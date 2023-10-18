@@ -1,0 +1,18 @@
+absl-py
+ipython>=8.8.0  # 8.7.0 has ipython3 lexer error
+sphinx>=5.3.0
+furo
+sphinx-autodoc-typehints
+sphinx-copybutton>=0.5.0
+sphinx-remove-toctrees
+jupyter-sphinx>=0.3.2
+sphinx-design
+
+# Packages used for CI tests.
+pytest
+pytest-xdist
+
+# Packages used for notebook execution
+matplotlib
+scikit-learn
+numpy
