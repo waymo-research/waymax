@@ -1,12 +1,15 @@
 absl-py
 ipython>=8.8.0  # 8.7.0 has ipython3 lexer error
-sphinx>=5.3.0
-furo
+sphinx>=6.2.1
+furo==2023.9.10
 sphinx-autodoc-typehints
-sphinx-copybutton>=0.5.0
-sphinx-remove-toctrees
+sphinx-copybutton>=0.5.2
+sphinx-remove-toctrees>=0.0.3
 jupyter-sphinx>=0.3.2
-sphinx-design
+sphinx-design>=0.5.0
+
+myst-nb
+sphinx-autoapi==3.0.0
 
 # Packages used for CI tests.
 pytest

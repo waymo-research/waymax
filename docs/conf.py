@@ -50,11 +50,12 @@ html_theme = 'furo'
 html_theme_options = {
     'source_repository': 'https://github.com/waymo-research/waymax'
 }
+html_favicon = 'https://waymo.com/favicon.png'
 
 # -- Options for myst ----------------------------------------------
 myst_heading_anchors = 3  # auto-generate 3 levels of heading anchors
 myst_enable_extensions = ['dollarmath']
-nb_execution_mode = 'force'
+nb_execution_mode = 'off'
 nb_execution_timeout = 300
 nb_execution_allow_errors = False
 nb_merge_streams = False

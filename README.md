@@ -1,5 +1,10 @@
 # Waymax: An accelerated simulator for autonomous driving research.
 
+[![arXiv](https://img.shields.io/badge/cs.RO-2310.08710-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2310.08710)
+
+[**Documentation**](https://waymo-research.github.io/waymax/docs/)
+| [**Tutorials**](https://waymo-research.github.io/waymax/docs/getting_started.html)
+
 ## Overview
 
 Waymax is a lightweight, multi-agent, JAX-based simulator for autonomous driving
