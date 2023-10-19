@@ -1,0 +1,790 @@
+:py:mod:`waymax.env`
+====================
+
+.. py:module:: waymax.env
+
+.. autoapi-nested-parse::
+
+   Reinforcement learning environment interfaces.
+
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   wrappers/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   abstract_environment/index.rst
+   base_environment/index.rst
+   errors/index.rst
+   planning_agent_environment/index.rst
+   rollout/index.rst
+   typedefs/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.AbstractEnvironment
+   waymax.env.BaseEnvironment
+   waymax.env.PlanningAgentDynamics
+   waymax.env.PlanningAgentEnvironment
+   waymax.env.RolloutOutput
+   waymax.env.BraxWrapper
+   waymax.env.DMEnvWrapper
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.rollout
+   waymax.env.rollout_log_by_expert_sdc
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.MultiAgentEnvironment
+   waymax.env.Metrics
+   waymax.env.Observation
+   waymax.env.ObservationFn
+   waymax.env.PyTree
+   waymax.env.RewardFn
+
+
+.. py:class:: AbstractEnvironment
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   A stateless environment interface for Waymax.
+
+   .. py:method:: reset(scenario: waymax.env.typedefs.GenericScenario) -> waymax.env.typedefs.GenericState
+      :abstractmethod:
+
+      Initializes a simulation state.
+
+      This method allows the environment to perform optional postprocessing
+      on the state before the episode begins. By default this method is a
+      no-op.
+
+      :param scenario: Scenario used to generate the initial state.
+
+      :returns: The initialized simulation state.
+
+
+   .. py:method:: step(state: waymax.env.typedefs.GenericState, actions: waymax.env.typedefs.GenericAction) -> waymax.env.typedefs.GenericState
+      :abstractmethod:
+
+      Advances the simulation by one timestep.
+
+      :param state: The current state of the simulator.
+      :param actions: Action to apply to the state to produce the updated simulator
+                      state.
+
+      :returns: The next simulation state after taking an action.
+
+
+   .. py:method:: reward(state: waymax.env.typedefs.GenericState, action: waymax.env.typedefs.GenericAction) -> jax.Array
+      :abstractmethod:
+
+      Computes the reward for a transition.
+
+      :param state: The state used to compute the reward.
+      :param action: The action applied to state.
+
+      :returns: A (..., num_objects) tensor of rewards.
+
+
+   .. py:method:: metrics(state: waymax.env.typedefs.GenericState) -> waymax.env.typedefs.Metrics
+      :abstractmethod:
+
+      Computes a set of metrics which score a given simulator state.
+
+      :param state: The state used to compute the metrics.
+
+      :returns:
+
+                A mapping from metric name to metrics which evaluate a simulator state at
+                  state.timestep where all of the metrics are of shape (..., num_objects).
+
+
+   .. py:method:: observe(state: waymax.env.typedefs.GenericState) -> waymax.env.typedefs.Observation
+      :abstractmethod:
+
+      Computes the observation of the simulator for the actor.
+
+      :param state: The state used to compute the observation.
+
+      :returns:
+
+                An observation of the simulator state for the given timestep of shape
+                  (...).
+
+
+   .. py:method:: action_spec() -> waymax.env.typedefs.GenericAction
+      :abstractmethod:
+
+      Returns the action specs of the environment without batch dimension.
+
+      :returns:
+
+                The action specs represented as a PyTree where the leaves
+                  are instances of specs.Array.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+      :abstractmethod:
+
+      Returns the reward specs of the environment without batch dimension.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+      :abstractmethod:
+
+      Returns the discount specs of the environment without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.PyTree
+      :abstractmethod:
+
+      Returns the observation specs of the environment without batch dimension.
+
+      :returns:
+
+                The observation specs represented as a PyTree where the
+                  leaves are instances of specs.Array.
+
+
+   .. py:method:: termination(state: waymax.env.typedefs.GenericState) -> jax.Array
+
+      Returns whether the current state is an episode termination.
+
+      A termination marks the end of an episode where the cost-to-go from
+      this state is 0.
+
+      The equivalent step type in DMEnv is dm_env.termination.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end of
+                  an episode as a termination.
+
+
+   .. py:method:: truncation(state: waymax.env.typedefs.GenericState) -> jax.Array
+
+      Returns whether the current state should truncate the episode.
+
+      A truncation denotes that an episode has ended due to reaching the step
+      limit of an episode. In these cases dynamic programming methods (e.g.
+      Q-learning) should still compute cost-to-go assuming the episode will
+      continue running.
+
+      The equivalent step type in DMEnv is dm_env.truncation.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end of
+                  an episode as a truncation.
+
+
+
+.. py:class:: BaseEnvironment(dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig)
+
+
+   Bases: :py:obj:`waymax.env.abstract_environment.AbstractEnvironment`
+
+   Waymax environment for multi-agent scenarios.
+
+   .. py:property:: dynamics
+      :type: waymax.dynamics.DynamicsModel
+
+
+   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+
+      Computes metrics (lower is better) from state.
+
+
+   .. py:method:: reset(state: waymax.datatypes.SimulatorState) -> waymax.datatypes.SimulatorState
+
+      Initializes the simulation state.
+
+      This initializer sets the initial timestep and fills the initial simulation
+      trajectory with invalid values.
+
+      :param state: An uninitialized state of shape (...).
+
+      :returns: The initialized simulation state of shape (...).
+
+
+   .. py:method:: observe(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Observation
+
+      Computes the observation for the given simulation state.
+
+      Here we assume that the default observation is just the simulator state. We
+      leave this for the user to override in order to provide a user-specific
+      observation function. A user can use this to move some of their model
+      specific post-processing into the environment rollout in the actor nodes. If
+      they want this post-processing on the accelertor, they can keep this the
+      same and implement it on the learner side. We provide some helper functions
+      at datatypes.observation.py to help write your own observation functions.
+
+      :param state: Current state of the simulator of shape (...).
+
+      :returns: Simulator state as an observation without modifications of shape (...).
+
+
+   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> waymax.datatypes.SimulatorState
+
+      Advances simulation by one timestep using the dynamics model.
+
+      :param state: The current state of the simulator of shape (...).
+      :param action: The action to apply, of shape (..., num_objects). The
+                     actions.valid field is used to denote which objects are being controlled
+                     - objects whose valid is False will fallback to default behavior
+                     specified by self.dynamics.
+
+      :returns: The next simulation state after taking an action of shape (...).
+
+
+   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+
+      Computes the reward for a transition.
+
+      :param state: The state used to compute the reward at state.timestep of shape
+                    (...).
+      :param action: The action applied to state of shape (..., num_objects, dim).
+
+      :returns: An array of rewards of shape (..., num_objects).
+
+
+   .. py:method:: action_spec() -> waymax.datatypes.Action
+
+      Returns the action specs of the environment without batch dimension.
+
+      :returns:
+
+                The action specs represented as a PyTree where the leaves
+                  are instances of specs.Array.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      Returns the reward specs of the environment without batch dimension.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      Returns the discount specs of the environment without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.Observation
+      :abstractmethod:
+
+      Returns the observation specs of the environment without batch dimension.
+
+      :returns:
+
+                The observation specs represented as a PyTree where the
+                  leaves are instances of specs.Array.
+
+
+
+.. py:data:: MultiAgentEnvironment
+
+   
+
+.. py:exception:: EpisodeAlreadyFinishedError
+
+
+   Bases: :py:obj:`RuntimeError`
+
+   Error thrown when attempting to advance an episode that is finished.
+
+
+.. py:exception:: SimulationNotInitializedError
+
+
+   Bases: :py:obj:`RuntimeError`
+
+   Error thrown when attempting to advance an episode before reset.
+
+
+.. py:class:: PlanningAgentDynamics(multi_agent_dynamics: waymax.dynamics.DynamicsModel)
+
+
+   Bases: :py:obj:`waymax.dynamics.DynamicsModel`
+
+   A dynamics wrapper for converting multi-agent dynamics to single-agent.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec of the action containing the bounds.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+
+   .. py:method:: forward(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory, log_trajectory: waymax.datatypes.Trajectory, is_controlled: jax.Array, timestep: int, allow_new_objects: bool = True) -> waymax.datatypes.Trajectory
+
+      Updates a simulated trajectory to the next timestep given an update.
+
+      Runs the forward model for the planning agent by taking in a single object's
+      action and tiling it for all others and then running the wrapped action.
+
+      :param action: Actions to be applied to the trajectory to produce updates at the
+                     next timestep of shape (..., dim).
+      :param trajectory: Simulated trajectory up to the current timestep. This
+                         trajectory will be updated by this function updated with the trajectory
+                         update. It is expected that this trajectory will have been updated up to
+                         `timestep`. This is of shape: (..., num_objects, num_timesteps).
+      :param log_trajectory: Logged trajectory for all objects over the entire run
+                             segment. Certain fields such as valid are optionally taken from this
+                             trajectory. This is of shape: (..., num_objects, num_timesteps).
+      :param is_controlled: Boolean array specifying which objects are to be controlled
+                            by the trajectory update of shape (..., num_objects).
+      :param timestep: Timestep of the current simulation.
+      :param allow_new_objects: Whether to allow new objects to enter the secene. If
+                                this is set to False, all objects that are not valid at the current
+                                timestep will not be valid at the next timestep and visa versa.
+
+      :returns:
+
+                Updated trajectory given update from a dynamics model at `timestep` + 1
+                  of shape (..., num_objects, num_timesteps).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Computes actions converting traj[timestep] to traj[timestep+1].
+
+      Runs the wrapped dynamics inverse and slices out the sdc's action
+      specifically.
+
+      :param trajectory: Full trajectory to compute the inverse actions from of shape
+                         (..., num_objects, num_timesteps). This trajectory is for the entire
+                         simulation so that dynamics models can use sophisticated otpimization
+                         techniques to find the best fitting actions.
+      :param metadata: Metadata on all objects in the scene which contains information
+                       about what types of objects are in the scene of shape (...,
+                       num_objects).
+      :param timestep: Current timestpe of the simulation.
+
+      :returns:
+
+                Action which will take a set of objects from trajectory[timestep] to
+                  trajectory[timestep + 1] of shape (..., num_objects, dim).
+
+
+
+.. py:class:: PlanningAgentEnvironment(dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig, sim_agent_actors: Sequence[waymax.agents.actor_core.WaymaxActorCore] = ())
+
+
+   Bases: :py:obj:`waymax.env.base_environment.BaseEnvironment`
+
+   An environment wrapper allowing for controlling a single agent.
+
+   The PlanningAgentEnvironment inherits from a multi-agent BaseEnvironment
+   to build a single-agent environment by returning only the observations and
+   rewards corresponding to the ego-agent (i.e. ADV).
+
+   Note that while the action and reward no longer have an obj dimension as
+   expected for a single agent env, the observation retains the obj dimension
+   set to 1 to conform with the observation datastructure.
+
+   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+
+      Computes the metrics for the single agent wrapper.
+
+      The metrics to be computed are based on those specified by the configuration
+      passed into the environment. This runs metrics that may be specific to the
+      planning agent case.
+
+      :param state: State of simulation to compute the metrics for. This will compute
+                    metrics for the timestep corresponding to `state.timestep` of shape
+                    (...).
+
+      :returns:
+
+                Dictionary from metric name to metrics.MetricResult which represents the
+                  metrics calculated at `state.timestep`. All metrics assumed to be shaped
+                  (..., num_objects=1) unless specified in the metrics implementation.
+
+
+   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+
+      Computes the reward for a transition.
+
+      :param state: State of simulation to compute the metrics for. This will compute
+                    reward for the timestep corresponding to `state.timestep` of shape
+                    (...).
+      :param action: The action applied for the state.
+
+      :returns: A float (...) tensor of rewards for the single agent.
+
+
+   .. py:method:: action_spec() -> waymax.datatypes.Action
+
+      Returns the action specs of the environment without batch dimension.
+
+      :returns:
+
+                The action specs represented as a PyTree where the leaves
+                  are instances of specs.Array.
+
+
+   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> waymax.datatypes.SimulatorState
+
+      Advances simulation by one timestep using the dynamics model.
+
+      :param state: The current state of the simulator of shape (...).
+      :param action: The action to apply, of shape (..., num_objects). The
+                     actions.valid field is used to denote which objects are being controlled
+                     - objects whose valid is False will fallback to default behavior
+                     specified by self.dynamics.
+
+      :returns: The next simulation state after taking an action of shape (...).
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      Specify the reward spec as just for one object.
+
+
+
+.. py:function:: rollout(scenario: waymax.env.typedefs.GenericScenario, actor: waymax.agents.actor_core.WaymaxActorCore, env: waymax.env.abstract_environment.AbstractEnvironment, rng: jax.Array, rollout_num_steps: int = 1, actor_params: Optional[waymax.agents.actor_core.Params] = None) -> RolloutOutput
+
+   Performs a rollout from the beginning of a run segment.
+
+
+   :param scenario: initial SimulatorState to start the rollout of shape (...).
+   :param actor: The action function used to select actions during the rollout.
+   :param env: A stateless Waymax environment used for computing steps, observations,
+               and rewards.
+   :param rng: Random key used for generate stochastic actions if needed.
+   :param rollout_num_steps: number of rollout steps.
+   :param actor_params: Parameters used by actor to select actions. It can be None if
+                        the actor does not require parameters.
+
+   :returns:
+
+             Stacked rollout output  of shape (rollout_num_steps + 1, ...) from the
+               simulator when taking an action given the action_fn. There is one extra in
+               the time dimension compared to `rollout_num_steps`. This is because we
+               prepend the initial timetep to the `timestep` field and append an invalid
+               action into the `action` field.
+
+
+.. py:function:: rollout_log_by_expert_sdc(scenario: waymax.env.typedefs.GenericScenario, env: waymax.env.abstract_environment.AbstractEnvironment, dynamics_model: waymax.dynamics.DynamicsModel, rollout_num_steps: int = 1) -> RolloutOutput
+
+   Rollouts state using logged expert actions specified by dynamics_model.
+
+
+.. py:class:: RolloutOutput
+
+
+   Rollout output datatypes.structure for using as output of rollout function.
+
+   .. attribute:: action
+
+      Action produced by a functional corresponding to `ActionFuncType`
+      which after taking by calling some `environment.step(action)` produces the
+      `timestep` information. This is aggregated over a number of timesteps and
+      so the shape is (num_timesteps, ..., num_objects, action_dim). The `...`
+      of the shapes correspond to any kind of prefix for batching that might be
+      applied.
+
+   .. attribute:: state
+
+      Temporally aggregated information of the output of the simulation
+      after calling `environment.step(action)`. This information represents the
+      important information from the simulation aggregated through the rollout
+      of shape (num_timesteps, ...). The first element of `state` corresponds to
+      the initial simulation state.
+
+   .. attribute:: observation
+
+      Temporally aggregated information of the output of the
+      simulation after calling `observe(environment.step(action))`. This
+      information  represents the observation of the agent of the simulator
+      state aggregated through the rollout of shape (num_timesteps, ...). The
+      first element of `observation` corresponds to the initial simulation
+      state.
+
+   .. attribute:: metrics
+
+      Mapping from metric name to metric which contains metrics computed
+      on the simulator states aggregated in time of shape (num_timestpes, ...).
+      These functions are defined in the `env.metrics(state)` function. As this
+      is a mapping, these metrics could be empty if the environment decides not
+      to produce metrics. This could be due to speed reasons during the rollout.
+
+   .. attribute:: reward
+
+      Scalar value of shape (num_timesteps, ..., num_objects) which
+      represents the reward achieved at a certain simulator state at the given
+      `state.timestep`.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      Returns the shape prefix for the rollout type.
+
+   .. py:attribute:: action
+      :type: waymax.env.typedefs.GenericAction
+
+      
+
+   .. py:attribute:: state
+      :type: waymax.env.typedefs.GenericState
+
+      
+
+   .. py:attribute:: observation
+      :type: waymax.env.typedefs.Observation
+
+      
+
+   .. py:attribute:: metrics
+      :type: waymax.env.typedefs.Metrics
+
+      
+
+   .. py:attribute:: reward
+      :type: jax.Array
+
+      
+
+   .. py:method:: validate()
+
+      Validates the shape prefix of the actions and timesteps.
+
+
+
+.. py:data:: Metrics
+
+   
+
+.. py:data:: Observation
+
+   
+
+.. py:data:: ObservationFn
+
+   
+
+.. py:data:: PyTree
+
+   
+
+.. py:data:: RewardFn
+
+   
+
+.. py:class:: BraxWrapper(wrapped_env: waymax.env.base_environment.BaseEnvironment)
+
+
+   Brax-like interface wrapper for the Waymax environment.
+
+   .. py:property:: dynamics
+      :type: waymax.dynamics.DynamicsModel
+
+
+   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+
+      Computes metrics (lower is better) from state.
+
+
+   .. py:method:: reset(state: waymax.datatypes.SimulatorState) -> TimeStep
+
+      Resets the environment and initializes the simulation state.
+
+      This initializer sets the initial timestep and fills the initial simulation
+      trajectory with invalid values.
+
+      :param state: An uninitialized state.
+
+      :returns: The initialized simulation state.
+
+
+   .. py:method:: observe(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Observation
+
+      Computes the observation for the given simulation state.
+
+
+   .. py:method:: step(timestep: TimeStep, action: waymax.datatypes.Action) -> TimeStep
+
+      Advances simulation by one timestep using the dynamics model.
+
+      :param timestep: The timestep containing the current state.
+      :param action: The action to apply, of shape (..., num_objects). The
+                     actions.valid field is used to denote which objects are being controlled
+                     - objects whose valid is False will fallback to default behavior
+                     specified by self.dynamics.
+
+      :returns: The timestep corresponding to the transition taken.
+
+
+   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+
+      Computes the reward for a transition.
+
+      :param state: The state used to compute the reward at state.timestep.
+      :param action: The action applied to state.
+
+      :returns: A (..., num_objects) tensor of rewards.
+
+
+   .. py:method:: termination(state: waymax.datatypes.SimulatorState) -> jax.Array
+
+      Returns whether the current state is an episode termination.
+
+      A termination marks the end of an episode where the cost-to-go from
+      this state is 0.
+
+      The equivalent step type in DMEnv is dm_env.termination.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end
+                  of an episode as a termination.
+
+
+   .. py:method:: truncation(state: waymax.datatypes.SimulatorState) -> jax.Array
+
+      Returns whether the current state should truncate the episode.
+
+      A truncation denotes that an episode has ended due to reaching the step
+      limit of an episode. In these cases dynamic programming methods (e.g.
+      Q-learning) should still compute cost-to-go assuming the episode will
+      continue running.
+
+      The equivalent step type in DMEnv is dm_env.truncation.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end of
+                  an episode as a truncation.
+
+
+   .. py:method:: action_spec() -> waymax.datatypes.Action
+
+      Action spec of the environment.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      Reward spec of the environment.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      Discount spec of the environment.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.PyTree
+
+      Observation spec of the environment.
+
+
+
+.. py:class:: DMEnvWrapper(data_generator: Iterator[waymax.datatypes.SimulatorState], stateless_env: waymax.env.abstract_environment.AbstractEnvironment, squeeze_scalar_actions: bool = True)
+
+
+   Bases: :py:obj:`dm_env.Environment`
+
+   A stateful environment wrapper implementing the DMEnv interface.
+
+   .. py:property:: config
+      :type: waymax.config.EnvironmentConfig
+
+
+   .. py:property:: simulation_state
+      :type: waymax.datatypes.SimulatorState
+
+      The current simulation state.
+
+   .. py:property:: stateless_env
+      :type: waymax.env.abstract_environment.AbstractEnvironment
+
+      The underlying stateless Waymax environment.
+
+   .. py:method:: observe(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Observation
+
+      Runs the stateless environment observation function.
+
+
+   .. py:method:: reset() -> dm_env.TimeStep
+
+      Resets the environment and returns the initial TimeStep.
+
+
+   .. py:method:: step(action: jax.Array) -> dm_env.TimeStep
+
+      Advances the state given an action.
+
+      :param action: An action with shape compatible with self.action_spec()
+
+      :returns:
+
+                The TimeStep corresponding to the transition taken by applying
+                  action to the current state.
+
+      :raises SimulationNotInitializedError: If reset() has not been called before
+          this method is called.
+      :raises EpisodeAlreadyFinishedError: If this method is called after an episode
+          has been terminated or truncated.
+
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      The action specs of this environment, without batch dimension.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      The discount specs of this environment, without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.PyTree
+
+      The observation specs of this environment, without batch dimension.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      The reward specs of this environment, without batch dimension.
+
+
+

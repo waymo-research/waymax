@@ -1,0 +1,404 @@
+:py:mod:`waymax.datatypes.observation`
+======================================
+
+.. py:module:: waymax.datatypes.observation
+
+.. autoapi-nested-parse::
+
+   Datastructure and helper functions for Waymax Observation functions.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.observation.ObjectPose2D
+   waymax.datatypes.observation.Observation
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.observation.transform_trajectory
+   waymax.datatypes.observation.transform_roadgraph_points
+   waymax.datatypes.observation.transform_traffic_lights
+   waymax.datatypes.observation.transform_observation
+   waymax.datatypes.observation.combine_two_object_pose_2d
+   waymax.datatypes.observation.global_observation_from_state
+   waymax.datatypes.observation._tree_expand_and_repeat
+   waymax.datatypes.observation.observation_from_state
+   waymax.datatypes.observation.sdc_observation_from_state
+
+
+
+.. py:class:: ObjectPose2D
+
+
+   Object 2D pose that can be used for coordinate transformation.
+
+   The pose information is stored with two format
+   (see details at https://en.wikipedia.org/wiki/Pose_(computer_vision)):
+   1) the position (original_xy) and orientation (original_yaw); 2) the
+   transformation matrix (matrix) with the rotation angle explicitly saved as
+   delta_yaw.
+
+   Note since this is a general data structure, the pose could be using arbitrary
+   coordinate system.
+
+   Example usage:
+   Assuming the pose is using C coordinate system, applying matrix[..., i, :, :]
+   over an object with center (x, y) and yaw in C coordinate system gives its
+   position in i's local coordinate system. The object's yaw in i's local
+   coordinate system is yaw + delta_yaw.
+   This is done by translation of -original_xy followed by counter-clockwise
+   rotation of original_yaw.
+
+   .. attribute:: original_xy
+
+      (..., num_objects, 2), the coordinates of each object's center
+      in original coordinate systems.
+
+   .. attribute:: original_yaw
+
+      (..., num_objects), object's yaw in original coordinate
+      systems.
+
+   .. attribute:: matrix
+
+      (..., num_objects, 3, 3), transformation matrix where `matrix[...,
+      i, :, :]` is the transformation from original coordinates to object `i`
+      centric coordinates.
+
+   .. attribute:: delta_yaw
+
+      (..., num_objects), rotation angles used to transform yaw in
+      original coordinate system to object-center coordinate system. Note this
+      is the negative of original_yaw.
+
+   .. attribute:: valid
+
+      (..., num_objects), valid or not.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects.
+
+   .. py:property:: rotation_matrix
+      :type: jax.Array
+
+      2D rotation matrix.
+
+   .. py:property:: translation_vector
+      :type: jax.Array
+
+      2D translation vector.
+
+   .. py:attribute:: original_xy
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: original_yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: matrix
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: delta_yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: from_center_and_yaw(xy: jax.Array, yaw: jax.Array, valid: Optional[jax.Array] = None) -> ObjectPose2D
+      :classmethod:
+
+      Initializes pose from center location and yaw.
+
+      :param xy: (..., num_objects, 2), 2D coordinates of objects' center in arbitrary
+                 coordinate system.
+      :param yaw: (..., num_objects), objects' yaw in same coordinate system as xy.
+      :param valid: (..., num_objects), boolean mask for validity.
+
+      :returns: A ObjectPose2D with shape (..., num_objects).
+
+
+   .. py:method:: from_transformation(matrix: jax.Array, delta_yaw: jax.Array, valid: Optional[jax.Array] = None) -> ObjectPose2D
+      :classmethod:
+
+      Init pose from transformation matrix and delta_yaw.
+
+      :param matrix: (..., num_objects, 3, 3), 2D homogenous transformation matrix.
+      :param delta_yaw: (..., num_objects), transformation angles used together with
+                        matrix for coordinate transformation (i.e. rotation applied by the
+                        transformation matrix).
+      :param valid: (..., num_objects), boolean mask for validity.
+
+      :returns: A ObjectPose2D with shape (..., num_objects).
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: Observation
+
+
+   Observation at a single simulation step.
+
+   num_observations: number of objects that will have an observation/view over
+   other objects/map elements.
+
+   The observation can include a fixed number of history information. Note we
+   support multi-agent observation by default: for each object (in axis
+   num_observations), we compute its view of all other objects (in axis
+   num_objects), roadgraph points, and traffic lights. The coordinates used for
+   each object (num_observations) are centered at its location defined by pose2d.
+
+   .. attribute:: trajectory
+
+      Time-dependent information, in object-centric coordinates
+      defined by pose2d of shape (..., num_observations, num_objects,
+      num_timesteps).
+
+   .. attribute:: is_ego
+
+      Binary mask of shape (..., num_observations, num_objects). It
+      represents which object in num_objects is the observer itself.
+
+   .. attribute:: pose2d
+
+      Poses for all objects, used for transformation of shape (...,
+      num_observations).
+
+   .. attribute:: metadata
+
+      Time-independent information of shape (..., num_observations,
+      num_objects).
+
+   .. attribute:: roadgraph_static_points
+
+      Top-k (k=num_points) nearest static roadgraph
+      points of shape (..., num_observations, num_points).
+
+   .. attribute:: traffic_lights
+
+      Current state of the traffic lights in the log of shape
+      (..., num_observations, num_traffic_lights, num_timesteps).
+
+   .. attribute:: sdc_paths
+
+      SDC roadgraph traversal paths. Only valid for SDC agents of shape
+      (..., num_observations, num_paths, num_points_per_path).
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      (..., num_observations).
+
+      :type: The longest common prefix shape of all attributes
+
+   .. py:property:: batch_dims
+      :type: tuple[int, Ellipsis]
+
+      Batch dimensions.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects.
+
+   .. py:property:: valid
+      :type: jax.Array
+
+      Whether the observation is valid, (..., num_observations).
+
+   .. py:attribute:: trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      
+
+   .. py:attribute:: is_ego
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: pose2d
+      :type: ObjectPose2D
+
+      
+
+   .. py:attribute:: metadata
+      :type: waymax.datatypes.object_state.ObjectMetadata
+
+      
+
+   .. py:attribute:: roadgraph_static_points
+      :type: waymax.datatypes.roadgraph.RoadgraphPoints
+
+      
+
+   .. py:attribute:: traffic_lights
+      :type: Observation.traffic_lights
+
+      
+
+   .. py:attribute:: sdc_paths
+      :type: Optional[waymax.datatypes.route.Paths]
+
+      
+
+   .. py:method:: for_obj(idx: int) -> Observation
+
+      Observation from idx-th object's point of view over all objects.
+
+      :param idx: The index of the object.
+
+      :returns: A Observation with shape (..., 1).
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:function:: transform_trajectory(traj: waymax.datatypes.object_state.Trajectory, pose2d: ObjectPose2D) -> waymax.datatypes.object_state.Trajectory
+
+   Transforms a Trajectory into coordinates specified by pose2d.
+
+   :param traj: A Trajectory with shape (..., num_observations, num_objects,
+                num_timesteps) in coordinate system same as the one used by
+                original_xy/yaw in pose2d.
+   :param pose2d: A ObjectPose2D with shape (..., num_observations).
+
+   :returns: A transformed trajectory in local coordinates per-observation defined by the
+             pose.
+
+
+.. py:function:: transform_roadgraph_points(roadgraph_points: waymax.datatypes.roadgraph.RoadgraphPoints, pose2d: ObjectPose2D) -> waymax.datatypes.roadgraph.RoadgraphPoints
+
+   Transform a RoadgraphPoints into coordinates specified by pose2d.
+
+   :param roadgraph_points: A RoadgraphPoints with shape (..., num_observations,
+                            num_points).
+   :param pose2d: A ObjectPose2D with shape (..., num_observations).
+
+   :returns: A transformed RoadgraphPoints in local coordinates per-observation defined
+             by the pose.
+
+
+.. py:function:: transform_traffic_lights(tls: waymax.datatypes.traffic_lights.TrafficLights, pose2d: ObjectPose2D) -> waymax.datatypes.traffic_lights.TrafficLights
+
+   Transforms a TrafficLightStates into coordinates specified by pose2d.
+
+   :param tls: A TrafficLightStates with shape (..., num_observations,
+               num_traffic_lights, num_timesteps).
+   :param pose2d: A ObjectPose2D with shape (..., num_observations).
+
+   :returns: Transformed TrafficLightStates in local coordinates per-observation defined
+             by the pose.
+
+
+.. py:function:: transform_observation(observation: Observation, pose2d: ObjectPose2D) -> Observation
+
+   Transforms a Observation into coordinates specified by pose2d.
+
+   :param observation: Has shape (..., num_observations)
+   :param pose2d: Has shape (..., num_observations)
+
+   :returns: Transformed observation in local coordinates per-observation defined by the
+             pose.
+
+
+.. py:function:: combine_two_object_pose_2d(src_pose: ObjectPose2D, dst_pose: ObjectPose2D) -> ObjectPose2D
+
+   Combines two ObjectPose2D as inverse(src_pose) plus dst_pose.
+
+   Applying transformation using the returned pose is equivalent to applying
+   transformation first with inverse(src_pose) and then dst_pose. Note as data
+   transformation is much more expensive than computing the combined pose, it's
+   more efficient to apply one data transformation with the combined pose instead
+   of applying multiple transformations with multiple poses.
+
+   :param src_pose: The source pose.
+   :param dst_pose: The destination/target pose.
+
+   :returns: The combined pose.
+
+
+.. py:function:: global_observation_from_state(state: waymax.datatypes.simulator_state.SimulatorState, obs_num_steps: int = 1, num_obj: int = 1) -> Observation
+
+   Generates observation in global coordinates.
+
+   :param state: Has shape (...,).
+   :param obs_num_steps: Number of observation steps for trajectories and traffic
+                         lights state.
+   :param num_obj: Used to tile the global observation for multiple objects.
+
+   :returns: Observation with shape (..., num_obj). Note the same observation in
+             global coordinates is tiled for num_obj when num_obj is larger than 1.
+
+
+.. py:function:: _tree_expand_and_repeat(tree: Any, repeats: int, axis: int) -> waymax.datatypes.array.PyTree
+
+
+.. py:function:: observation_from_state(state: waymax.datatypes.simulator_state.SimulatorState, obs_num_steps: int = 1, roadgraph_top_k: int = 1000, coordinate_frame: waymax.config.CoordinateFrame = config.CoordinateFrame.GLOBAL) -> Observation
+
+   Constructs Observation from SimulatorState for all agents (jit-able).
+
+   :param state: A SimulatorState, with entirely variable shape (...).
+   :param obs_num_steps: Number of steps history included in observation. Last
+                         timestep is state.timestep.
+   :param roadgraph_top_k: Number of topk roadgraph observed by each object.
+   :param coordinate_frame: Which coordinate frame the returned observation is using.
+
+   :returns: Observation at current timestep from given simulator state, with shape (...,
+             num_objects).
+
+
+.. py:function:: sdc_observation_from_state(state: waymax.datatypes.simulator_state.SimulatorState, obs_num_steps: int = 1, roadgraph_top_k: int = 1000, coordinate_frame: waymax.config.CoordinateFrame = config.CoordinateFrame.SDC) -> Observation
+
+   Constructs Observation from SimulatorState for SDC only (jit-able).
+
+   :param state: a SimulatorState, with shape (...)
+   :param obs_num_steps: number of steps history included in observation. Last
+                         timestep is state.timestep.
+   :param roadgraph_top_k: number of topk roadgraph observed by each object.
+   :param coordinate_frame: which coordinate frame the returned observation is using.
+
+   :returns: SDC Observation at current timestep from given simulator state, with shape
+             (..., 1), where the last object dimension is 1 as there is only one SDC. It
+             is not sequeezed to be consistent with multi-agent cases and compatible for
+             other utils fnctions.
+
+

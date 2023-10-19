@@ -1,0 +1,192 @@
+:py:mod:`waymax.datatypes.simulator_state`
+==========================================
+
+.. py:module:: waymax.datatypes.simulator_state
+
+.. autoapi-nested-parse::
+
+   All customized data structures for Waymax.
+
+   Note the shape of a data classes here is defined as the most common prefix shape
+   among all attributes.
+   The validate function is implemented separately instead of as __post_init__, to
+   have better support with jax utils.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.simulator_state.SimulatorState
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.simulator_state.update_state_by_log
+   waymax.datatypes.simulator_state.get_control_mask
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.simulator_state.ArrayLike
+   waymax.datatypes.simulator_state.PyTree
+
+
+.. py:data:: ArrayLike
+
+   
+
+.. py:data:: PyTree
+
+   
+
+.. py:class:: SimulatorState
+
+
+   A dataclass holding the simulator state, all data in global coordinates.
+
+   .. attribute:: sim_trajectory
+
+      Simulated trajectory for all objects of shape (...,
+      num_objects, num_timesteps). The number of timesteps is the same as in the
+      log, but future trajectory points that have not been simulated will be
+      marked invalid.
+
+   .. attribute:: log_trajectory
+
+      Logged trajectory for all objects of shape (...,
+      num_objects, num_timesteps).
+
+   .. attribute:: log_traffic_light
+
+      Logged traffic light information for the entire run
+      segment of shape (..., num_traffic_lights, num_timesteps).
+
+   .. attribute:: object_metadata
+
+      Metadata for all objects of shape (..., num_objects).
+
+   .. attribute:: timestep
+
+      The current simulation timestep index of shape (...). Note that
+      sim_trajectory at `timestep` is the last executed step by the simulator.
+
+   .. attribute:: sdc_paths
+
+      Paths for SDC, representing where the SDC can drive of shape
+      (..., num_paths, num_points_per_path).
+
+   .. attribute:: roadgraph_points
+
+      A optional RoadgraphPoints holding subsampled roadgraph
+      points of shape (..., num_points).
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      Shape is defined as the most common prefix shape of all attributes.
+
+   .. py:property:: batch_dims
+      :type: tuple[int, Ellipsis]
+
+      Batch dimensions.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects included in this trajectory per example.
+
+   .. py:property:: is_done
+      :type: bool
+
+      Returns whether the simulation is at the end of the logged history.
+
+   .. py:property:: remaining_timesteps
+      :type: int
+
+      Returns the number of remaining timesteps in the episode.
+
+   .. py:property:: current_sim_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      Returns the trajectory corresponding to the current sim state.
+
+   .. py:property:: current_log_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      Returns the trajectory corresponding to the current sim state.
+
+   .. py:attribute:: sim_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      
+
+   .. py:attribute:: log_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      
+
+   .. py:attribute:: log_traffic_light
+      :type: waymax.datatypes.traffic_lights.TrafficLights
+
+      
+
+   .. py:attribute:: object_metadata
+      :type: waymax.datatypes.object_state.ObjectMetadata
+
+      
+
+   .. py:attribute:: timestep
+      :type: jax.typing.ArrayLike
+
+      
+
+   .. py:attribute:: sdc_paths
+      :type: Optional[waymax.datatypes.route.Paths]
+
+      
+
+   .. py:attribute:: roadgraph_points
+      :type: Optional[waymax.datatypes.roadgraph.RoadgraphPoints]
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:function:: update_state_by_log(state: SimulatorState, num_steps: int) -> SimulatorState
+
+   Advances SimulatorState by num_steps using logged data.
+
+
+.. py:function:: get_control_mask(metadata: waymax.datatypes.object_state.ObjectMetadata, obj_type: waymax.config.ObjectType) -> jax.Array
+
+   Returns binary mask for selected object type.
+
+   :param metadata: An ObjectMetadata, having shape (..., num_objects).
+   :param obj_type: Represents which type of objects should be selected.
+
+   :returns: A binary mask with shape (..., num_objects).
+
+

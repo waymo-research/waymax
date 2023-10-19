@@ -1,0 +1,108 @@
+:py:mod:`waymax.metrics.route`
+==============================
+
+.. py:module:: waymax.metrics.route
+
+.. autoapi-nested-parse::
+
+   Metrics relating to route.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.route.ProgressionMetric
+   waymax.metrics.route.OffRouteMetric
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.route.FULL_PROGRESS_VALUE
+
+
+.. py:data:: FULL_PROGRESS_VALUE
+   :value: 1.0
+
+   
+
+.. py:class:: ProgressionMetric
+
+
+   Bases: :py:obj:`waymax.metrics.abstract_metric.AbstractMetric`
+
+   Route progression metric for SDC.
+
+   This metric returns a non-negative value representing the progression
+   towards the final logged position from the initial logged position along the
+   route. It first finds the closest on-route path to the SDC's current xy
+   position according to Euclidean distance and uses that as the reference path
+   to compute the progress (`arc_length`) relative to the logged SDC's initial
+   and final xy positions.
+
+   If the SDC trajectory is invalid or there are no valid on-route paths, it
+   returns zero.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes the progression metric.
+
+      :param simulator_state: The current simulator state of shape.
+
+      :returns: A (...) MetricResult containing the metric result described above.
+
+      :raises ValueError: If `simulator_state.sdc_paths` is undefined.
+
+
+
+.. py:class:: OffRouteMetric
+
+
+   Bases: :py:obj:`waymax.metrics.abstract_metric.AbstractMetric`
+
+   Off-route metric for the SDC.
+
+   The SDC is considered off-route either if 1) it is farther than
+   MAX_DISTANCE_TO_ROUTE_PATH from the closest on-route path, or 2) it is farther
+   from the closest on-route path than the closest off-route path by
+   MAX_RELATIVE_DISTANCE_TO_OFF_ROUTE_PATH.
+
+   If the SDC is on-route, the SDC trajectory is completely invalid, or there are
+   no valid on-route paths, it returns zero.
+
+   If the SDC is off-route, this metric returns the distance to the closest valid
+   on-route path. If there are no valid on-route paths, it returns the distance
+   to the closest valid off-route path.
+
+   .. py:attribute:: MAX_DISTANCE_TO_ROUTE_PATH
+      :value: 5
+
+      
+
+   .. py:attribute:: MAX_RELATIVE_DISTANCE_TO_OFF_ROUTE_PATH
+      :value: 2
+
+      
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes the off route metric.
+
+      :param simulator_state: The current simulator state of shape (....).
+
+      :returns: A (...) MetricResult containing the metric result described above.
+
+      :raises ValueError: If `simulator_state.sdc_paths` is undefined.
+
+
+

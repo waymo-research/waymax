@@ -1,0 +1,80 @@
+:py:mod:`waymax.rewards`
+========================
+
+.. py:module:: waymax.rewards
+
+.. autoapi-nested-parse::
+
+   Reward functions.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   abstract_reward_function/index.rst
+   linear_combination_reward/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.rewards.AbstractRewardFunction
+   waymax.rewards.LinearCombinationReward
+
+
+
+
+.. py:class:: AbstractRewardFunction
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   Abstract class that ensures a certain reward function design.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action, agent_mask: jax.Array) -> jax.Array
+      :abstractmethod:
+
+      Computes rewards for every agent given a sim state and action.
+
+      :param simulator_state: State of the Waymax environment.
+      :param action: Action taken to control the agent(s) (..., num_objects,
+                     action_space).
+      :param agent_mask: Binary mask indicating which agent inputs are valid (...,
+                         num_objects).
+
+      :returns: An array of rewards, where there is one reward per agent
+                (..., num_objects).
+
+
+
+.. py:class:: LinearCombinationReward(config: waymax.config.LinearCombinationRewardConfig)
+
+
+   Bases: :py:obj:`waymax.rewards.abstract_reward_function.AbstractRewardFunction`
+
+   Reward function that performs a linear combination of metrics.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action, agent_mask: jax.Array) -> jax.Array
+
+      Computes the reward as a linear combination of metrics.
+
+      :param simulator_state: State of the Waymax environment.
+      :param action: Action taken to control the agent(s) (..., num_objects,
+                     action_space).
+      :param agent_mask: Binary mask indicating which agent inputs are valid (...,
+                         num_objects).
+
+      :returns: An array of rewards, where there is one reward per agent
+                (..., num_objects).
+
+
+

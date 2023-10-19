@@ -1,0 +1,34 @@
+:py:mod:`waymax.agents.agent_builder`
+=====================================
+
+.. py:module:: waymax.agents.agent_builder
+
+.. autoapi-nested-parse::
+
+   Waymax sim agent builder functions.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.agent_builder.create_sim_agents_from_config
+
+
+
+.. py:function:: create_sim_agents_from_config(config: waymax.config.SimAgentConfig) -> waymax.agents.actor_core.WaymaxActorCore
+
+   Constructs sim agent WaymaxActorCore objects from a config.
+
+   :param config: Waymax sim agent config specifying agent type and controlled
+                  objects' type.
+
+   :returns: Constructed sim agents.
+
+

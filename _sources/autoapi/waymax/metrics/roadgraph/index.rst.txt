@@ -1,0 +1,127 @@
+:py:mod:`waymax.metrics.roadgraph`
+==================================
+
+.. py:module:: waymax.metrics.roadgraph
+
+.. autoapi-nested-parse::
+
+   Metrics functions relating to roadgraph.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.roadgraph.WrongWayMetric
+   waymax.metrics.roadgraph.OffroadMetric
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.roadgraph.is_offroad
+   waymax.metrics.roadgraph.compute_signed_distance_to_nearest_road_edge_point
+
+
+
+.. py:class:: WrongWayMetric
+
+
+   Bases: :py:obj:`waymax.metrics.abstract_metric.AbstractMetric`
+
+   Wrong-way metric for SDC.
+
+   This metric checks if SDC is driving into wrong driving the wrong way or path.
+   It first computes the distance to the closest roadgraph point in all valid
+   paths that the SDC can drive along from its starting position. If the distance
+   is larger than the threhold WRONG_WAY_THRES, it's considered wrong-way and
+   returns the distance; otherwise, it's driving on the legal lanes, and returns
+   0.0.
+
+   .. py:attribute:: WRONG_WAY_THRES
+      :value: 3.5
+
+      
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes a per-timestep, per-object metric from a SimulatorState.
+
+      :param simulator_state: The current simulator state of shape (...).
+
+      :returns: A MetricResult containing the metric result and validity mask of shape
+                (..., num_objects).
+
+
+
+.. py:class:: OffroadMetric
+
+
+   Bases: :py:obj:`waymax.metrics.abstract_metric.AbstractMetric`
+
+   Offroad metric.
+
+   This metric returns 1.0 if the object is offroad.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes the offroad metric.
+
+      :param simulator_state: Updated simulator state to calculate metrics for. Will
+                              compute the offroad metric for timestep `simulator_state.timestep`.
+
+      :returns:
+
+                An array containing the metric result of the same shape as the input
+                  trajectories. The shape is (..., num_objects).
+
+
+
+.. py:function:: is_offroad(trajectory: waymax.datatypes.Trajectory, roadgraph_points: waymax.datatypes.RoadgraphPoints) -> jax.Array
+
+   Checks if the given trajectory is offroad.
+
+   This determines the signed distance between each bounding box corner and the
+   closest road edge (median or boundary). If the distance is negative, then the
+   trajectory is onroad else offroad.
+
+   :param trajectory: Agent trajectories to test to see if they are on or off road of
+                      shape (..., num_objects). The bounding boxes derived from center and shape
+                      of the trajectory will be used to determine if any point in the box is
+                      offroad.
+   :param roadgraph_points: All of the roadgraph points in the run segment of shape
+                            (..., num_points). Roadgraph points of type `ROAD_EDGE_BOUNDARY` and
+                            `ROAD_EDGE_MEDIAN` are used to do the check.
+
+   :returns: a bool array with the shape (..., num_objects). The value is
+             True if the bbox is offroad.
+   :rtype: agent_mask
+
+
+.. py:function:: compute_signed_distance_to_nearest_road_edge_point(query_points: jax.Array, roadgraph_points: waymax.datatypes.RoadgraphPoints, z_stretch: float = 2.0) -> jax.Array
+
+   Computes the signed distance from a set of queries to roadgraph points.
+
+   :param query_points: A set of query points for the metric of shape
+                        (num_query_points, 3).
+   :param roadgraph_points: A set of roadgraph points of shape (num_points).
+   :param z_stretch: Tolerance in the z dimension which determines how close to
+                     associate points in the roadgraph. This is used to fix problems with
+                     overpasses.
+
+   :returns:
+
+             Signed distances of the query points with the closest road edge points of
+               shape (num_query_points). If the value is negative, it means that the
+               actor is on the correct side of the road, if it is positive, it is
+               considered `offroad`.
+
+

@@ -1,0 +1,37 @@
+:py:mod:`waymax`
+================
+
+.. py:module:: waymax
+
+.. autoapi-nested-parse::
+
+   Waymax root directory.
+
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   agents/index.rst
+   dataloader/index.rst
+   datatypes/index.rst
+   dynamics/index.rst
+   env/index.rst
+   metrics/index.rst
+   rewards/index.rst
+   utils/index.rst
+   visualization/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   config/index.rst
+
+

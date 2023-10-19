@@ -1,0 +1,26 @@
+:py:mod:`waymax.visualization.color`
+====================================
+
+.. py:module:: waymax.visualization.color
+
+.. autoapi-nested-parse::
+
+   Defines the color for different components.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: TRAFFIC_LIGHT_COLORS
+
+   
+
+.. py:data:: ROAD_GRAPH_COLORS
+
+   
+
+.. py:data:: COLOR_DICT
+
+   
+

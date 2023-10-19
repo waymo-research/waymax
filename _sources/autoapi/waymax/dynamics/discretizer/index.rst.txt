@@ -1,0 +1,147 @@
+:py:mod:`waymax.dynamics.discretizer`
+=====================================
+
+.. py:module:: waymax.dynamics.discretizer
+
+.. autoapi-nested-parse::
+
+   Library for discretizing continuous values and discretizing wrappers.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.discretizer.Discretizer
+   waymax.dynamics.discretizer.DiscreteActionSpaceWrapper
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.discretizer.inverse_action_by_search
+
+
+
+.. py:class:: Discretizer(min_value: jax.Array, max_value: jax.Array, bins: jax.Array)
+
+
+   Discretizes continuous values into a 1-dimensional array.
+
+   The total number of discrete actions is equal to the product of (all
+   bins + 1). We add +1 to be inclusive of boundaries of the min and max values.
+   If the continuous value has a shape of (..., 3), and 3 bins are used
+   with bin sizes [2, 3, 4], then there will be a total of 60 discrete actions
+   (3 * 4 * 5).
+
+   .. py:method:: discretize(values: jax.Array) -> jax.Array
+
+      Discretizes a continuous batched n-d vector of values to 1d indices.
+
+      :param values: Vector of continuous values of shape (..., num_vector_elements) to
+                     discretize.
+
+      :returns:
+
+                Discretized values in a tensor of shape (..., 1) with maximum
+                  value self._max_discrete_idx.
+
+
+   .. py:method:: make_continuous(indices_1d: jax.Array) -> jax.Array
+
+      Takes a discretized matrix and converts it back to continuous values.
+
+      :param indices_1d: Discrete matrix of shape (..., 1) to convert back to
+                         continuous matrices of shape (..., num_vector_elements).
+
+      :returns:
+
+                Continuous values of shape (..., num_vector_elements) corresponding to the
+                  value discretized by `indices_1d`.
+
+
+
+.. py:class:: DiscreteActionSpaceWrapper(dynamics_model: waymax.dynamics.abstract_dynamics.DynamicsModel, bins: jax.Array, bin_inverse: bool = True)
+
+
+   Bases: :py:obj:`waymax.dynamics.abstract_dynamics.DynamicsModel`
+
+   Discrete action version of any dynamics model.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for discrete dynamics model.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates.
+
+      This function converts the discrete action into a continuous action and
+      then runs the underlying continuous action space.
+
+      :param action: Actions to take. Has shape (..., num_objects).
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns:
+
+                The trajectory update for timestep of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Calculates the inverse to generate the best fit discrete action.
+
+      If `self._bin_inverse` is False, a discrete optimization algorithm is
+      performed to produce the best fit action by searching over the discrete
+      action space. If `self._bin_inverse` is True, we discretize the continuous
+      inverse. This might be noisier than `self._bin_inverse` = False.
+
+      :param trajectory: A Trajectory used to infer actions of shape (..., num_objects,
+                         num_timesteps=1).
+      :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+      :param timestep: index of time for actions.
+
+      :returns:
+
+                An Action that converts traj[timestep] to traj[timestep+1] of shape
+                  (..., num_objects, dim=2).
+
+
+
+.. py:function:: inverse_action_by_search(traj: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int, continuous_dynamics: waymax.dynamics.abstract_dynamics.DynamicsModel, all_continuous_actions: jax.Array, all_discrete_actions: jax.Array, discrete_invalid_placeholder: jax.Array) -> waymax.datatypes.Action
+
+   Compute the inverse action that best fits a trajectory.
+
+   This inverse method uses a discrete optimization algorithm to produce the
+   best fit action by searching over the discrete action space.
+
+   :param traj: A Trajectory used to infer actions of shape (..., num_objects,
+                num_timesteps=1).
+   :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+   :param timestep: index of time for actions.
+   :param continuous_dynamics: A continuous-space dynamics model.
+   :param all_continuous_actions: A tensor containing of all possible continuous
+                                  actions of shape (all_actions, dim_action). Each continuous value
+                                  corresponds to one bin of the discretized space.
+   :param all_discrete_actions: A tensor containing the indices of all possible
+                                discrete actions of shape (all_actions, 1)
+   :param discrete_invalid_placeholder: The default action value of shape (..., 1)
+                                        used as a placeholder for actions that are invalid.
+
+   :returns:
+
+             An Action that converts traj[timestep] to traj[timestep+1] of shape
+               (..., num_objects, dim=2).
+
+

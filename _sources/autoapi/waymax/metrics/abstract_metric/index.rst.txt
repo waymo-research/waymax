@@ -1,0 +1,63 @@
+:py:mod:`waymax.metrics.abstract_metric`
+========================================
+
+.. py:module:: waymax.metrics.abstract_metric
+
+.. autoapi-nested-parse::
+
+   Simulator abstract metric definition.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.abstract_metric.MetricResult
+   waymax.metrics.abstract_metric.AbstractMetric
+
+
+
+
+.. py:class:: MetricResult
+
+
+   Bases: :py:obj:`waymax.datatypes.MaskedArray`
+
+   A metric result holding metric values and a validity mask.
+
+   .. attribute:: value
+
+      A (...) float32 array of values.
+
+   .. attribute:: valid
+
+      A (...) boolean validity mask.
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+
+.. py:class:: AbstractMetric
+
+
+   Abstract class for simulator metrics.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> MetricResult
+      :abstractmethod:
+
+      Computes a per-timestep, per-object metric from a SimulatorState.
+
+      :param simulator_state: The current simulator state of shape (...).
+
+      :returns: A MetricResult containing the metric result and validity mask of shape
+                (..., num_objects).
+
+
+

@@ -1,0 +1,189 @@
+:py:mod:`waymax.env.rollout`
+============================
+
+.. py:module:: waymax.env.rollout
+
+.. autoapi-nested-parse::
+
+   Utilities for fast jittable rollout of environments in Waymax.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.rollout.RolloutCarry
+   waymax.env.rollout.RolloutOutput
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.rollout.rollout
+   waymax.env.rollout.rollout_log_by_expert_sdc
+
+
+
+.. py:class:: RolloutCarry
+
+
+   Rollout output that is carried between iterations of the rollout.
+
+   .. attribute:: state
+
+      Current state of the simulator after `state.timestep` steps.
+
+   .. attribute:: observation
+
+      Observation of the simulator state from the environment which
+      is called by a given observation function meant to be the input of the
+      actor's model.
+
+   .. attribute:: rng
+
+      Random key which represents the key for randomizing actions and
+      initializing parameters for a Waymax actor.
+
+   .. attribute:: actor_state
+
+      Internal state for whatever the agent needs to keep as its
+      state. This can be recurrent embeddings or accounting information.
+
+   .. py:attribute:: state
+      :type: waymax.env.typedefs.GenericState
+
+      
+
+   .. py:attribute:: observation
+      :type: waymax.env.typedefs.Observation
+
+      
+
+   .. py:attribute:: rng
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: actor_state
+      :type: waymax.env.typedefs.PyTree
+
+      
+
+
+.. py:class:: RolloutOutput
+
+
+   Rollout output datatypes.structure for using as output of rollout function.
+
+   .. attribute:: action
+
+      Action produced by a functional corresponding to `ActionFuncType`
+      which after taking by calling some `environment.step(action)` produces the
+      `timestep` information. This is aggregated over a number of timesteps and
+      so the shape is (num_timesteps, ..., num_objects, action_dim). The `...`
+      of the shapes correspond to any kind of prefix for batching that might be
+      applied.
+
+   .. attribute:: state
+
+      Temporally aggregated information of the output of the simulation
+      after calling `environment.step(action)`. This information represents the
+      important information from the simulation aggregated through the rollout
+      of shape (num_timesteps, ...). The first element of `state` corresponds to
+      the initial simulation state.
+
+   .. attribute:: observation
+
+      Temporally aggregated information of the output of the
+      simulation after calling `observe(environment.step(action))`. This
+      information  represents the observation of the agent of the simulator
+      state aggregated through the rollout of shape (num_timesteps, ...). The
+      first element of `observation` corresponds to the initial simulation
+      state.
+
+   .. attribute:: metrics
+
+      Mapping from metric name to metric which contains metrics computed
+      on the simulator states aggregated in time of shape (num_timestpes, ...).
+      These functions are defined in the `env.metrics(state)` function. As this
+      is a mapping, these metrics could be empty if the environment decides not
+      to produce metrics. This could be due to speed reasons during the rollout.
+
+   .. attribute:: reward
+
+      Scalar value of shape (num_timesteps, ..., num_objects) which
+      represents the reward achieved at a certain simulator state at the given
+      `state.timestep`.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      Returns the shape prefix for the rollout type.
+
+   .. py:attribute:: action
+      :type: waymax.env.typedefs.GenericAction
+
+      
+
+   .. py:attribute:: state
+      :type: waymax.env.typedefs.GenericState
+
+      
+
+   .. py:attribute:: observation
+      :type: waymax.env.typedefs.Observation
+
+      
+
+   .. py:attribute:: metrics
+      :type: waymax.env.typedefs.Metrics
+
+      
+
+   .. py:attribute:: reward
+      :type: jax.Array
+
+      
+
+   .. py:method:: validate()
+
+      Validates the shape prefix of the actions and timesteps.
+
+
+
+.. py:function:: rollout(scenario: waymax.env.typedefs.GenericScenario, actor: waymax.agents.actor_core.WaymaxActorCore, env: waymax.env.abstract_environment.AbstractEnvironment, rng: jax.Array, rollout_num_steps: int = 1, actor_params: Optional[waymax.agents.actor_core.Params] = None) -> RolloutOutput
+
+   Performs a rollout from the beginning of a run segment.
+
+
+   :param scenario: initial SimulatorState to start the rollout of shape (...).
+   :param actor: The action function used to select actions during the rollout.
+   :param env: A stateless Waymax environment used for computing steps, observations,
+               and rewards.
+   :param rng: Random key used for generate stochastic actions if needed.
+   :param rollout_num_steps: number of rollout steps.
+   :param actor_params: Parameters used by actor to select actions. It can be None if
+                        the actor does not require parameters.
+
+   :returns:
+
+             Stacked rollout output  of shape (rollout_num_steps + 1, ...) from the
+               simulator when taking an action given the action_fn. There is one extra in
+               the time dimension compared to `rollout_num_steps`. This is because we
+               prepend the initial timetep to the `timestep` field and append an invalid
+               action into the `action` field.
+
+
+.. py:function:: rollout_log_by_expert_sdc(scenario: waymax.env.typedefs.GenericScenario, env: waymax.env.abstract_environment.AbstractEnvironment, dynamics_model: waymax.dynamics.DynamicsModel, rollout_num_steps: int = 1) -> RolloutOutput
+
+   Rollouts state using logged expert actions specified by dynamics_model.
+
+

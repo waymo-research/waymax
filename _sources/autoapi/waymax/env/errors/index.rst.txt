@@ -1,0 +1,30 @@
+:py:mod:`waymax.env.errors`
+===========================
+
+.. py:module:: waymax.env.errors
+
+.. autoapi-nested-parse::
+
+   Error messages for waymax.
+
+
+
+Module Contents
+---------------
+
+.. py:exception:: EpisodeAlreadyFinishedError
+
+
+   Bases: :py:obj:`RuntimeError`
+
+   Error thrown when attempting to advance an episode that is finished.
+
+
+.. py:exception:: SimulationNotInitializedError
+
+
+   Bases: :py:obj:`RuntimeError`
+
+   Error thrown when attempting to advance an episode before reset.
+
+

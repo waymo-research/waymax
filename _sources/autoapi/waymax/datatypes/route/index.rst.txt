@@ -1,0 +1,140 @@
+:py:mod:`waymax.datatypes.route`
+================================
+
+.. py:module:: waymax.datatypes.route
+
+.. autoapi-nested-parse::
+
+   Customized route paths data structure for Waymax datatypes.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.route.Paths
+
+
+
+
+.. py:class:: Paths
+
+
+   Data structure for a set of paths represented by roadgraph points.
+
+   A `path` consists of a set of roadgraph points (usually along the lane center)
+   and represents where an object can legally traverse giving its starting point.
+
+   .. attribute:: x
+
+      Path coordinate x, shape is (..., num_paths, num_points_per_path) and
+      dtype is float32.
+
+   .. attribute:: y
+
+      Path coordinate y, shape is (..., num_paths, num_points_per_path) and
+      dtype is float32.
+
+   .. attribute:: z
+
+      Path coordinate z, shape is (..., num_paths, num_points_per_path) and
+      dtype is float32.
+
+   .. attribute:: ids
+
+      IDs representing which lane the points belong to, shape is (...,
+      num_paths, num_points_per_path) and dtype is int32.
+
+   .. attribute:: valid
+
+      Validity flag, shape is (..., num_paths, num_points_per_path) and
+      dtype is bool.
+
+   .. attribute:: arc_length
+
+      Represents the arc length for each point from the starting point
+      along the path with shape (..., num_paths, num_points_per_path) and dtype
+      is float32.
+
+   .. attribute:: on_route
+
+      Flag for each path representing whether it is on the road route
+      corresponding to the logged trajectory, shape is (..., num_paths, 1) and
+      the dtype is bool.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of the routes.
+
+   .. py:property:: num_points_per_path
+      :type: int
+
+      The number of points included in the paths per example.
+
+   .. py:property:: num_paths
+      :type: int
+
+      The number of paths included in the example.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location for all points.
+
+   .. py:property:: xyz
+      :type: jax.Array
+
+      Stacked xyz location for all points.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: arc_length
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: on_route
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+

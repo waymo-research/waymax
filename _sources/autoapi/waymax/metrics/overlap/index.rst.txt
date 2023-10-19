@@ -1,0 +1,55 @@
+:py:mod:`waymax.metrics.overlap`
+================================
+
+.. py:module:: waymax.metrics.overlap
+
+.. autoapi-nested-parse::
+
+   Metrics relating to overlaps.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.overlap.OverlapMetric
+
+
+
+
+.. py:class:: OverlapMetric
+
+
+   Bases: :py:obj:`waymax.metrics.abstract_metric.AbstractMetric`
+
+   Overlap metric.
+
+   This metric returns 1.0 if an object's bounding box is overlapping with
+   that of another object.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes a per-timestep, per-object metric from a SimulatorState.
+
+      :param simulator_state: The current simulator state of shape (...).
+
+      :returns: A MetricResult containing the metric result and validity mask of shape
+                (..., num_objects).
+
+
+   .. py:method:: compute_overlap(current_traj: waymax.datatypes.Trajectory) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes the overlap metric.
+
+      :param current_traj: Trajectory object containing current states of shape (...,
+                           num_objects, num_timesteps=1).
+
+      :returns: A (..., num_objects) MetricResult.
+
+
+

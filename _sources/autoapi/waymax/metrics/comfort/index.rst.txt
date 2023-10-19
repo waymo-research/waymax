@@ -1,0 +1,88 @@
+:py:mod:`waymax.metrics.comfort`
+================================
+
+.. py:module:: waymax.metrics.comfort
+
+.. autoapi-nested-parse::
+
+   Metrics relating to comfort.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.comfort.KinematicsInfeasibilityMetric
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.comfort._KIM_EPSILON
+
+
+.. py:data:: _KIM_EPSILON
+   :value: 0.001
+
+   
+
+.. py:class:: KinematicsInfeasibilityMetric(dt: float = 0.1, max_acc: float = 10.4, max_steering: float = 0.3)
+
+
+   Bases: :py:obj:`waymax.metrics.abstract_metric.AbstractMetric`
+
+   Kinematics infeasibility metric.
+
+   The metric uses continuous acceleration, steering inverse dynamics model to
+   estimate the required acceleration and steering curvature to complete the
+   transition. This metric returns 1 if the magnitude of the estimated
+   acceleration and/or steering curvature exceeds the max feasibility magnitude,
+   otherwise returns 0.0.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes the kinematics infeasibility metric.
+
+      The metrics detects whether the acceleration, steering curvature at step
+      simulator_state.timestep violates the allowed magnitude ranges. The
+      acceleration, steering curvature corresponds to the transition from
+      simulator_state.timestep-1 to simulator_state.timestep. The value of
+      simulator_state.timestep means that all states are updated up to the step
+      of simulator_state.timestep and simulator_state.timestep+1 is still invalid.
+      Therefore, we need to test whether the transition from
+      simulator_state.timestep-1 to simulator_state.timestep is kinematically
+      feasible.
+
+      :param simulator_state: The current simulator state of shape of shape (...).
+
+      :returns:
+
+                A (..., num_objects) MetricResult containing the metric result, with
+                  values in either 1 or 0, where 1.0 indicates that the current step
+                  violates the kinematic infeasibility metrics, and 0.0 indicates that the
+                  current step does not violate the kinematic infeasibility metrics.
+
+
+   .. py:method:: compute_kinematics_infeasibility(traj: waymax.datatypes.Trajectory, timestep: jax.Array) -> waymax.metrics.abstract_metric.MetricResult
+
+      Computes the kinematics infeasibility metric.
+
+
+      :param traj: The sim_trajectory of all steps, of shape (...,  num_objects,
+                   num_timesteps).
+      :param timestep: The current simulator timestep at which the kinematics
+                       infeasibility metric is calculated at.
+
+      :returns: A (..., num_objects) MetricResult containing the metric result.
+
+
+

@@ -1,0 +1,177 @@
+:py:mod:`waymax.agents.actor_core`
+==================================
+
+.. py:module:: waymax.agents.actor_core
+
+.. autoapi-nested-parse::
+
+   Abstract definition of a Waymax actor for use at inference-time.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.actor_core.WaymaxActorOutput
+   waymax.agents.actor_core.WaymaxActorCore
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.actor_core.register_actor_core
+   waymax.agents.actor_core.actor_core_factory
+   waymax.agents.actor_core.merge_actions
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.actor_core.ActorState
+   waymax.agents.actor_core.Params
+   waymax.agents.actor_core._ActorCore
+
+
+.. py:data:: ActorState
+
+   
+
+.. py:data:: Params
+
+   
+
+.. py:class:: WaymaxActorOutput
+
+
+   Output of the Waymax actor including an action and its internal state.
+
+   .. attribute:: actor_state
+
+      Internal state for whatever the agent needs to keep as its
+      state. This can be recurrent embeddings or accounting information.
+
+   .. attribute:: action
+
+      Action of shape (..., num_objects) predicted by the Waymax actor at
+      the most recent simulation step given the inputs in the `select_action`
+      function of `WaymaxActorCore`.
+
+   .. attribute:: is_controlled
+
+      A binary indicator of shape (..., num_objects) representing
+      which objects are controlled by the actor.
+
+   .. py:attribute:: actor_state
+      :type: ActorState
+
+      
+
+   .. py:attribute:: action
+      :type: waymax.datatypes.Action
+
+      
+
+   .. py:attribute:: is_controlled
+      :type: jax.Array
+
+      
+
+   .. py:method:: validate()
+
+      Validates shapes.
+
+
+
+.. py:class:: WaymaxActorCore
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   Interface that defines actor functionality for inference.
+
+   .. py:property:: name
+      :type: str
+      :abstractmethod:
+
+      Name of the agent used for inspection and logging.
+
+   .. py:method:: init(rng: jax.Array, state: waymax.datatypes.SimulatorState) -> ActorState
+      :abstractmethod:
+
+      Initializes the actor's internal state.
+
+      ActorState is a generic type which can contain anything that the agent
+      needs to pass through to the next call, e.g. for recurrent state or
+      batch normalization. The `init` function takes a random key to help
+      randomize initialization and the initial timestep.
+
+      :param rng: A random key.
+      :param state: The initial simulator state.
+
+      :returns: The actor's initial state.
+
+
+   .. py:method:: select_action(params: Params, state: waymax.datatypes.SimulatorState, actor_state: ActorState, rng: jax.Array) -> WaymaxActorOutput
+      :abstractmethod:
+
+      Selects an action given the current simulator state.
+
+      :param params: Actor parameters, e.g. neural network weights.
+      :param state: The current simulator state.
+      :param actor_state: The actor state, e.g. recurrent state or batch normalization.
+      :param rng: A random key.
+
+      :returns: An actor output containing the next action and actor state.
+
+
+
+.. py:data:: _ActorCore
+
+   
+
+.. py:function:: register_actor_core(actor_core_cls: type[_ActorCore]) -> type[_ActorCore]
+
+   Registers an ActorCore class as a PyTree node.
+
+
+.. py:function:: actor_core_factory(init: Callable[[jax.Array, waymax.datatypes.SimulatorState], ActorState], select_action: Callable[[Params, waymax.datatypes.SimulatorState, ActorState, jax.Array], WaymaxActorOutput], name: str = 'WaymaxActorCore') -> WaymaxActorCore
+
+   Creates a WaymaxActorCore from pure functions.
+
+   :param init: A function that initializes the actor's internal state. This is a
+                generic type which can contain anything that the agent needs to pass
+                through to the next call. The `init` function takes a random key to help
+                randomize initialization and the initial timestep. It should return its
+                specific internal state.
+   :param select_action: A function that selects an action given the current simulator
+                         state of the environment, the previous actor state and an optional random
+                         key. Returns the action and the updated internal actor state.
+   :param name: Name of the agent used for inspection and logging.
+
+   :returns: An actor core instance defined by init and select_action.
+
+
+.. py:function:: merge_actions(actor_outputs: Sequence[WaymaxActorOutput]) -> waymax.datatypes.Action
+
+   Combines multiple actor_outputs into one action instance.
+
+   :param actor_outputs: A sequence of WaymaxActorOutput to be combined, each
+                         corresponds to a different actor. Note different actor should not be
+                         controlling the same object (i.e. is_controlled flags from different
+                         actors should be disjoint). Note all actors must use the same dynamics
+                         model.
+
+   :returns: An `Action` consists of information from all actor outputs.
+
+

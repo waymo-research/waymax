@@ -1,0 +1,237 @@
+:py:mod:`waymax.dataloader`
+===========================
+
+.. py:module:: waymax.dataloader
+
+.. autoapi-nested-parse::
+
+   Libraries for loading data in Waymax.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dataloader_utils/index.rst
+   womd_dataloader/index.rst
+   womd_factories/index.rst
+   womd_factories_internal/index.rst
+   womd_utils/index.rst
+
+
+Package Contents
+----------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dataloader.get_data_generator
+   waymax.dataloader.tf_examples_dataset
+   waymax.dataloader.preprocess_serialized_womd_data
+   waymax.dataloader.preprocess_womd_example
+   waymax.dataloader.simulator_state_generator
+   waymax.dataloader.object_metadata_from_womd_dict
+   waymax.dataloader.paths_from_womd_dict
+   waymax.dataloader.roadgraph_from_womd_dict
+   waymax.dataloader.simulator_state_from_womd_dict
+   waymax.dataloader.traffic_lights_from_womd_dict
+   waymax.dataloader.trajectory_from_womd_dict
+   waymax.dataloader.simulator_state_to_womd_dict
+
+
+
+.. py:function:: get_data_generator(config: waymax.config.DatasetConfig, preprocess_fn: Optional[Callable[[bytes], dict[str, tensorflow.Tensor | dict[str, tensorflow.Tensor]]]], postprocess_fn: Optional[Callable[[dict[str, jax.Array]], T]] = None) -> Iterator[T]
+
+   Iterator that yields the desired object returned by postprocess_fn.
+
+   It parses data using preprocess_fn and returns a generator of data whose data
+   structure is defined by postprocess_fn function.
+
+   :param config: config for dataset and preprocessing.
+   :param preprocess_fn: preprocess the serialized data into a dictionary of str to tf
+                         Tensor.
+   :param postprocess_fn: a function that converts dict of jnp array to desired data
+                          class. Note for distributed training, this function will be pmap-ed and
+                          executed in the main process.
+
+   :Yields: Iterator of desired data class.
+
+
+.. py:function:: tf_examples_dataset(path: str, data_format: waymax.config.DataFormat, preprocess_fn: Callable[[bytes], dict[str, tensorflow.Tensor]], shuffle_seed: Optional[int] = None, shuffle_buffer_size: int = 100, repeat: Optional[int] = None, batch_dims: Sequence[int] = (), num_shards: int = 1, deterministic: bool = True, drop_remainder: bool = True, tf_data_service_address: Optional[str] = None, batch_by_scenario: bool = True) -> tensorflow.data.Dataset
+
+   Returns a dataset of Open Motion dataset TFExamples.
+
+   Each TFExample contains data for the trajectory of all objects, the roadgraph,
+   and traffic light states. See https://waymo.com/open/data/motion/tfexample
+   for the data format definition.
+
+   :param path: The path to the dataset.
+   :param data_format: Data format of the dataset.
+   :param preprocess_fn: Function for parsing and preprocessing individual examples.
+   :param shuffle_seed: Seed for shuffling. If left default (None), will not shuffle
+                        the dataset.
+   :param shuffle_buffer_size: The size of the shuffle buffer.
+   :param repeat: Number of times to repeat the dataset. Default (None) will repeat
+                  infinitely.
+   :param batch_dims: List of size of batch dimensions. Multiple batch dimension can
+                      be used to provide inputs for multiple devices. E.g.
+                      [jax.local_device_count(), batch_size_per_device].
+   :param num_shards: Number of shards for parallel loading, no effect on data
+                      returned.
+   :param deterministic: Whether to use deterministic parallel processing.
+   :param drop_remainder: Arg for tf.data.Dataset.batch. Set True to drop remainder if
+                          the last batch does not contains enough examples.
+   :param tf_data_service_address: Set to use tf data service.
+   :param batch_by_scenario: If True, one example in a returned batch is the entire
+                             scenario containing all objects; if False, the dataset will treat
+                             individual object trajectories as a training example rather than an entire
+                             scenario.
+
+   :returns: A tf.data.Dataset of Open Motion Dataset tf.Example elements.
+
+
+.. py:function:: preprocess_serialized_womd_data(serialized: bytes, config: waymax.config.DatasetConfig) -> dict[str, tensorflow.Tensor]
+
+   Parses serialized tf example into tf Tensor dict.
+
+
+.. py:function:: preprocess_womd_example(example: dict[str, tensorflow.Tensor], aggregate_timesteps: bool, max_num_objects: Optional[int] = None) -> dict[str, tensorflow.Tensor]
+
+   Preprocesses dict of tf tensors, keyed by str.
+
+
+.. py:function:: simulator_state_generator(config: waymax.config.DatasetConfig) -> Iterator[waymax.datatypes.simulator_state.SimulatorState]
+
+   Wrapper for SimulatorState iterator.
+
+   This is the high level api for Waymax data loading that takes Waymax data
+   config and outputs generator of SimulatorState.
+
+   :param config: dataset config.
+
+   :returns: A SimulatorState iterator.
+
+
+.. py:function:: object_metadata_from_womd_dict(example: dict[str, jax.Array]) -> waymax.datatypes.object_state.ObjectMetadata
+
+   Constructs object metadata from an Open Motion TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample).
+
+   :returns:
+
+             Metadata for the objects in the scene read from the WOMD data example of
+               shape (..., num_objects).
+
+
+.. py:function:: paths_from_womd_dict(example: dict[str, jax.Array], prefix_key: str = 'path_samples') -> waymax.datatypes.route.Paths
+
+   Constructs paths from an Open Motion TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD, with
+                   extra key/values pairs for route related data.
+   :param prefix_key: Keys for indexing route data.
+
+   :returns: Paths with shape (..., num_paths, num_points_per_path).
+
+
+.. py:function:: roadgraph_from_womd_dict(example: dict[str, jax.Array], prefix_key: str = 'roadgraph_samples') -> waymax.datatypes.roadgraph.RoadgraphPoints
+
+   Constructs a point map from an Open Motion TFExample dictionary.
+
+   :param example: Dictionary which contains data from the WOMD tf.Examples with
+                   optional extra batch dimensions. These are defined at
+                   https://waymo.com/open/data/motion/tfexample.
+   :param prefix_key: Prefix key for the roadgraph type in the example.
+
+   :returns: RoadgraphPoints from the `example` scenario with shape (..., num_points).
+
+
+.. py:function:: simulator_state_from_womd_dict(example: dict[str, jax.Array], include_sdc_paths: bool = False, time_key: str = 'all') -> waymax.datatypes.simulator_state.SimulatorState
+
+   Constructs a simulator state from an aggregated WOMD data dict.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample). The data, however, can be
+                   augmented with different time keys. We do this in our data loader, by
+                   aggregating all timesteps into an `all` key prefix.
+   :param include_sdc_paths: Whether to include sdc based route paths when
+                             constructing the simulator state. This is useful for representing the
+                             route of the agent. A similar parameter must be used in the data loader to
+                             get consistent behavior.
+   :param time_key: Time step information to gather from `example` (`past`, `current`,
+                    `future`, `all`).
+
+   :returns:
+
+             A simulator state constructed at the initial timestep to spec given the
+               parameters.
+
+   :raises ValueError: If a `time_key` parameter is passed in that is not one of
+       (`past`, `current`, `future`, `all`).
+
+
+.. py:function:: traffic_lights_from_womd_dict(example: dict[str, jax.Array], time_key: str = 'all') -> waymax.datatypes.traffic_lights.TrafficLights
+
+   Constructs a traffic light state from WOMD TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample). The data, however, can be
+                   augmented with different time keys. We do this in our data loader, by
+                   aggregating all timesteps into an `all` key.
+   :param time_key: Time step information to gather from traffic light (`past`,
+                    `current`, `future`, `all`).
+
+   :returns: Traffic lights from the `example` scenario with shape (...,
+             num_traffic_lights, num_timesteps).
+
+   :raises ValueError: If `time_key` is not part of the accepted values.
+
+
+.. py:function:: trajectory_from_womd_dict(example: dict[str, jax.Array], time_key: str = 'all') -> waymax.datatypes.object_state.Trajectory
+
+   Constructs a trajectory from an Open Motion TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample).
+   :param time_key: Key which represents what time dimension to access from the state
+                    fields in the example: (i.e. past, current, future, all).
+
+   :returns: Trajectory of all objects from the `example` scenario with shape (...,
+             num_objects, num_timesteps).
+
+
+.. py:function:: simulator_state_to_womd_dict(state: waymax.datatypes.simulator_state.SimulatorState, feature_description: dict[str, tensorflow.io.FixedLenFeature], validate: bool = False) -> dict[str, jax.Array]
+
+   Converts a simulator state into the WOMD tensor format.
+
+   See https://waymo.com/open/data/motion/tfexample for the tf.Example format
+   which will be returned from this function.
+   Note: This function is compatible with `jax2tf`.
+
+   :param state: State of the simulator from the environment. Should contain at least
+                 num_history + 1 elements in the time dimension for all temporal components
+                 of the simulated trajectory.
+   :param feature_description: Feature description expected out of the dictionary.
+                               This is used to understand the shape of the fields expected such as number
+                               of agents and amount of history.
+   :param validate: Validate whether the simulation has progressed far enough to
+                    ensure that an adequate amount of history is present.
+
+   :returns: A dictionary matching fields as if they were read from the WOMD dataset.
+
+   :raises ValueError: If `validate` is set to `True` and the number of history stored
+       in the observations is not `num_history` + 1.
+
+

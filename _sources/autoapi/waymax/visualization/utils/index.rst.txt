@@ -1,0 +1,135 @@
+:py:mod:`waymax.visualization.utils`
+====================================
+
+.. py:module:: waymax.visualization.utils
+
+.. autoapi-nested-parse::
+
+   General visualization functions for non-waymax data using matplotlib.
+
+   Note there is no batch dimension, and should not rely on any customized data
+   structure.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.visualization.utils.VizConfig
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.visualization.utils.init_fig_ax_via_size
+   waymax.visualization.utils.init_fig_ax
+   waymax.visualization.utils.center_at_xy
+   waymax.visualization.utils.img_from_fig
+   waymax.visualization.utils.save_img_as_png
+   waymax.visualization.utils.get_n_colors
+   waymax.visualization.utils.plot_numpy_bounding_boxes
+
+
+
+.. py:class:: VizConfig
+
+
+   Config for visualization.
+
+   .. py:attribute:: front_x
+      :type: float
+      :value: 75.0
+
+      
+
+   .. py:attribute:: back_x
+      :type: float
+      :value: 75.0
+
+      
+
+   .. py:attribute:: front_y
+      :type: float
+      :value: 75.0
+
+      
+
+   .. py:attribute:: back_y
+      :type: float
+      :value: 75.0
+
+      
+
+   .. py:attribute:: px_per_meter
+      :type: float
+      :value: 4.0
+
+      
+
+   .. py:attribute:: show_agent_id
+      :type: bool
+      :value: True
+
+      
+
+   .. py:attribute:: center_agent_idx
+      :type: int
+
+      
+
+   .. py:attribute:: verbose
+      :type: bool
+      :value: True
+
+      
+
+
+.. py:function:: init_fig_ax_via_size(x_px: float, y_px: float) -> tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]
+
+   Initializes a figure with given size in pixel.
+
+
+.. py:function:: init_fig_ax(vis_config: VizConfig = VizConfig()) -> tuple[matplotlib.figure.Figure, matplotlib.axes.Axes]
+
+   Initializes a figure with vis_config.
+
+
+.. py:function:: center_at_xy(ax: matplotlib.axes.Axes, xy: numpy.ndarray, vis_config: VizConfig = VizConfig()) -> None
+
+
+.. py:function:: img_from_fig(fig: matplotlib.figure.Figure) -> numpy.ndarray
+
+   Returns a [H, W, 3] uint8 np image from fig.canvas.tostring_rgb().
+
+
+.. py:function:: save_img_as_png(img: numpy.ndarray, filename: str = '/tmp/img.png')
+
+   Saves np image to disk.
+
+
+.. py:function:: get_n_colors(num_color: int = 10, max_hue: float = 1.0, saturation: float = 1.0, lightness: float = 1.0) -> numpy.ndarray
+
+   Gets n different colors.
+
+
+.. py:function:: plot_numpy_bounding_boxes(ax: matplotlib.axes.Axes, bboxes: numpy.ndarray, color: numpy.ndarray, alpha: Optional[float] = 1.0, as_center_pts: bool = False) -> None
+
+   Plots multiple bounding boxes.
+
+   :param ax: Fig handles.
+   :param bboxes: Shape (num_bbox, 5), with last dimension as (x, y, length, width,
+                  yaw).
+   :param color: Shape (3,), represents RGB color for drawing.
+   :param alpha: Alpha value for drawing, i.e. 0 means fully transparent.
+   :param as_center_pts: If set to True, bboxes will be drawn as center points,
+                         instead of full bboxes.
+
+

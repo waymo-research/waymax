@@ -1,0 +1,191 @@
+:py:mod:`waymax.env.planning_agent_environment`
+===============================================
+
+.. py:module:: waymax.env.planning_agent_environment
+
+.. autoapi-nested-parse::
+
+   Waymax environment for tasks relating to Planning for the ADV.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.planning_agent_environment.PlanningAgentDynamics
+   waymax.env.planning_agent_environment.PlanningAgentEnvironment
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.planning_agent_environment._initialized_overlap
+
+
+
+.. py:class:: PlanningAgentDynamics(multi_agent_dynamics: waymax.dynamics.DynamicsModel)
+
+
+   Bases: :py:obj:`waymax.dynamics.DynamicsModel`
+
+   A dynamics wrapper for converting multi-agent dynamics to single-agent.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec of the action containing the bounds.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+
+   .. py:method:: forward(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory, log_trajectory: waymax.datatypes.Trajectory, is_controlled: jax.Array, timestep: int, allow_new_objects: bool = True) -> waymax.datatypes.Trajectory
+
+      Updates a simulated trajectory to the next timestep given an update.
+
+      Runs the forward model for the planning agent by taking in a single object's
+      action and tiling it for all others and then running the wrapped action.
+
+      :param action: Actions to be applied to the trajectory to produce updates at the
+                     next timestep of shape (..., dim).
+      :param trajectory: Simulated trajectory up to the current timestep. This
+                         trajectory will be updated by this function updated with the trajectory
+                         update. It is expected that this trajectory will have been updated up to
+                         `timestep`. This is of shape: (..., num_objects, num_timesteps).
+      :param log_trajectory: Logged trajectory for all objects over the entire run
+                             segment. Certain fields such as valid are optionally taken from this
+                             trajectory. This is of shape: (..., num_objects, num_timesteps).
+      :param is_controlled: Boolean array specifying which objects are to be controlled
+                            by the trajectory update of shape (..., num_objects).
+      :param timestep: Timestep of the current simulation.
+      :param allow_new_objects: Whether to allow new objects to enter the secene. If
+                                this is set to False, all objects that are not valid at the current
+                                timestep will not be valid at the next timestep and visa versa.
+
+      :returns:
+
+                Updated trajectory given update from a dynamics model at `timestep` + 1
+                  of shape (..., num_objects, num_timesteps).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Computes actions converting traj[timestep] to traj[timestep+1].
+
+      Runs the wrapped dynamics inverse and slices out the sdc's action
+      specifically.
+
+      :param trajectory: Full trajectory to compute the inverse actions from of shape
+                         (..., num_objects, num_timesteps). This trajectory is for the entire
+                         simulation so that dynamics models can use sophisticated otpimization
+                         techniques to find the best fitting actions.
+      :param metadata: Metadata on all objects in the scene which contains information
+                       about what types of objects are in the scene of shape (...,
+                       num_objects).
+      :param timestep: Current timestpe of the simulation.
+
+      :returns:
+
+                Action which will take a set of objects from trajectory[timestep] to
+                  trajectory[timestep + 1] of shape (..., num_objects, dim).
+
+
+
+.. py:class:: PlanningAgentEnvironment(dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig, sim_agent_actors: Sequence[waymax.agents.actor_core.WaymaxActorCore] = ())
+
+
+   Bases: :py:obj:`waymax.env.base_environment.BaseEnvironment`
+
+   An environment wrapper allowing for controlling a single agent.
+
+   The PlanningAgentEnvironment inherits from a multi-agent BaseEnvironment
+   to build a single-agent environment by returning only the observations and
+   rewards corresponding to the ego-agent (i.e. ADV).
+
+   Note that while the action and reward no longer have an obj dimension as
+   expected for a single agent env, the observation retains the obj dimension
+   set to 1 to conform with the observation datastructure.
+
+   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+
+      Computes the metrics for the single agent wrapper.
+
+      The metrics to be computed are based on those specified by the configuration
+      passed into the environment. This runs metrics that may be specific to the
+      planning agent case.
+
+      :param state: State of simulation to compute the metrics for. This will compute
+                    metrics for the timestep corresponding to `state.timestep` of shape
+                    (...).
+
+      :returns:
+
+                Dictionary from metric name to metrics.MetricResult which represents the
+                  metrics calculated at `state.timestep`. All metrics assumed to be shaped
+                  (..., num_objects=1) unless specified in the metrics implementation.
+
+
+   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+
+      Computes the reward for a transition.
+
+      :param state: State of simulation to compute the metrics for. This will compute
+                    reward for the timestep corresponding to `state.timestep` of shape
+                    (...).
+      :param action: The action applied for the state.
+
+      :returns: A float (...) tensor of rewards for the single agent.
+
+
+   .. py:method:: action_spec() -> waymax.datatypes.Action
+
+      Returns the action specs of the environment without batch dimension.
+
+      :returns:
+
+                The action specs represented as a PyTree where the leaves
+                  are instances of specs.Array.
+
+
+   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> waymax.datatypes.SimulatorState
+
+      Advances simulation by one timestep using the dynamics model.
+
+      :param state: The current state of the simulator of shape (...).
+      :param action: The action to apply, of shape (..., num_objects). The
+                     actions.valid field is used to denote which objects are being controlled
+                     - objects whose valid is False will fallback to default behavior
+                     specified by self.dynamics.
+
+      :returns: The next simulation state after taking an action of shape (...).
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      Specify the reward spec as just for one object.
+
+
+
+.. py:function:: _initialized_overlap(log_trajectory: waymax.datatypes.Trajectory) -> jax.Array
+
+   Return a mask for objects initialized in a overlap state.
+
+   This function returns a boolean mask indicating if an object is in a
+   overlap state at timestep 0 in the logged trajectory. This function
+   can be used to prune out certain objects that are initialized in an
+   overlap, such as articulated buses and pedestrians in a PUDO situation.
+
+   :param log_trajectory: A trajectory of shape (..., num_objects, num_timesteps).
+
+   :returns: A [..., objects] boolean tensor of overlap masks.
+
+

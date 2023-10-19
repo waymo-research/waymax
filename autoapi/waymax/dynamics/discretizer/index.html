@@ -1,0 +1,530 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>waymax.dynamics.discretizer - Waymax documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">Waymax  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Waymax  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../agents/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/actor_core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.actor_core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/agent_builder/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.agent_builder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/constant_speed/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.constant_speed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/expert/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.expert</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/sim_agent/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.sim_agent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/waypoint_following_agent/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.waypoint_following_agent</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/dataloader_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.dataloader_utils</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_dataloader</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_factories/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_factories</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_factories_internal/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_factories_internal</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../datatypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/action/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.action</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/array/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.array</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/constant/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.constant</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/object_state/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.object_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/observation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.observation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/operations/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.operations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/roadgraph/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.roadgraph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/route/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.route</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/simulator_state/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.simulator_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../datatypes/traffic_lights/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.traffic_lights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../env/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../env/wrappers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../env/wrappers/brax_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.brax_wrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../env/wrappers/dm_env_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.dm_env_wrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/abstract_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.abstract_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/base_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.base_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.errors</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/planning_agent_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.planning_agent_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/rollout/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.rollout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/typedefs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.typedefs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/abstract_metric/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.abstract_metric</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/comfort/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.comfort</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/imitation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.imitation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/metric_factory/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.metric_factory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/overlap/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.overlap</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/roadgraph/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.roadgraph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/route/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.route</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../rewards/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../rewards/abstract_reward_function/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards.abstract_reward_function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rewards/linear_combination_reward/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards.linear_combination_reward</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/geometry/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils.geometry</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/test_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils.test_utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../visualization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization/color/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.color</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.utils</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization/viz/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.viz</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.config</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Further Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../py-modindex.html">Module Index</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-waymax.dynamics.discretizer">
+<span id="waymax-dynamics-discretizer"></span><h1><a class="reference internal" href="#module-waymax.dynamics.discretizer" title="waymax.dynamics.discretizer"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dynamics.discretizer</span></code></a><a class="headerlink" href="#module-waymax.dynamics.discretizer" title="Permalink to this heading">#</a></h1>
+<p>Library for discretizing continuous values and discretizing wrappers.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.dynamics.discretizer.Discretizer" title="waymax.dynamics.discretizer.Discretizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Discretizer</span></code></a></p></td>
+<td><p>Discretizes continuous values into a 1-dimensional array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper" title="waymax.dynamics.discretizer.DiscreteActionSpaceWrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteActionSpaceWrapper</span></code></a></p></td>
+<td><p>Discrete action version of any dynamics model.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.dynamics.discretizer.inverse_action_by_search" title="waymax.dynamics.discretizer.inverse_action_by_search"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse_action_by_search</span></code></a>(→ waymax.datatypes.Action)</p></td>
+<td><p>Compute the inverse action that best fits a trajectory.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.Discretizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.dynamics.discretizer.</span></span><span class="sig-name descname"><span class="pre">Discretizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.dynamics.discretizer.Discretizer" title="Permalink to this definition">#</a></dt>
+<dd><p>Discretizes continuous values into a 1-dimensional array.</p>
+<p>The total number of discrete actions is equal to the product of (all
+bins + 1). We add +1 to be inclusive of boundaries of the min and max values.
+If the continuous value has a shape of (…, 3), and 3 bins are used
+with bin sizes [2, 3, 4], then there will be a total of 60 discrete actions
+(3 * 4 * 5).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.Discretizer.discretize">
+<span class="sig-name descname"><span class="pre">discretize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.dynamics.discretizer.Discretizer.discretize" title="Permalink to this definition">#</a></dt>
+<dd><p>Discretizes a continuous batched n-d vector of values to 1d indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> – Vector of continuous values of shape (…, num_vector_elements) to
+discretize.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Discretized values in a tensor of shape (…, 1) with maximum</dt><dd><p>value self._max_discrete_idx.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.Discretizer.make_continuous">
+<span class="sig-name descname"><span class="pre">make_continuous</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices_1d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.dynamics.discretizer.Discretizer.make_continuous" title="Permalink to this definition">#</a></dt>
+<dd><p>Takes a discretized matrix and converts it back to continuous values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>indices_1d</strong> – Discrete matrix of shape (…, 1) to convert back to
+continuous matrices of shape (…, num_vector_elements).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Continuous values of shape (…, num_vector_elements) corresponding to the</dt><dd><p>value discretized by <cite>indices_1d</cite>.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.DiscreteActionSpaceWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.dynamics.discretizer.</span></span><span class="sig-name descname"><span class="pre">DiscreteActionSpaceWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dynamics_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../abstract_dynamics/index.html#waymax.dynamics.abstract_dynamics.DynamicsModel" title="waymax.dynamics.abstract_dynamics.DynamicsModel"><span class="pre">waymax.dynamics.abstract_dynamics.DynamicsModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_inverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../abstract_dynamics/index.html#waymax.dynamics.abstract_dynamics.DynamicsModel" title="waymax.dynamics.abstract_dynamics.DynamicsModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waymax.dynamics.abstract_dynamics.DynamicsModel</span></code></a></p>
+<p>Discrete action version of any dynamics model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.action_spec">
+<span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Action spec for discrete dynamics model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.compute_update">
+<span class="sig-name descname"><span class="pre">compute_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.TrajectoryUpdate" title="waymax.datatypes.TrajectoryUpdate"><span class="pre">waymax.datatypes.TrajectoryUpdate</span></a></span></span><a class="headerlink" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.compute_update" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the pose and velocity updates.</p>
+<p>This function converts the discrete action into a continuous action and
+then runs the underlying continuous action space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> – Actions to take. Has shape (…, num_objects).</p></li>
+<li><p><strong>trajectory</strong> – Trajectory to be updated. Has shape of (…, num_objects,
+num_timesteps=1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The trajectory update for timestep of shape</dt><dd><p>(…, num_objects, num_timesteps=1).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.ObjectMetadata" title="waymax.datatypes.ObjectMetadata"><span class="pre">waymax.datatypes.ObjectMetadata</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></span><a class="headerlink" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.inverse" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculates the inverse to generate the best fit discrete action.</p>
+<p>If <cite>self._bin_inverse</cite> is False, a discrete optimization algorithm is
+performed to produce the best fit action by searching over the discrete
+action space. If <cite>self._bin_inverse</cite> is True, we discretize the continuous
+inverse. This might be noisier than <cite>self._bin_inverse</cite> = False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trajectory</strong> – A Trajectory used to infer actions of shape (…, num_objects,
+num_timesteps=1).</p></li>
+<li><p><strong>metadata</strong> – Object metadata for the trajectory of shape (…, num_objects).</p></li>
+<li><p><strong>timestep</strong> – index of time for actions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>An Action that converts traj[timestep] to traj[timestep+1] of shape</dt><dd><p>(…, num_objects, dim=2).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waymax.dynamics.discretizer.inverse_action_by_search">
+<span class="sig-prename descclassname"><span class="pre">waymax.dynamics.discretizer.</span></span><span class="sig-name descname"><span class="pre">inverse_action_by_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.ObjectMetadata" title="waymax.datatypes.ObjectMetadata"><span class="pre">waymax.datatypes.ObjectMetadata</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous_dynamics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../abstract_dynamics/index.html#waymax.dynamics.abstract_dynamics.DynamicsModel" title="waymax.dynamics.abstract_dynamics.DynamicsModel"><span class="pre">waymax.dynamics.abstract_dynamics.DynamicsModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_continuous_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_discrete_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discrete_invalid_placeholder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></span><a class="headerlink" href="#waymax.dynamics.discretizer.inverse_action_by_search" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute the inverse action that best fits a trajectory.</p>
+<p>This inverse method uses a discrete optimization algorithm to produce the
+best fit action by searching over the discrete action space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj</strong> – A Trajectory used to infer actions of shape (…, num_objects,
+num_timesteps=1).</p></li>
+<li><p><strong>metadata</strong> – Object metadata for the trajectory of shape (…, num_objects).</p></li>
+<li><p><strong>timestep</strong> – index of time for actions.</p></li>
+<li><p><strong>continuous_dynamics</strong> – A continuous-space dynamics model.</p></li>
+<li><p><strong>all_continuous_actions</strong> – A tensor containing of all possible continuous
+actions of shape (all_actions, dim_action). Each continuous value
+corresponds to one bin of the discretized space.</p></li>
+<li><p><strong>all_discrete_actions</strong> – A tensor containing the indices of all possible
+discrete actions of shape (all_actions, 1)</p></li>
+<li><p><strong>discrete_invalid_placeholder</strong> – The default action value of shape (…, 1)
+used as a placeholder for actions that are invalid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>An Action that converts traj[timestep] to traj[timestep+1] of shape</dt><dd><p>(…, num_objects, dim=2).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, The Waymax Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dynamics.discretizer</span></code></a><ul>
+<li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.Discretizer"><code class="docutils literal notranslate"><span class="pre">Discretizer</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.Discretizer.discretize"><code class="docutils literal notranslate"><span class="pre">Discretizer.discretize()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.Discretizer.make_continuous"><code class="docutils literal notranslate"><span class="pre">Discretizer.make_continuous()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper"><code class="docutils literal notranslate"><span class="pre">DiscreteActionSpaceWrapper</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.action_spec"><code class="docutils literal notranslate"><span class="pre">DiscreteActionSpaceWrapper.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.compute_update"><code class="docutils literal notranslate"><span class="pre">DiscreteActionSpaceWrapper.compute_update()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.DiscreteActionSpaceWrapper.inverse"><code class="docutils literal notranslate"><span class="pre">DiscreteActionSpaceWrapper.inverse()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.dynamics.discretizer.inverse_action_by_search"><code class="docutils literal notranslate"><span class="pre">inverse_action_by_search()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/scripts/furo.js"></script>
+    <script src="../../../../_static/design-tabs.js"></script>
+    </body>
+</html>

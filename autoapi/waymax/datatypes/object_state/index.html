@@ -1,0 +1,882 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="waymax.datatypes.observation" href="../observation/index.html" /><link rel="prev" title="waymax.datatypes.constant" href="../constant/index.html" />
+
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>waymax.datatypes.object_state - Waymax documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">Waymax  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Waymax  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../agents/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/actor_core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.actor_core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/agent_builder/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.agent_builder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/constant_speed/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.constant_speed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/expert/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.expert</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/sim_agent/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.sim_agent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../agents/waypoint_following_agent/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.waypoint_following_agent</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/dataloader_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.dataloader_utils</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_dataloader</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_factories/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_factories</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_factories_internal/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_factories_internal</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataloader/womd_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../action/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.action</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../array/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.array</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../constant/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.constant</span></code></a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.object_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.observation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../operations/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.operations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../roadgraph/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.roadgraph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../route/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.route</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../simulator_state/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.simulator_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../traffic_lights/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.traffic_lights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../env/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../env/wrappers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../env/wrappers/brax_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.brax_wrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../env/wrappers/dm_env_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.dm_env_wrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/abstract_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.abstract_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/base_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.base_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.errors</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/planning_agent_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.planning_agent_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/rollout/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.rollout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env/typedefs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.typedefs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/abstract_metric/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.abstract_metric</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/comfort/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.comfort</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/imitation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.imitation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/metric_factory/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.metric_factory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/overlap/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.overlap</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/roadgraph/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.roadgraph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metrics/route/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.route</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../rewards/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../rewards/abstract_reward_function/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards.abstract_reward_function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rewards/linear_combination_reward/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards.linear_combination_reward</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/geometry/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils.geometry</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils/test_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils.test_utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../visualization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization/color/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.color</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.utils</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization/viz/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.viz</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.config</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Further Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../py-modindex.html">Module Index</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-waymax.datatypes.object_state">
+<span id="waymax-datatypes-object-state"></span><h1><a class="reference internal" href="#module-waymax.datatypes.object_state" title="waymax.datatypes.object_state"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.object_state</span></code></a><a class="headerlink" href="#module-waymax.datatypes.object_state" title="Permalink to this heading">#</a></h1>
+<p>Data structures for trajectory and metadata information for scene objects.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds" title="waymax.datatypes.object_state.ObjectTypeIds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObjectTypeIds</span></code></a></p></td>
+<td><p>Ids for different map elements to be mapped into a tensor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata" title="waymax.datatypes.object_state.ObjectMetadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObjectMetadata</span></code></a></p></td>
+<td><p>Time-independent object metadata.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory" title="waymax.datatypes.object_state.Trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trajectory</span></code></a></p></td>
+<td><p>Data structure representing a trajectory.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.datatypes.object_state.fill_invalid_trajectory" title="waymax.datatypes.object_state.fill_invalid_trajectory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_invalid_trajectory</span></code></a>(→ Trajectory)</p></td>
+<td><p>Fills a trajectory with invalid values.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.datatypes.object_state._INVALID_FLOAT_VALUE" title="waymax.datatypes.object_state._INVALID_FLOAT_VALUE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_INVALID_FLOAT_VALUE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.datatypes.object_state._INVALID_INT_VALUE" title="waymax.datatypes.object_state._INVALID_INT_VALUE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_INVALID_INT_VALUE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state._INVALID_FLOAT_VALUE">
+<span class="sig-prename descclassname"><span class="pre">waymax.datatypes.object_state.</span></span><span class="sig-name descname"><span class="pre">_INVALID_FLOAT_VALUE</span></span><a class="headerlink" href="#waymax.datatypes.object_state._INVALID_FLOAT_VALUE" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state._INVALID_INT_VALUE">
+<span class="sig-prename descclassname"><span class="pre">waymax.datatypes.object_state.</span></span><span class="sig-name descname"><span class="pre">_INVALID_INT_VALUE</span></span><a class="headerlink" href="#waymax.datatypes.object_state._INVALID_INT_VALUE" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectTypeIds">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.datatypes.object_state.</span></span><span class="sig-name descname"><span class="pre">ObjectTypeIds</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectTypeIds" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></p>
+<p>Ids for different map elements to be mapped into a tensor.</p>
+<dl class="simple">
+<dt>These integers represent the ID of these specific types as defined in:</dt><dd><p><a class="reference external" href="https://waymo.com/open/data/motion/tfexample">https://waymo.com/open/data/motion/tfexample</a>.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectTypeIds.UNSET">
+<span class="sig-name descname"><span class="pre">UNSET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectTypeIds.UNSET" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectTypeIds.VEHICLE">
+<span class="sig-name descname"><span class="pre">VEHICLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectTypeIds.VEHICLE" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectTypeIds.PEDESTRIAN">
+<span class="sig-name descname"><span class="pre">PEDESTRIAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectTypeIds.PEDESTRIAN" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectTypeIds.CYCLIST">
+<span class="sig-name descname"><span class="pre">CYCLIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectTypeIds.CYCLIST" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectTypeIds.OTHER">
+<span class="sig-name descname"><span class="pre">OTHER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectTypeIds.OTHER" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.datatypes.object_state.</span></span><span class="sig-name descname"><span class="pre">ObjectMetadata</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata" title="Permalink to this definition">#</a></dt>
+<dd><p>Time-independent object metadata.</p>
+<p>All arrays are of shape (…, num_objects).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.ids">
+<span class="sig-name descname"><span class="pre">ids</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.ids" title="Permalink to this definition">#</a></dt>
+<dd><p>A unique integer id for each object which is consistent over time of
+data type int32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.object_types">
+<span class="sig-name descname"><span class="pre">object_types</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.object_types" title="Permalink to this definition">#</a></dt>
+<dd><p>An integer representing each different class of object
+(Unset=0, Vehicle=1, Pedestrian=2, Cyclist=3, Other=4) of data type int32.
+This definition is from Waymo Open Motion Dataset (WOMD).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.is_sdc">
+<span class="sig-name descname"><span class="pre">is_sdc</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.is_sdc" title="Permalink to this definition">#</a></dt>
+<dd><p>Binary mask of data type bool representing whether an object
+represents the sdc or some other object.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.is_modeled">
+<span class="sig-name descname"><span class="pre">is_modeled</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.is_modeled" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether a specific object is one designated by WOMD to be
+predicted of data type bool.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.is_valid">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.is_valid" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether an object is valid at any part of the run segment of data
+type bool.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.objects_of_interest">
+<span class="sig-name descname"><span class="pre">objects_of_interest</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.objects_of_interest" title="Permalink to this definition">#</a></dt>
+<dd><p>A vector of type bool to indicate which objects in the
+scene corresponding to the first dimension of the object tensors have
+interactive behavior. Up to 2 objects will be selected. The objects in
+this list form an interactive group.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.is_controlled">
+<span class="sig-name descname"><span class="pre">is_controlled</span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.is_controlled" title="Permalink to this definition">#</a></dt>
+<dd><p>Whether an object will be controlled by external agents in an
+environment.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.shape">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ellipsis</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.shape" title="Permalink to this definition">#</a></dt>
+<dd><p>The Array shape of the metadata.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.num_objects">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.num_objects" title="Permalink to this definition">#</a></dt>
+<dd><p>The number of objects in metadata.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">ids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">object_types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">is_sdc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">is_modeled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">objects_of_interest</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">is_controlled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.__eq__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.ObjectMetadata.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#waymax.datatypes.object_state.ObjectMetadata.validate" title="Permalink to this definition">#</a></dt>
+<dd><p>Validates shape and type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.datatypes.object_state.</span></span><span class="sig-name descname"><span class="pre">Trajectory</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory" title="Permalink to this definition">#</a></dt>
+<dd><p>Data structure representing a trajectory.</p>
+<p>The shapes of all objects are of shape (…, num_objects, num_timesteps).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.x" title="Permalink to this definition">#</a></dt>
+<dd><p>The x coordinate of each object at each time step of data type float32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.y" title="Permalink to this definition">#</a></dt>
+<dd><p>The y coordinate of each object at each time step of data type float32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.z">
+<span class="sig-name descname"><span class="pre">z</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.z" title="Permalink to this definition">#</a></dt>
+<dd><p>The z coordinate of each object at each time step of data type float32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.vel_x">
+<span class="sig-name descname"><span class="pre">vel_x</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.vel_x" title="Permalink to this definition">#</a></dt>
+<dd><p>The x component of the object velocity at each time step of data type
+float32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.vel_y">
+<span class="sig-name descname"><span class="pre">vel_y</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.vel_y" title="Permalink to this definition">#</a></dt>
+<dd><p>The y component of the object velocity at each time step of data type
+float32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.yaw">
+<span class="sig-name descname"><span class="pre">yaw</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.yaw" title="Permalink to this definition">#</a></dt>
+<dd><p>Counter-clockwise yaw in top-down view (rotation about the Z axis from
+a unit X vector to the object direction vector) of shape of data type
+float32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.valid">
+<span class="sig-name descname"><span class="pre">valid</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.valid" title="Permalink to this definition">#</a></dt>
+<dd><p>Validity bit for all object at all times steps of data type bool.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.timestamp_micros">
+<span class="sig-name descname"><span class="pre">timestamp_micros</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.timestamp_micros" title="Permalink to this definition">#</a></dt>
+<dd><p>A timestamp in microseconds for each time step of data
+type int32.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.length">
+<span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.length" title="Permalink to this definition">#</a></dt>
+<dd><p>The length of each object at each time step of data type float32.
+Note for each object, its length is fixed for all time steps.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.width" title="Permalink to this definition">#</a></dt>
+<dd><p>The width of each object at each time step of data type float32. Note
+for each object, its width is fixed for all time steps.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.height" title="Permalink to this definition">#</a></dt>
+<dd><p>The height of each object at each time step of data type float32.
+Note for each object, its height is fixed for all time steps.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.shape">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ellipsis</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.shape" title="Permalink to this definition">#</a></dt>
+<dd><p>The Array shape of this trajectory.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.num_objects">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.num_objects" title="Permalink to this definition">#</a></dt>
+<dd><p>The number of objects included in this trajectory per example.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.num_timesteps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_timesteps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.num_timesteps" title="Permalink to this definition">#</a></dt>
+<dd><p>The length of this trajectory in time.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.xy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.xy" title="Permalink to this definition">#</a></dt>
+<dd><p>Stacked xy location.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.xyz">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xyz</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.xyz" title="Permalink to this definition">#</a></dt>
+<dd><p>Stacked xyz location.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.vel_xy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vel_xy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.vel_xy" title="Permalink to this definition">#</a></dt>
+<dd><p>Stacked xy velocity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.speed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">speed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.speed" title="Permalink to this definition">#</a></dt>
+<dd><p>Speed on x-y plane.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.vel_yaw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vel_yaw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.vel_yaw" title="Permalink to this definition">#</a></dt>
+<dd><p>Angle of the velocity on x-y plane.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.bbox_corners">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bbox_corners</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.bbox_corners" title="Permalink to this definition">#</a></dt>
+<dd><p>Corners of the bounding box spanning the object’s shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Box corners’ (x, y) coordinates spanning the object of shape</dt><dd><p>(…, num_objects, num_timesteps, 4, 2). The 4 corners start from the
+objects’ front right corner and go counter-clockwise.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">vel_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id10" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">vel_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id11" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">yaw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id12" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">valid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id13" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">timestamp_micros</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id14" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id15" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id16" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id17" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.__eq__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.stack_fields">
+<span class="sig-name descname"><span class="pre">stack_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.stack_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns a concatenated version of a set of field names for Trajectory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.zeros">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory" title="waymax.datatypes.object_state.Trajectory"><span class="pre">Trajectory</span></a></span></span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.zeros" title="Permalink to this definition">#</a></dt>
+<dd><p>Creates a Trajectory containing zeros of the specified shape.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.Trajectory.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#waymax.datatypes.object_state.Trajectory.validate" title="Permalink to this definition">#</a></dt>
+<dd><p>Validates shape and type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waymax.datatypes.object_state.fill_invalid_trajectory">
+<span class="sig-prename descclassname"><span class="pre">waymax.datatypes.object_state.</span></span><span class="sig-name descname"><span class="pre">fill_invalid_trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory" title="waymax.datatypes.object_state.Trajectory"><span class="pre">Trajectory</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory" title="waymax.datatypes.object_state.Trajectory"><span class="pre">Trajectory</span></a></span></span><a class="headerlink" href="#waymax.datatypes.object_state.fill_invalid_trajectory" title="Permalink to this definition">#</a></dt>
+<dd><p>Fills a trajectory with invalid values.</p>
+<p>An invalid value is -1 for numerical fields and False for booleans.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>traj</strong> – Trajectory to fill.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new trajectory with invalid values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../observation/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.observation</span></code></div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../constant/index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.constant</span></code></div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, The Waymax Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.object_state</span></code></a><ul>
+<li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li><a class="reference internal" href="#waymax.datatypes.object_state._INVALID_FLOAT_VALUE"><code class="docutils literal notranslate"><span class="pre">_INVALID_FLOAT_VALUE</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state._INVALID_INT_VALUE"><code class="docutils literal notranslate"><span class="pre">_INVALID_INT_VALUE</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds"><code class="docutils literal notranslate"><span class="pre">ObjectTypeIds</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds.UNSET"><code class="docutils literal notranslate"><span class="pre">ObjectTypeIds.UNSET</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds.VEHICLE"><code class="docutils literal notranslate"><span class="pre">ObjectTypeIds.VEHICLE</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds.PEDESTRIAN"><code class="docutils literal notranslate"><span class="pre">ObjectTypeIds.PEDESTRIAN</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds.CYCLIST"><code class="docutils literal notranslate"><span class="pre">ObjectTypeIds.CYCLIST</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectTypeIds.OTHER"><code class="docutils literal notranslate"><span class="pre">ObjectTypeIds.OTHER</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.ids"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.ids</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.object_types"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.object_types</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.is_sdc"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_sdc</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.is_modeled"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_modeled</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.is_valid"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_valid</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.objects_of_interest"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.objects_of_interest</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.is_controlled"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_controlled</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.shape"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.shape</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.num_objects"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.num_objects</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.ids</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.object_types</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_sdc</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_modeled</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_valid</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.objects_of_interest</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.is_controlled</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.__eq__"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.__eq__()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.ObjectMetadata.validate"><code class="docutils literal notranslate"><span class="pre">ObjectMetadata.validate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.x"><code class="docutils literal notranslate"><span class="pre">Trajectory.x</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.y"><code class="docutils literal notranslate"><span class="pre">Trajectory.y</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.z"><code class="docutils literal notranslate"><span class="pre">Trajectory.z</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.vel_x"><code class="docutils literal notranslate"><span class="pre">Trajectory.vel_x</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.vel_y"><code class="docutils literal notranslate"><span class="pre">Trajectory.vel_y</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.yaw"><code class="docutils literal notranslate"><span class="pre">Trajectory.yaw</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.valid"><code class="docutils literal notranslate"><span class="pre">Trajectory.valid</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.timestamp_micros"><code class="docutils literal notranslate"><span class="pre">Trajectory.timestamp_micros</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.length"><code class="docutils literal notranslate"><span class="pre">Trajectory.length</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.width"><code class="docutils literal notranslate"><span class="pre">Trajectory.width</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.height"><code class="docutils literal notranslate"><span class="pre">Trajectory.height</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.shape"><code class="docutils literal notranslate"><span class="pre">Trajectory.shape</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.num_objects"><code class="docutils literal notranslate"><span class="pre">Trajectory.num_objects</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.num_timesteps"><code class="docutils literal notranslate"><span class="pre">Trajectory.num_timesteps</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.xy"><code class="docutils literal notranslate"><span class="pre">Trajectory.xy</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.xyz"><code class="docutils literal notranslate"><span class="pre">Trajectory.xyz</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.vel_xy"><code class="docutils literal notranslate"><span class="pre">Trajectory.vel_xy</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.speed"><code class="docutils literal notranslate"><span class="pre">Trajectory.speed</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.vel_yaw"><code class="docutils literal notranslate"><span class="pre">Trajectory.vel_yaw</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.bbox_corners"><code class="docutils literal notranslate"><span class="pre">Trajectory.bbox_corners</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">Trajectory.x</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">Trajectory.y</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">Trajectory.z</span></code></a></li>
+<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">Trajectory.vel_x</span></code></a></li>
+<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">Trajectory.vel_y</span></code></a></li>
+<li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">Trajectory.yaw</span></code></a></li>
+<li><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">Trajectory.valid</span></code></a></li>
+<li><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">Trajectory.timestamp_micros</span></code></a></li>
+<li><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">Trajectory.length</span></code></a></li>
+<li><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">Trajectory.width</span></code></a></li>
+<li><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">Trajectory.height</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.__eq__"><code class="docutils literal notranslate"><span class="pre">Trajectory.__eq__()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.stack_fields"><code class="docutils literal notranslate"><span class="pre">Trajectory.stack_fields()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.zeros"><code class="docutils literal notranslate"><span class="pre">Trajectory.zeros()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.Trajectory.validate"><code class="docutils literal notranslate"><span class="pre">Trajectory.validate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.datatypes.object_state.fill_invalid_trajectory"><code class="docutils literal notranslate"><span class="pre">fill_invalid_trajectory()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/scripts/furo.js"></script>
+    <script src="../../../../_static/design-tabs.js"></script>
+    </body>
+</html>

@@ -1,0 +1,165 @@
+:py:mod:`waymax.env.abstract_environment`
+=========================================
+
+.. py:module:: waymax.env.abstract_environment
+
+.. autoapi-nested-parse::
+
+   Abstract interface for the Waymax environment.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.abstract_environment.AbstractEnvironment
+
+
+
+
+.. py:class:: AbstractEnvironment
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   A stateless environment interface for Waymax.
+
+   .. py:method:: reset(scenario: waymax.env.typedefs.GenericScenario) -> waymax.env.typedefs.GenericState
+      :abstractmethod:
+
+      Initializes a simulation state.
+
+      This method allows the environment to perform optional postprocessing
+      on the state before the episode begins. By default this method is a
+      no-op.
+
+      :param scenario: Scenario used to generate the initial state.
+
+      :returns: The initialized simulation state.
+
+
+   .. py:method:: step(state: waymax.env.typedefs.GenericState, actions: waymax.env.typedefs.GenericAction) -> waymax.env.typedefs.GenericState
+      :abstractmethod:
+
+      Advances the simulation by one timestep.
+
+      :param state: The current state of the simulator.
+      :param actions: Action to apply to the state to produce the updated simulator
+                      state.
+
+      :returns: The next simulation state after taking an action.
+
+
+   .. py:method:: reward(state: waymax.env.typedefs.GenericState, action: waymax.env.typedefs.GenericAction) -> jax.Array
+      :abstractmethod:
+
+      Computes the reward for a transition.
+
+      :param state: The state used to compute the reward.
+      :param action: The action applied to state.
+
+      :returns: A (..., num_objects) tensor of rewards.
+
+
+   .. py:method:: metrics(state: waymax.env.typedefs.GenericState) -> waymax.env.typedefs.Metrics
+      :abstractmethod:
+
+      Computes a set of metrics which score a given simulator state.
+
+      :param state: The state used to compute the metrics.
+
+      :returns:
+
+                A mapping from metric name to metrics which evaluate a simulator state at
+                  state.timestep where all of the metrics are of shape (..., num_objects).
+
+
+   .. py:method:: observe(state: waymax.env.typedefs.GenericState) -> waymax.env.typedefs.Observation
+      :abstractmethod:
+
+      Computes the observation of the simulator for the actor.
+
+      :param state: The state used to compute the observation.
+
+      :returns:
+
+                An observation of the simulator state for the given timestep of shape
+                  (...).
+
+
+   .. py:method:: action_spec() -> waymax.env.typedefs.GenericAction
+      :abstractmethod:
+
+      Returns the action specs of the environment without batch dimension.
+
+      :returns:
+
+                The action specs represented as a PyTree where the leaves
+                  are instances of specs.Array.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+      :abstractmethod:
+
+      Returns the reward specs of the environment without batch dimension.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+      :abstractmethod:
+
+      Returns the discount specs of the environment without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.PyTree
+      :abstractmethod:
+
+      Returns the observation specs of the environment without batch dimension.
+
+      :returns:
+
+                The observation specs represented as a PyTree where the
+                  leaves are instances of specs.Array.
+
+
+   .. py:method:: termination(state: waymax.env.typedefs.GenericState) -> jax.Array
+
+      Returns whether the current state is an episode termination.
+
+      A termination marks the end of an episode where the cost-to-go from
+      this state is 0.
+
+      The equivalent step type in DMEnv is dm_env.termination.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end of
+                  an episode as a termination.
+
+
+   .. py:method:: truncation(state: waymax.env.typedefs.GenericState) -> jax.Array
+
+      Returns whether the current state should truncate the episode.
+
+      A truncation denotes that an episode has ended due to reaching the step
+      limit of an episode. In these cases dynamic programming methods (e.g.
+      Q-learning) should still compute cost-to-go assuming the episode will
+      continue running.
+
+      The equivalent step type in DMEnv is dm_env.truncation.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end of
+                  an episode as a truncation.
+
+
+

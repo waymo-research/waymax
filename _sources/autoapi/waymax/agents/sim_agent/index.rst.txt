@@ -1,0 +1,98 @@
+:py:mod:`waymax.agents.sim_agent`
+=================================
+
+.. py:module:: waymax.agents.sim_agent
+
+.. autoapi-nested-parse::
+
+   Base class for Waymax sim agents.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.sim_agent.SimAgentActor
+   waymax.agents.sim_agent.FrozenSimPolicy
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.sim_agent._DEFAULT_CONTROL_FUNC
+
+
+.. py:data:: _DEFAULT_CONTROL_FUNC
+
+   
+
+.. py:class:: SimAgentActor(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None)
+
+
+   Bases: :py:obj:`waymax.agents.actor_core.WaymaxActorCore`
+
+   Base class for simulated agents.
+
+   Subclasses should implement the `update_trajectory` method. As SimAgentActor
+   outputs TrajectoryUpdate actions, it is primarily intended to be used with
+   the StateDynamics dynamics model.
+
+   .. py:property:: name
+      :type: str
+
+      Name of the agent used for inspection and logging.
+
+   .. py:method:: update_trajectory(state: waymax.datatypes.SimulatorState) -> waymax.datatypes.TrajectoryUpdate
+      :abstractmethod:
+
+      Updates the trajectory for all simulated agents.
+
+      :param state: The current simulator state.
+
+      :returns: A trajectory update of shape (..., num_objects, num_timesteps=1) that
+                contains the updated positions and velocities for all simulated agents
+                for the next timestep.
+
+
+   .. py:method:: init(rng: jax.Array, state: waymax.datatypes.SimulatorState)
+
+      Returns an empty initial state.
+
+
+   .. py:method:: select_action(params: waymax.agents.actor_core.Params, state: waymax.datatypes.SimulatorState, actor_state: Any, rng: jax.Array) -> waymax.agents.actor_core.WaymaxActorOutput
+
+      Selects an action given the current simulator state.
+
+      :param params: Actor parameters, e.g. neural network weights.
+      :param state: The current simulator state.
+      :param actor_state: The actor state, e.g. recurrent state or batch normalization.
+      :param rng: A random key.
+
+      :returns: An actor output containing the next action and actor state.
+
+
+
+.. py:class:: FrozenSimPolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None)
+
+
+   Bases: :py:obj:`SimAgentActor`
+
+   A sim agent policy that does not update object trajectories.
+
+   This class is primarily intended to be used for testing or debugging purposes.
+
+   .. py:method:: update_trajectory(state: waymax.datatypes.SimulatorState) -> waymax.datatypes.TrajectoryUpdate
+
+      Returns the current sim trajectory as the next update.
+
+
+

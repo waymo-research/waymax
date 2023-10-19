@@ -1,0 +1,123 @@
+:py:mod:`waymax.dataloader.womd_factories`
+==========================================
+
+.. py:module:: waymax.dataloader.womd_factories
+
+.. autoapi-nested-parse::
+
+   Factory functions for converting tensors to Waymax internal data structures.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dataloader.womd_factories.object_metadata_from_womd_dict
+   waymax.dataloader.womd_factories.roadgraph_from_womd_dict
+   waymax.dataloader.womd_factories.paths_from_womd_dict
+   waymax.dataloader.womd_factories.simulator_state_from_womd_dict
+   waymax.dataloader.womd_factories.trajectory_from_womd_dict
+   waymax.dataloader.womd_factories.traffic_lights_from_womd_dict
+
+
+
+.. py:function:: object_metadata_from_womd_dict(example: dict[str, jax.Array]) -> waymax.datatypes.object_state.ObjectMetadata
+
+   Constructs object metadata from an Open Motion TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample).
+
+   :returns:
+
+             Metadata for the objects in the scene read from the WOMD data example of
+               shape (..., num_objects).
+
+
+.. py:function:: roadgraph_from_womd_dict(example: dict[str, jax.Array], prefix_key: str = 'roadgraph_samples') -> waymax.datatypes.roadgraph.RoadgraphPoints
+
+   Constructs a point map from an Open Motion TFExample dictionary.
+
+   :param example: Dictionary which contains data from the WOMD tf.Examples with
+                   optional extra batch dimensions. These are defined at
+                   https://waymo.com/open/data/motion/tfexample.
+   :param prefix_key: Prefix key for the roadgraph type in the example.
+
+   :returns: RoadgraphPoints from the `example` scenario with shape (..., num_points).
+
+
+.. py:function:: paths_from_womd_dict(example: dict[str, jax.Array], prefix_key: str = 'path_samples') -> waymax.datatypes.route.Paths
+
+   Constructs paths from an Open Motion TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD, with
+                   extra key/values pairs for route related data.
+   :param prefix_key: Keys for indexing route data.
+
+   :returns: Paths with shape (..., num_paths, num_points_per_path).
+
+
+.. py:function:: simulator_state_from_womd_dict(example: dict[str, jax.Array], include_sdc_paths: bool = False, time_key: str = 'all') -> waymax.datatypes.simulator_state.SimulatorState
+
+   Constructs a simulator state from an aggregated WOMD data dict.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample). The data, however, can be
+                   augmented with different time keys. We do this in our data loader, by
+                   aggregating all timesteps into an `all` key prefix.
+   :param include_sdc_paths: Whether to include sdc based route paths when
+                             constructing the simulator state. This is useful for representing the
+                             route of the agent. A similar parameter must be used in the data loader to
+                             get consistent behavior.
+   :param time_key: Time step information to gather from `example` (`past`, `current`,
+                    `future`, `all`).
+
+   :returns:
+
+             A simulator state constructed at the initial timestep to spec given the
+               parameters.
+
+   :raises ValueError: If a `time_key` parameter is passed in that is not one of
+       (`past`, `current`, `future`, `all`).
+
+
+.. py:function:: trajectory_from_womd_dict(example: dict[str, jax.Array], time_key: str = 'all') -> waymax.datatypes.object_state.Trajectory
+
+   Constructs a trajectory from an Open Motion TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample).
+   :param time_key: Key which represents what time dimension to access from the state
+                    fields in the example: (i.e. past, current, future, all).
+
+   :returns: Trajectory of all objects from the `example` scenario with shape (...,
+             num_objects, num_timesteps).
+
+
+.. py:function:: traffic_lights_from_womd_dict(example: dict[str, jax.Array], time_key: str = 'all') -> waymax.datatypes.traffic_lights.TrafficLights
+
+   Constructs a traffic light state from WOMD TFExample dictionary.
+
+   :param example: Mapping from feature name to array for data read from WOMD
+                   `tf.Example`'s in the format of specified in the WOMD website
+                   (https://waymo.com/open/data/motion/tfexample). The data, however, can be
+                   augmented with different time keys. We do this in our data loader, by
+                   aggregating all timesteps into an `all` key.
+   :param time_key: Time step information to gather from traffic light (`past`,
+                    `current`, `future`, `all`).
+
+   :returns: Traffic lights from the `example` scenario with shape (...,
+             num_traffic_lights, num_timesteps).
+
+   :raises ValueError: If `time_key` is not part of the accepted values.
+
+

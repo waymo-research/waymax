@@ -1,0 +1,267 @@
+:py:mod:`waymax.agents.waypoint_following_agent`
+================================================
+
+.. py:module:: waymax.agents.waypoint_following_agent
+
+.. autoapi-nested-parse::
+
+   Implementations for waypoint following sim agents.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.waypoint_following_agent.WaypointFollowingPolicy
+   waymax.agents.waypoint_following_agent.IDMRoutePolicy
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.waypoint_following_agent._find_reference_traj_from_log_traj
+   waymax.agents.waypoint_following_agent._project_to_a_trajectory
+   waymax.agents.waypoint_following_agent._compute_arclengths
+   waymax.agents.waypoint_following_agent._add_headway_waypoints
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.waypoint_following_agent._DEFAULT_LEAD_DISTANCE
+   waymax.agents.waypoint_following_agent._DEFAULT_LEAD_VELOCITY
+   waymax.agents.waypoint_following_agent._MINIMUM_LEAD_DISTANCE
+   waymax.agents.waypoint_following_agent._DEFAULT_TIME_DELTA
+   waymax.agents.waypoint_following_agent._REACHED_END_OF_TRAJECTORY_THRESHOLD
+   waymax.agents.waypoint_following_agent._DISTANCE_TO_REF_THRESHOLD
+   waymax.agents.waypoint_following_agent._STATIC_SPEED_THRESHOLD
+
+
+.. py:data:: _DEFAULT_LEAD_DISTANCE
+
+   
+
+.. py:data:: _DEFAULT_LEAD_VELOCITY
+
+   
+
+.. py:data:: _MINIMUM_LEAD_DISTANCE
+   :value: 0.1
+
+   
+
+.. py:data:: _DEFAULT_TIME_DELTA
+   :value: 0.1
+
+   
+
+.. py:data:: _REACHED_END_OF_TRAJECTORY_THRESHOLD
+   :value: 0.05
+
+   
+
+.. py:data:: _DISTANCE_TO_REF_THRESHOLD
+   :value: 5.0
+
+   
+
+.. py:data:: _STATIC_SPEED_THRESHOLD
+   :value: 1.0
+
+   
+
+.. py:class:: WaypointFollowingPolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None)
+
+
+   Bases: :py:obj:`waymax.agents.sim_agent.SimAgentActor`
+
+   A base class for all waypoint-following sim agents.
+
+   The WaypointFollowingPolicy will force sim agents to travel along a
+   pre-defined path (the agent's future in the log trajectory). The behavior
+   of the vehicle is determined by setting its speed via the update_speed()
+   method, which will update the velocity of the vehicle.
+
+   .. py:method:: update_trajectory(state: waymax.datatypes.SimulatorState) -> waymax.datatypes.TrajectoryUpdate
+
+      Returns a trajectory update of shape (..., num_objects, 1).
+
+
+   .. py:method:: _get_next_trajectory_by_projection(log_traj: waymax.datatypes.Trajectory, cur_sim_traj: waymax.datatypes.Trajectory, new_speed: jax.Array, new_speed_valid: jax.Array, dt: float = _DEFAULT_TIME_DELTA) -> waymax.datatypes.Trajectory
+
+      Computes the next trajectory.
+
+      :param log_traj: Logged trajectory for the simulation of shape (..., num_objects,
+                       num_timesteps).
+      :param cur_sim_traj: Current simulated trajectory for the simulation of shape
+                           (..., num_objects, num_timesteps=1).
+      :param new_speed: Updated speed for the agents after solving for velocity of
+                        shape (..., num_objects).
+      :param new_speed_valid: Updated validity for the speed updates of the agents
+                              after (..., num_objects).
+      :param dt: Delta between timesteps of the simulator state.
+
+      :returns:
+
+                The next Trajectory projected onto log_traj of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: update_speed(state: waymax.datatypes.SimulatorState, dt: float = _DEFAULT_TIME_DELTA) -> tuple[jax.Array, jax.Array]
+      :abstractmethod:
+
+      Updates the speed for each agent in the current simulation step.
+
+      :param state: The simulator state of shape (...).
+      :param dt: Delta between timesteps of the simulator state.
+
+      :returns: A (..., num_objects) float array of speeds.
+                valids: A (..., num_objects) bool array of valids.
+      :rtype: speeds
+
+
+
+.. py:class:: IDMRoutePolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None, desired_vel: float = 30.0, min_spacing: float = 2.0, safe_time_headway: float = 2.0, max_accel: float = 2.0, max_deccel: float = 4.0, delta: float = 4.0, max_lookahead: int = 10, additional_lookahead_points: int = 10, additional_lookahead_distance: float = 10.0)
+
+
+   Bases: :py:obj:`WaypointFollowingPolicy`
+
+   A policy implementing the intelligent driver model (IDM).
+
+   This policy uses IDM to compute the acceleration and velocities for the
+   agent while it follows its own logged future.
+
+   .. py:method:: update_speed(state: waymax.datatypes.SimulatorState, dt: float = _DEFAULT_TIME_DELTA) -> tuple[jax.Array, jax.Array]
+
+      Returns the new speed for each agent in the current simulation step.
+
+      :param state: The simulator state of shape (...).
+      :param dt: Delta between timesteps of the simulator state.
+
+      :returns: A (..., num_objects) float array of speeds.
+                valids: A (..., num_objects) bool array of valids.
+      :rtype: speeds
+
+
+   .. py:method:: _get_accel(log_waypoints: waymax.datatypes.Trajectory, cur_position: jax.Array, cur_speed: jax.Array, obj_curr_traj: waymax.datatypes.Trajectory) -> jax.Array
+
+      Computes vehicle accelerations according to IDM for a single vehicle.
+
+      Note log_waypoints and obj_curr_traj contain the same set of objects, thus
+      need to remove collision against oneself when computing pairwise collision.
+
+      :param log_waypoints: A trajectory of the agents' future of shape (...,
+                            num_objects, num_timesteps).
+      :param cur_position: Current positions for the agents of shape (..., num_objects,
+                           3).
+      :param cur_speed: Current speeds for the agents of shape (..., num_objects).
+      :param obj_curr_traj: Trajectory containing the state for all current objects of
+                            shape (..., num_objects, num_timesteps=1).
+
+      :returns:
+
+                A vector of all vehicles' accelerations after solving for them of shape
+                  (..., num_objects).
+
+
+   .. py:method:: _compute_lead_velocity(future_speeds: jax.Array, collisions_per_agent: jax.Array, future_speeds_valid: Optional[jax.Array] = None) -> jax.Array
+
+      Computes the velocity of the object at the closest collision.
+
+      :param future_speeds: Future speeds per agent of shape (..., num_objects,
+                            num_timesteps).
+      :param collisions_per_agent: Future collision indications of shape (...,
+                                   num_objects, num_timesteps).
+      :param future_speeds_valid: Boolean mask for future speeds of shape (...,
+                                  num_objects, num_timesteps).
+
+      :returns:
+
+                An array containing the velocity of the colliding object at the
+                  closest collision of shape (...).
+
+
+   .. py:method:: _compute_lead_distance(agent_future: jax.Array, collision_indicator: jax.Array, agent_future_valid: Optional[jax.Array] = None, current_position: Optional[jax.Array] = None, use_arclength=False) -> jax.Array
+
+      Computes the distance between the agent and the nearest collision.
+
+      :param agent_future: Agent's future positions {x, y, z} of shape (...,
+                           num_timesteps, 3).
+      :param collision_indicator: Collision indications of shape (..., num_timesteps).
+      :param agent_future_valid: Boolean mask for agent's future positions of shape
+                                 (..., num_timesteps).
+      :param current_position: Array of the vehicle's current positions {x, y, z} of
+                               shape  (..., 1, 3). If None, will use the first element of agent_future
+                               as the current position.
+      :param use_arclength: Whether to use arclength for computing collisions.
+                            Arclength is more accurate but is not robust to futures with mixed
+                            valids.
+
+      :returns: An array of distances to the agent's closest collision of shape (...).
+
+
+
+.. py:function:: _find_reference_traj_from_log_traj(xyz: jax.Array, traj: waymax.datatypes.Trajectory, num_pts: int) -> waymax.datatypes.Trajectory
+
+   Finds sub-trajectory for given position xyz.
+
+   :param xyz: Position of the agent of shape (..., 3).
+   :param traj: Full trajectory for a given agent (..., T).
+   :param num_pts: The number of waypoints to retrieve for future Trajectory.
+
+   :returns: Trajectory with (..., T_out=num_pts).
+
+
+.. py:function:: _project_to_a_trajectory(xy: jax.Array, traj: waymax.datatypes.Trajectory, extrapolate_traj: bool = False) -> tuple[jax.Array, jax.Array, jax.Array]
+
+   Projects points on to a Trajectory.
+
+   :param xy: Current xy position of the agent of shape (..., 1, 2).
+   :param traj: Full trajectory of the agent of shape (..., num_timesteps).
+   :param extrapolate_traj: Whether to extrapolate a projection beyond the final
+                            waypoint in direction of the final waypoint.
+
+   :returns: Updated xy with shape (..., 1, 2).
+             Updated yaw with shape (..., 1).
+             Boolean indicating whether the agent reached the last waypoint
+               with shape (..., 1).
+
+
+.. py:function:: _compute_arclengths(waypoints: jax.Array, valid: Optional[jax.Array] = None) -> jax.Array
+
+   Helper function for computing the arclengths of a series of waypoints.
+
+
+.. py:function:: _add_headway_waypoints(traj: waymax.datatypes.Trajectory, distance: float = 2.0, num_points: int = 10) -> waymax.datatypes.Trajectory
+
+   Adds additional waypoints after a trajectory for collision detection.
+
+   This function adds `num_points` additional waypoints, spaced evenly over
+   `distance`, to the end of a series of waypoints following the same heading as
+   the final timestep.
+   The use case is to add additional waypoints for collision detection, since
+   we only check for collisions along future waypoints. This is especially
+   useful for vehicles that move slowly or are parked in the logs and do not
+   have many future logged waypoints.
+
+   :param traj: A trajectory of waypoints of shape (...., num_timesteps).
+   :param distance: Distance over which to add points.
+   :param num_points: Number of points to add.
+
+   :returns:
+
+             A trajectory of shape (..., num_timesteps+N) containing augmented waypoints,
+               where N is num_points.
+
+

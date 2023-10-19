@@ -1,0 +1,77 @@
+:py:mod:`waymax.agents.expert`
+==============================
+
+.. py:module:: waymax.agents.expert
+
+.. autoapi-nested-parse::
+
+   Expert actor which returns an action inferred from logged data.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.expert.infer_expert_action
+   waymax.agents.expert.create_expert_actor
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.expert._EXPERT_NAME
+   waymax.agents.expert._IS_SDC_FUNC
+
+
+.. py:data:: _EXPERT_NAME
+   :value: 'expert'
+
+   
+
+.. py:data:: _IS_SDC_FUNC
+
+   
+
+.. py:function:: infer_expert_action(simulator_state: waymax.datatypes.SimulatorState, dynamics_model: waymax.dynamics.DynamicsModel) -> waymax.datatypes.Action
+
+   Infers an action from sim_traj[timestep] to log_traj[timestep + 1].
+
+   :param simulator_state: State of the simulator at the current timestep. Will use
+                           the `sim_trajectory` and `log_trajectory` fields to calculate an action.
+   :param dynamics_model: Dynamics model whose `inverse` function will be used to
+                          infer the expert action given the logged states.
+
+   :returns:
+
+             Action that will take the agent from sim_traj[timestep] to
+               log_traj[timestep + 1].
+
+
+.. py:function:: create_expert_actor(dynamics_model: waymax.dynamics.DynamicsModel, is_controlled_func: Callable[[waymax.datatypes.SimulatorState], jax.Array] = _IS_SDC_FUNC) -> waymax.agents.actor_core.WaymaxActorCore
+
+   Creates an expert agent using the WaymaxActorCore interface.
+
+   This agent infers an action from the `expert` by inferring an action using
+   the logged data. It does this by calling the `inverse` function on the passed
+   in `dynamics` parameter. It will return an action in the format returned by
+   the `dynamics` parameter.
+
+   :param dynamics_model: Dynamics model whose `inverse` function will be used to
+                          infer the expert action given the logged states.
+   :param is_controlled_func: A function that maps state to a controlled objects mask
+                              of shape (..., num_objects).
+
+   :returns: A Stateless Waymax actor which returns an `expert` action for all controlled
+             objects (defined by is_controlled_func) by inferring the best-fit action
+             given the logged state.
+
+

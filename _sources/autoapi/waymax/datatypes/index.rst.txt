@@ -1,0 +1,1753 @@
+:py:mod:`waymax.datatypes`
+==========================
+
+.. py:module:: waymax.datatypes
+
+.. autoapi-nested-parse::
+
+   Data structures and helper operations for Waymax.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   action/index.rst
+   array/index.rst
+   constant/index.rst
+   object_state/index.rst
+   observation/index.rst
+   operations/index.rst
+   roadgraph/index.rst
+   route/index.rst
+   simulator_state/index.rst
+   traffic_lights/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.Action
+   waymax.datatypes.TrajectoryUpdate
+   waymax.datatypes.MaskedArray
+   waymax.datatypes.ObjectMetadata
+   waymax.datatypes.ObjectTypeIds
+   waymax.datatypes.Trajectory
+   waymax.datatypes.ObjectPose2D
+   waymax.datatypes.Observation
+   waymax.datatypes.MapElementIds
+   waymax.datatypes.RoadgraphPoints
+   waymax.datatypes.Paths
+   waymax.datatypes.SimulatorState
+   waymax.datatypes.TrafficLights
+   waymax.datatypes.TrafficLightStates
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.fill_invalid_trajectory
+   waymax.datatypes.observation_from_state
+   waymax.datatypes.sdc_observation_from_state
+   waymax.datatypes.transform_observation
+   waymax.datatypes.transform_roadgraph_points
+   waymax.datatypes.transform_traffic_lights
+   waymax.datatypes.transform_trajectory
+   waymax.datatypes.compare_all_leaf_nodes
+   waymax.datatypes.dynamic_index
+   waymax.datatypes.dynamic_slice
+   waymax.datatypes.make_invalid_data
+   waymax.datatypes.masked_mean
+   waymax.datatypes.select_by_onehot
+   waymax.datatypes.update_by_mask
+   waymax.datatypes.update_by_slice_in_dim
+   waymax.datatypes.filter_topk_roadgraph_points
+   waymax.datatypes.is_road_edge
+   waymax.datatypes.get_control_mask
+   waymax.datatypes.update_state_by_log
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.PyTree
+   waymax.datatypes.TIME_INTERVAL
+   waymax.datatypes.TIMESTEP_MICROS_INTERVAL
+   waymax.datatypes.dynamic_update_slice_in_dim
+
+
+.. py:class:: Action
+
+
+   Raw actions tensor and validity mask.
+
+   .. attribute:: data
+
+      Action array for all agents in the scene of shape (..., num_objects,
+      dim).
+
+   .. attribute:: valid
+
+      Whether or not an action is valid for a given agent of shape (...,
+      num_objects, 1).
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The tensor shape of actions.
+
+   .. py:attribute:: data
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+
+.. py:class:: TrajectoryUpdate
+
+
+   A datastructure holding the controllable parts of a Trajectory.
+
+   The TrajectoryUpdate class contains the fields that a dynamics model is
+   allowed to update (pose and velocity). Remaining fields, such as object
+   dimensions and timestamps, are computed using common code
+   (see `update_state_with_dynamics_trajectory`).
+
+   As all dynamics produce a TrajectoryUpdate (via the `compute_update` method),
+   the TrajectoryUpdate serves as an intermediate update format that is common
+   to all dynamics models. This allows handling of multiple agents using
+   heterogeneous dynamics models.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The tensor shape of actions.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+   .. py:method:: as_action() -> Action
+
+      Returns this trajectory update as a 5D Action for StateDynamics.
+
+      :returns: An action data structure with data of shape (..., 5) containing
+                x, y, yaw, vel_x, and vel_y.
+
+
+
+.. py:class:: MaskedArray
+
+
+   A dataclass holding values and a validity mask.
+
+   .. attribute:: value
+
+      A valid.shape + (...) array of values.
+
+   .. attribute:: valid
+
+      A boolean validity mask.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array prefix shape of the value.
+
+   .. py:attribute:: value
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+   .. py:method:: create_and_validate(value: jax.Array, valid: jax.Array) -> MaskedArray
+      :classmethod:
+
+      Creates an instance of the class.
+
+
+   .. py:method:: masked_value(fill_value: Any = 0.0) -> jax.Array
+
+      Returns `value` where invalid elements are replaced with `fill_value`.
+
+      :param fill_value: Value with which to replace invalid elements. Must be castable
+                         to the dtype of `value`.
+
+      :returns: `value` where invalid elements are replaced with `fill_value`.
+
+
+
+.. py:data:: PyTree
+
+   
+
+.. py:data:: TIME_INTERVAL
+   :value: 0.1
+
+   
+
+.. py:data:: TIMESTEP_MICROS_INTERVAL
+   :value: 100000
+
+   
+
+.. py:function:: fill_invalid_trajectory(traj: Trajectory) -> Trajectory
+
+   Fills a trajectory with invalid values.
+
+   An invalid value is -1 for numerical fields and False for booleans.
+
+   :param traj: Trajectory to fill.
+
+   :returns: A new trajectory with invalid values.
+
+
+.. py:class:: ObjectMetadata
+
+
+   Time-independent object metadata.
+
+   All arrays are of shape (..., num_objects).
+
+   .. attribute:: ids
+
+      A unique integer id for each object which is consistent over time of
+      data type int32.
+
+   .. attribute:: object_types
+
+      An integer representing each different class of object
+      (Unset=0, Vehicle=1, Pedestrian=2, Cyclist=3, Other=4) of data type int32.
+      This definition is from Waymo Open Motion Dataset (WOMD).
+
+   .. attribute:: is_sdc
+
+      Binary mask of data type bool representing whether an object
+      represents the sdc or some other object.
+
+   .. attribute:: is_modeled
+
+      Whether a specific object is one designated by WOMD to be
+      predicted of data type bool.
+
+   .. attribute:: is_valid
+
+      Whether an object is valid at any part of the run segment of data
+      type bool.
+
+   .. attribute:: objects_of_interest
+
+      A vector of type bool to indicate which objects in the
+      scene corresponding to the first dimension of the object tensors have
+      interactive behavior. Up to 2 objects will be selected. The objects in
+      this list form an interactive group.
+
+   .. attribute:: is_controlled
+
+      Whether an object will be controlled by external agents in an
+      environment.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of the metadata.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects in metadata.
+
+   .. py:attribute:: ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: object_types
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_sdc
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_modeled
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_valid
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: objects_of_interest
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_controlled
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: ObjectTypeIds
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Ids for different map elements to be mapped into a tensor.
+
+   These integers represent the ID of these specific types as defined in:
+     https://waymo.com/open/data/motion/tfexample.
+
+   .. py:attribute:: UNSET
+      :value: 0
+
+      
+
+   .. py:attribute:: VEHICLE
+      :value: 1
+
+      
+
+   .. py:attribute:: PEDESTRIAN
+      :value: 2
+
+      
+
+   .. py:attribute:: CYCLIST
+      :value: 3
+
+      
+
+   .. py:attribute:: OTHER
+      :value: 4
+
+      
+
+
+.. py:class:: Trajectory
+
+
+   Data structure representing a trajectory.
+
+   The shapes of all objects are of shape (..., num_objects, num_timesteps).
+
+   .. attribute:: x
+
+      The x coordinate of each object at each time step of data type float32.
+
+   .. attribute:: y
+
+      The y coordinate of each object at each time step of data type float32.
+
+   .. attribute:: z
+
+      The z coordinate of each object at each time step of data type float32.
+
+   .. attribute:: vel_x
+
+      The x component of the object velocity at each time step of data type
+      float32.
+
+   .. attribute:: vel_y
+
+      The y component of the object velocity at each time step of data type
+      float32.
+
+   .. attribute:: yaw
+
+      Counter-clockwise yaw in top-down view (rotation about the Z axis from
+      a unit X vector to the object direction vector) of shape of data type
+      float32.
+
+   .. attribute:: valid
+
+      Validity bit for all object at all times steps of data type bool.
+
+   .. attribute:: timestamp_micros
+
+      A timestamp in microseconds for each time step of data
+      type int32.
+
+   .. attribute:: length
+
+      The length of each object at each time step of data type float32.
+      Note for each object, its length is fixed for all time steps.
+
+   .. attribute:: width
+
+      The width of each object at each time step of data type float32. Note
+      for each object, its width is fixed for all time steps.
+
+   .. attribute:: height
+
+      The height of each object at each time step of data type float32.
+      Note for each object, its height is fixed for all time steps.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of this trajectory.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects included in this trajectory per example.
+
+   .. py:property:: num_timesteps
+      :type: int
+
+      The length of this trajectory in time.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location.
+
+   .. py:property:: xyz
+      :type: jax.Array
+
+      Stacked xyz location.
+
+   .. py:property:: vel_xy
+      :type: jax.Array
+
+      Stacked xy velocity.
+
+   .. py:property:: speed
+      :type: jax.Array
+
+      Speed on x-y plane.
+
+   .. py:property:: vel_yaw
+      :type: jax.Array
+
+      Angle of the velocity on x-y plane.
+
+   .. py:property:: bbox_corners
+      :type: jax.Array
+
+      Corners of the bounding box spanning the object's shape.
+
+      :returns:
+
+                Box corners' (x, y) coordinates spanning the object of shape
+                  (..., num_objects, num_timesteps, 4, 2). The 4 corners start from the
+                  objects' front right corner and go counter-clockwise.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: timestamp_micros
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: length
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: width
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: height
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: stack_fields(field_names: collections.abc.Sequence[str]) -> jax.Array
+
+      Returns a concatenated version of a set of field names for Trajectory.
+
+
+   .. py:method:: zeros(shape: collections.abc.Sequence[int]) -> Trajectory
+      :classmethod:
+
+      Creates a Trajectory containing zeros of the specified shape.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: ObjectPose2D
+
+
+   Object 2D pose that can be used for coordinate transformation.
+
+   The pose information is stored with two format
+   (see details at https://en.wikipedia.org/wiki/Pose_(computer_vision)):
+   1) the position (original_xy) and orientation (original_yaw); 2) the
+   transformation matrix (matrix) with the rotation angle explicitly saved as
+   delta_yaw.
+
+   Note since this is a general data structure, the pose could be using arbitrary
+   coordinate system.
+
+   Example usage:
+   Assuming the pose is using C coordinate system, applying matrix[..., i, :, :]
+   over an object with center (x, y) and yaw in C coordinate system gives its
+   position in i's local coordinate system. The object's yaw in i's local
+   coordinate system is yaw + delta_yaw.
+   This is done by translation of -original_xy followed by counter-clockwise
+   rotation of original_yaw.
+
+   .. attribute:: original_xy
+
+      (..., num_objects, 2), the coordinates of each object's center
+      in original coordinate systems.
+
+   .. attribute:: original_yaw
+
+      (..., num_objects), object's yaw in original coordinate
+      systems.
+
+   .. attribute:: matrix
+
+      (..., num_objects, 3, 3), transformation matrix where `matrix[...,
+      i, :, :]` is the transformation from original coordinates to object `i`
+      centric coordinates.
+
+   .. attribute:: delta_yaw
+
+      (..., num_objects), rotation angles used to transform yaw in
+      original coordinate system to object-center coordinate system. Note this
+      is the negative of original_yaw.
+
+   .. attribute:: valid
+
+      (..., num_objects), valid or not.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects.
+
+   .. py:property:: rotation_matrix
+      :type: jax.Array
+
+      2D rotation matrix.
+
+   .. py:property:: translation_vector
+      :type: jax.Array
+
+      2D translation vector.
+
+   .. py:attribute:: original_xy
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: original_yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: matrix
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: delta_yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: from_center_and_yaw(xy: jax.Array, yaw: jax.Array, valid: Optional[jax.Array] = None) -> ObjectPose2D
+      :classmethod:
+
+      Initializes pose from center location and yaw.
+
+      :param xy: (..., num_objects, 2), 2D coordinates of objects' center in arbitrary
+                 coordinate system.
+      :param yaw: (..., num_objects), objects' yaw in same coordinate system as xy.
+      :param valid: (..., num_objects), boolean mask for validity.
+
+      :returns: A ObjectPose2D with shape (..., num_objects).
+
+
+   .. py:method:: from_transformation(matrix: jax.Array, delta_yaw: jax.Array, valid: Optional[jax.Array] = None) -> ObjectPose2D
+      :classmethod:
+
+      Init pose from transformation matrix and delta_yaw.
+
+      :param matrix: (..., num_objects, 3, 3), 2D homogenous transformation matrix.
+      :param delta_yaw: (..., num_objects), transformation angles used together with
+                        matrix for coordinate transformation (i.e. rotation applied by the
+                        transformation matrix).
+      :param valid: (..., num_objects), boolean mask for validity.
+
+      :returns: A ObjectPose2D with shape (..., num_objects).
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: Observation
+
+
+   Observation at a single simulation step.
+
+   num_observations: number of objects that will have an observation/view over
+   other objects/map elements.
+
+   The observation can include a fixed number of history information. Note we
+   support multi-agent observation by default: for each object (in axis
+   num_observations), we compute its view of all other objects (in axis
+   num_objects), roadgraph points, and traffic lights. The coordinates used for
+   each object (num_observations) are centered at its location defined by pose2d.
+
+   .. attribute:: trajectory
+
+      Time-dependent information, in object-centric coordinates
+      defined by pose2d of shape (..., num_observations, num_objects,
+      num_timesteps).
+
+   .. attribute:: is_ego
+
+      Binary mask of shape (..., num_observations, num_objects). It
+      represents which object in num_objects is the observer itself.
+
+   .. attribute:: pose2d
+
+      Poses for all objects, used for transformation of shape (...,
+      num_observations).
+
+   .. attribute:: metadata
+
+      Time-independent information of shape (..., num_observations,
+      num_objects).
+
+   .. attribute:: roadgraph_static_points
+
+      Top-k (k=num_points) nearest static roadgraph
+      points of shape (..., num_observations, num_points).
+
+   .. attribute:: traffic_lights
+
+      Current state of the traffic lights in the log of shape
+      (..., num_observations, num_traffic_lights, num_timesteps).
+
+   .. attribute:: sdc_paths
+
+      SDC roadgraph traversal paths. Only valid for SDC agents of shape
+      (..., num_observations, num_paths, num_points_per_path).
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      (..., num_observations).
+
+      :type: The longest common prefix shape of all attributes
+
+   .. py:property:: batch_dims
+      :type: tuple[int, Ellipsis]
+
+      Batch dimensions.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects.
+
+   .. py:property:: valid
+      :type: jax.Array
+
+      Whether the observation is valid, (..., num_observations).
+
+   .. py:attribute:: trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      
+
+   .. py:attribute:: is_ego
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: pose2d
+      :type: ObjectPose2D
+
+      
+
+   .. py:attribute:: metadata
+      :type: waymax.datatypes.object_state.ObjectMetadata
+
+      
+
+   .. py:attribute:: roadgraph_static_points
+      :type: waymax.datatypes.roadgraph.RoadgraphPoints
+
+      
+
+   .. py:attribute:: traffic_lights
+      :type: Observation.traffic_lights
+
+      
+
+   .. py:attribute:: sdc_paths
+      :type: Optional[waymax.datatypes.route.Paths]
+
+      
+
+   .. py:method:: for_obj(idx: int) -> Observation
+
+      Observation from idx-th object's point of view over all objects.
+
+      :param idx: The index of the object.
+
+      :returns: A Observation with shape (..., 1).
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:function:: observation_from_state(state: waymax.datatypes.simulator_state.SimulatorState, obs_num_steps: int = 1, roadgraph_top_k: int = 1000, coordinate_frame: waymax.config.CoordinateFrame = config.CoordinateFrame.GLOBAL) -> Observation
+
+   Constructs Observation from SimulatorState for all agents (jit-able).
+
+   :param state: A SimulatorState, with entirely variable shape (...).
+   :param obs_num_steps: Number of steps history included in observation. Last
+                         timestep is state.timestep.
+   :param roadgraph_top_k: Number of topk roadgraph observed by each object.
+   :param coordinate_frame: Which coordinate frame the returned observation is using.
+
+   :returns: Observation at current timestep from given simulator state, with shape (...,
+             num_objects).
+
+
+.. py:function:: sdc_observation_from_state(state: waymax.datatypes.simulator_state.SimulatorState, obs_num_steps: int = 1, roadgraph_top_k: int = 1000, coordinate_frame: waymax.config.CoordinateFrame = config.CoordinateFrame.SDC) -> Observation
+
+   Constructs Observation from SimulatorState for SDC only (jit-able).
+
+   :param state: a SimulatorState, with shape (...)
+   :param obs_num_steps: number of steps history included in observation. Last
+                         timestep is state.timestep.
+   :param roadgraph_top_k: number of topk roadgraph observed by each object.
+   :param coordinate_frame: which coordinate frame the returned observation is using.
+
+   :returns: SDC Observation at current timestep from given simulator state, with shape
+             (..., 1), where the last object dimension is 1 as there is only one SDC. It
+             is not sequeezed to be consistent with multi-agent cases and compatible for
+             other utils fnctions.
+
+
+.. py:function:: transform_observation(observation: Observation, pose2d: ObjectPose2D) -> Observation
+
+   Transforms a Observation into coordinates specified by pose2d.
+
+   :param observation: Has shape (..., num_observations)
+   :param pose2d: Has shape (..., num_observations)
+
+   :returns: Transformed observation in local coordinates per-observation defined by the
+             pose.
+
+
+.. py:function:: transform_roadgraph_points(roadgraph_points: waymax.datatypes.roadgraph.RoadgraphPoints, pose2d: ObjectPose2D) -> waymax.datatypes.roadgraph.RoadgraphPoints
+
+   Transform a RoadgraphPoints into coordinates specified by pose2d.
+
+   :param roadgraph_points: A RoadgraphPoints with shape (..., num_observations,
+                            num_points).
+   :param pose2d: A ObjectPose2D with shape (..., num_observations).
+
+   :returns: A transformed RoadgraphPoints in local coordinates per-observation defined
+             by the pose.
+
+
+.. py:function:: transform_traffic_lights(tls: waymax.datatypes.traffic_lights.TrafficLights, pose2d: ObjectPose2D) -> waymax.datatypes.traffic_lights.TrafficLights
+
+   Transforms a TrafficLightStates into coordinates specified by pose2d.
+
+   :param tls: A TrafficLightStates with shape (..., num_observations,
+               num_traffic_lights, num_timesteps).
+   :param pose2d: A ObjectPose2D with shape (..., num_observations).
+
+   :returns: Transformed TrafficLightStates in local coordinates per-observation defined
+             by the pose.
+
+
+.. py:function:: transform_trajectory(traj: waymax.datatypes.object_state.Trajectory, pose2d: ObjectPose2D) -> waymax.datatypes.object_state.Trajectory
+
+   Transforms a Trajectory into coordinates specified by pose2d.
+
+   :param traj: A Trajectory with shape (..., num_observations, num_objects,
+                num_timesteps) in coordinate system same as the one used by
+                original_xy/yaw in pose2d.
+   :param pose2d: A ObjectPose2D with shape (..., num_observations).
+
+   :returns: A transformed trajectory in local coordinates per-observation defined by the
+             pose.
+
+
+.. py:function:: compare_all_leaf_nodes(first: PyTree, second: PyTree, compare_func: Callable[[jax.Array, jax.Array], bool] = jnp.array_equal) -> bool
+
+   Checks if all leaf nodes are consistent via compare_func.
+
+   The default behaviour (with compare_func as jnp.array_equal) is to
+   compare if two PyTree are equal (i.e. all leaf nodes of array are equal).
+   One can also use compare_func as jnp.allclose to give some tolerance
+   for numerical difference.
+
+   :param first: A PyTree for comparison.
+   :param second: A PyTree for comparison.
+   :param compare_func: A function comparing nodes between two input arrays.
+
+   :returns: True if inputs PyTrees are consistent by func.
+
+
+.. py:function:: dynamic_index(inputs: PyTree, index: ArrayLike, axis: int = 0, keepdims: bool = True) -> PyTree
+
+   Wraps dynamic_index_in_dim on a PyTree.
+
+   :param inputs: Object where each element in it is to be indexed.
+   :param index: Element number to index into each array in the tree.
+   :param axis: Axis of each array to perform the indexing in.
+   :param keepdims: Whether or not to keep the same rank as `inputs`. If this is set
+                    to `True` then the return value will be such that `.shape[axis]` == 1.
+
+   :returns:
+
+             Array tree where every element of the tree has been indexed at the same
+               specified axis.
+
+
+.. py:function:: dynamic_slice(inputs: PyTree, start_index: ArrayLike, slice_size: int, axis: int = 0) -> PyTree
+
+   Wraps dynamic_slice_in_dim on a PyTree.
+
+   :param inputs: Object where each element in its tree is to be sliced.
+   :param start_index: Start index of slicing function.
+   :param slice_size: Size of slice applied to `inputs` starting from `start_index` to
+                      `start_index` + `slice_size`.
+   :param axis: Axis of each array to perform the slicing in.
+
+   :returns:
+
+             Array tree which has been sliced along an axis which maintains the same
+               rank as `inputs`.
+
+
+.. py:data:: dynamic_update_slice_in_dim
+
+   
+
+.. py:function:: make_invalid_data(data: jax.Array) -> jax.Array
+
+   Returns a tensor of invalid values with identical shape to data.
+
+   Invalid values are defined as False for booleans, and -1 for numerical values.
+
+   :param data: Tensor to invalidate.
+
+   :returns: A tensor of invalid values of the same shape and dtype as data.
+
+
+.. py:function:: masked_mean(x: jax.Array, valid: jax.Array, axis: Axis = 0, invalid_value: float = -1.0) -> jax.Array
+
+   Calculates the mean of the array removing invalid values.
+
+   :param x: Input to the masked mean function.
+   :param valid: Boolean array with the same shape as x which indicates which values
+                 should be included in the mean.
+   :param axis: Axis to reduce along.
+   :param invalid_value: If there is no valid fields, the value will be replaced by
+                         this invalid value.
+
+   :returns: Array representing the mean of the array of all valid values.
+
+
+.. py:function:: select_by_onehot(data: PyTree, selection: jax.Array, keepdims: bool = False) -> PyTree
+
+   Selects data using a one-hot vector.
+
+   :param data: A pytree with leaf shapes (..., N, ...).
+   :param selection: A one-hot vector with shape (..., N).
+   :param keepdims: Whether to leave a (1,) dimension on the selected axis.
+
+   :returns: A pytree with leaf shapes (..., 1) if keepdims=True.
+             A pytree with leaf shapes (..., ) if keepdims=False.
+
+
+.. py:function:: update_by_mask(inputs: PyTree, updates: PyTree, mask: jax.Array) -> PyTree
+
+   Updates inputs by updates (with same struct) for masked values.
+
+   Uses `jax.tree_util` to update each field as such:
+     inputs.field = jnp.where(mask, updates.field, inputs.field)
+
+   :param inputs: Represents the data to be updated and returned.
+   :param updates: Represents the data that is passed in to update all fields. It is
+                   assumed that the `updates` and the `inputs` have the same structure. These
+                   fields must be broadcastable to the same shape as `inputs` after applying
+                   the mask.
+   :param mask: Mask that represents which elements of the `inputs` array tree to
+                update with the `updates` field. Shape must be broadcastable to the leaf
+                nodes of inputs and updates.
+
+   :returns:
+
+             Updated tree array of the same structure as `inputs` which has had all its
+               fields updated with the corresponding fields in `updates` conditioned on
+               whether `mask` requests it.
+
+
+.. py:function:: update_by_slice_in_dim(inputs: PyTree, updates: PyTree, inputs_start_idx: ArrayLike, updates_start_idx: Optional[ArrayLike] = None, slice_size: Optional[int] = None, axis: int = 0) -> PyTree
+
+   Updates a slice in inputs using slices from updates.
+
+   It replaces inputs[inputs_start_idx:inputs_start_idx+slice_size] by
+   updates[updates_start_idx:updates_start_idx+slice_size] for specified axis
+   only.
+
+   If updates_start_idx and slice_size are both None, the behavior of this
+   function will default to dynamic_update_slice_in_dim.
+
+   :param inputs: Represents the data to be updated and returned.
+   :param updates: Represents the data that is passed in to update all fields. It is
+                   assumed that the `updates` and the `inputs` have the same structure.
+   :param inputs_start_idx: starting index in inputs.
+   :param updates_start_idx: starting index in updates.
+   :param slice_size: the slice size used for update. If slice size is None, uses the
+                      entire array and updates_start_idx will be ignored.
+   :param axis: Axis of each array to perform the slicing in.
+
+   :returns: A PyTree with same structure as inputs.
+
+
+.. py:function:: filter_topk_roadgraph_points(roadgraph: RoadgraphPoints, reference_points: jax.Array, topk: int) -> RoadgraphPoints
+
+   Returns the topk closest roadgraph points to a reference point.
+
+   If `topk` is larger than the number of points, exception will be raised.
+
+   :param roadgraph: Roadgraph information to filter, (..., num_points).
+   :param reference_points: A tensor of shape (..., 2) - the reference point used to
+                            measure distance.
+   :param topk: Number of points to keep.
+
+   :returns:
+
+             Roadgraph data structure that has been filtered to only contain the `topk`
+               closest points to a reference point.
+
+
+.. py:function:: is_road_edge(types: jax.Array) -> jax.Array
+
+   Determines which map elements in a tensor are road edges.
+
+   :param types: An array of integer values with each integer value representing a
+                 unique map type. These integers are based on a schema defined in
+                 https://waymo.com/open/data/motion/tfexample. This is of shape (...,
+                   num_points).
+
+   :returns: A bool array where an element is true if the map element is a road edge.
+
+
+.. py:class:: MapElementIds
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Ids for different map elements to be mapped into a tensor.
+
+   These integers represent the ID of these specific types as defined in:
+     https://waymo.com/open/data/motion/tfexample.
+
+   .. py:attribute:: LANE_UNDEFINED
+      :value: 0
+
+      
+
+   .. py:attribute:: LANE_FREEWAY
+      :value: 1
+
+      
+
+   .. py:attribute:: LANE_SURFACE_STREET
+      :value: 2
+
+      
+
+   .. py:attribute:: LANE_BIKE_LANE
+      :value: 3
+
+      
+
+   .. py:attribute:: ROAD_LINE_UNKNOWN
+      :value: 5
+
+      
+
+   .. py:attribute:: ROAD_LINE_BROKEN_SINGLE_WHITE
+      :value: 6
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_SINGLE_WHITE
+      :value: 7
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_DOUBLE_WHITE
+      :value: 8
+
+      
+
+   .. py:attribute:: ROAD_LINE_BROKEN_SINGLE_YELLOW
+      :value: 9
+
+      
+
+   .. py:attribute:: ROAD_LINE_BROKEN_DOUBLE_YELLOW
+      :value: 10
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_SINGLE_YELLOW
+      :value: 11
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_DOUBLE_YELLOW
+      :value: 12
+
+      
+
+   .. py:attribute:: ROAD_LINE_PASSING_DOUBLE_YELLOW
+      :value: 13
+
+      
+
+   .. py:attribute:: ROAD_EDGE_UNKNOWN
+      :value: 14
+
+      
+
+   .. py:attribute:: ROAD_EDGE_BOUNDARY
+      :value: 15
+
+      
+
+   .. py:attribute:: ROAD_EDGE_MEDIAN
+      :value: 16
+
+      
+
+   .. py:attribute:: STOP_SIGN
+      :value: 17
+
+      
+
+   .. py:attribute:: CROSSWALK
+      :value: 18
+
+      
+
+   .. py:attribute:: SPEED_BUMP
+      :value: 19
+
+      
+
+   .. py:attribute:: UNKNOWN
+
+      
+
+
+.. py:class:: RoadgraphPoints
+
+
+   Data structure representing roadgraph points.
+
+   It holds the coordinates of the sampled map data points.  Note all attributes
+   have shape (..., num_points), where num_points is the
+   number of road graph points.
+
+   .. attribute:: x
+
+      X coordinate of positions of the sampled map data points of dtype
+      float32.
+
+   .. attribute:: y
+
+      Y coordinate of positions of the sampled map data points of dtype
+      float32.
+
+   .. attribute:: z
+
+      Z coordinate of positions of the sampled map data points of dtype
+      float32.
+
+   .. attribute:: dir_x
+
+      X coordinate of a unit direction vector for each map feature sample
+      point of dtype float32.
+
+   .. attribute:: dir_y
+
+      Y coordinate of a unit direction vector for each map feature sample
+      point of dtype float32.
+
+   .. attribute:: dir_z
+
+      Z coordinate of a unit direction vector for each map feature sample
+      point of dtype float32.
+
+   .. attribute:: types
+
+      A unique integer for each combination of map feature type and
+      properties of dtype int32. See the table in the Value Range column of
+      website: https://waymo.com/open/data/motion/tfexample.
+
+   .. attribute:: ids
+
+      A unique Integer ID for the vector map feature each sample is from of
+      dtype int32.
+
+   .. attribute:: valid
+
+      A valid flag for each map sample point of dtype bool.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of the RoadgraphPoints.
+
+   .. py:property:: num_points
+      :type: int
+
+      The number of points included in this RoadgraphPoints per example.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location for all points.
+
+   .. py:property:: xyz
+      :type: jax.Array
+
+      Stacked xyz location for all points.
+
+   .. py:property:: dir_xy
+      :type: jax.Array
+
+      Stacked xy direction for all points.
+
+   .. py:property:: dir_xyz
+      :type: jax.Array
+
+      Stacked xy direction for all points.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: dir_x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: dir_y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: dir_z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: types
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: Paths
+
+
+   Data structure for a set of paths represented by roadgraph points.
+
+   A `path` consists of a set of roadgraph points (usually along the lane center)
+   and represents where an object can legally traverse giving its starting point.
+
+   .. attribute:: x
+
+      Path coordinate x, shape is (..., num_paths, num_points_per_path) and
+      dtype is float32.
+
+   .. attribute:: y
+
+      Path coordinate y, shape is (..., num_paths, num_points_per_path) and
+      dtype is float32.
+
+   .. attribute:: z
+
+      Path coordinate z, shape is (..., num_paths, num_points_per_path) and
+      dtype is float32.
+
+   .. attribute:: ids
+
+      IDs representing which lane the points belong to, shape is (...,
+      num_paths, num_points_per_path) and dtype is int32.
+
+   .. attribute:: valid
+
+      Validity flag, shape is (..., num_paths, num_points_per_path) and
+      dtype is bool.
+
+   .. attribute:: arc_length
+
+      Represents the arc length for each point from the starting point
+      along the path with shape (..., num_paths, num_points_per_path) and dtype
+      is float32.
+
+   .. attribute:: on_route
+
+      Flag for each path representing whether it is on the road route
+      corresponding to the logged trajectory, shape is (..., num_paths, 1) and
+      the dtype is bool.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of the routes.
+
+   .. py:property:: num_points_per_path
+      :type: int
+
+      The number of points included in the paths per example.
+
+   .. py:property:: num_paths
+      :type: int
+
+      The number of paths included in the example.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location for all points.
+
+   .. py:property:: xyz
+      :type: jax.Array
+
+      Stacked xyz location for all points.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: arc_length
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: on_route
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+
+.. py:function:: get_control_mask(metadata: waymax.datatypes.object_state.ObjectMetadata, obj_type: waymax.config.ObjectType) -> jax.Array
+
+   Returns binary mask for selected object type.
+
+   :param metadata: An ObjectMetadata, having shape (..., num_objects).
+   :param obj_type: Represents which type of objects should be selected.
+
+   :returns: A binary mask with shape (..., num_objects).
+
+
+.. py:class:: SimulatorState
+
+
+   A dataclass holding the simulator state, all data in global coordinates.
+
+   .. attribute:: sim_trajectory
+
+      Simulated trajectory for all objects of shape (...,
+      num_objects, num_timesteps). The number of timesteps is the same as in the
+      log, but future trajectory points that have not been simulated will be
+      marked invalid.
+
+   .. attribute:: log_trajectory
+
+      Logged trajectory for all objects of shape (...,
+      num_objects, num_timesteps).
+
+   .. attribute:: log_traffic_light
+
+      Logged traffic light information for the entire run
+      segment of shape (..., num_traffic_lights, num_timesteps).
+
+   .. attribute:: object_metadata
+
+      Metadata for all objects of shape (..., num_objects).
+
+   .. attribute:: timestep
+
+      The current simulation timestep index of shape (...). Note that
+      sim_trajectory at `timestep` is the last executed step by the simulator.
+
+   .. attribute:: sdc_paths
+
+      Paths for SDC, representing where the SDC can drive of shape
+      (..., num_paths, num_points_per_path).
+
+   .. attribute:: roadgraph_points
+
+      A optional RoadgraphPoints holding subsampled roadgraph
+      points of shape (..., num_points).
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      Shape is defined as the most common prefix shape of all attributes.
+
+   .. py:property:: batch_dims
+      :type: tuple[int, Ellipsis]
+
+      Batch dimensions.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects included in this trajectory per example.
+
+   .. py:property:: is_done
+      :type: bool
+
+      Returns whether the simulation is at the end of the logged history.
+
+   .. py:property:: remaining_timesteps
+      :type: int
+
+      Returns the number of remaining timesteps in the episode.
+
+   .. py:property:: current_sim_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      Returns the trajectory corresponding to the current sim state.
+
+   .. py:property:: current_log_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      Returns the trajectory corresponding to the current sim state.
+
+   .. py:attribute:: sim_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      
+
+   .. py:attribute:: log_trajectory
+      :type: waymax.datatypes.object_state.Trajectory
+
+      
+
+   .. py:attribute:: log_traffic_light
+      :type: waymax.datatypes.traffic_lights.TrafficLights
+
+      
+
+   .. py:attribute:: object_metadata
+      :type: waymax.datatypes.object_state.ObjectMetadata
+
+      
+
+   .. py:attribute:: timestep
+      :type: jax.typing.ArrayLike
+
+      
+
+   .. py:attribute:: sdc_paths
+      :type: Optional[waymax.datatypes.route.Paths]
+
+      
+
+   .. py:attribute:: roadgraph_points
+      :type: Optional[waymax.datatypes.roadgraph.RoadgraphPoints]
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:function:: update_state_by_log(state: SimulatorState, num_steps: int) -> SimulatorState
+
+   Advances SimulatorState by num_steps using logged data.
+
+
+.. py:class:: TrafficLights
+
+
+   Data structure representing the dynamic traffic light state information.
+
+   All attributes have shape (..., num_traffic_lights, num_timesteps).
+
+   .. attribute:: x
+
+      The X coordinate of the stop light position of dtype float32.
+
+   .. attribute:: y
+
+      The Y coordinate of the stop light position of dtype float32.
+
+   .. attribute:: z
+
+      The Z coordinate of the stop light position. This point is at the
+      beginning of the lane segment controlled by the traffic signal of dtype
+      float32.
+
+   .. attribute:: state
+
+      The state of each traffic light at each time step of dtype int32. See
+      above enum for integer values of all traffic lights states.
+
+   .. attribute:: lane_ids
+
+      which lane it controls.
+
+   .. attribute:: valid
+
+      A valid flag for all elements of features traffic_light.XX. If set to
+      True, the element is populated with valid data.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The tensor shape of the traffic lights.
+
+   .. py:property:: num_traffic_lights
+      :type: int
+
+      The number of points included in this traffic light per example.
+
+   .. py:property:: num_timesteps
+      :type: int
+
+      The number of timesteps included in this traffic light per example.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location for all points.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: state
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: lane_ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: TrafficLightStates
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Represents the integer values for all Traffic Light State values.
+
+   .. py:attribute:: UNKNOWN
+      :value: 0
+
+      
+
+   .. py:attribute:: ARROW_STOP
+      :value: 1
+
+      
+
+   .. py:attribute:: ARROW_CAUTION
+      :value: 2
+
+      
+
+   .. py:attribute:: ARROW_GO
+      :value: 3
+
+      
+
+   .. py:attribute:: STOP
+      :value: 4
+
+      
+
+   .. py:attribute:: CAUTION
+      :value: 5
+
+      
+
+   .. py:attribute:: GO
+      :value: 6
+
+      
+
+   .. py:attribute:: FLASHING_STOP
+      :value: 7
+
+      
+
+   .. py:attribute:: FLASHING_CAUTION
+      :value: 8
+
+      
+
+

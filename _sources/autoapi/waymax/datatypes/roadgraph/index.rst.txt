@@ -1,0 +1,325 @@
+:py:mod:`waymax.datatypes.roadgraph`
+====================================
+
+.. py:module:: waymax.datatypes.roadgraph
+
+.. autoapi-nested-parse::
+
+   Roadgraph based datastructures for Waymax based on WOMD.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.roadgraph.MapElementIds
+   waymax.datatypes.roadgraph.RoadgraphPoints
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.roadgraph.filter_topk_roadgraph_points
+   waymax.datatypes.roadgraph.is_road_edge
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.roadgraph.PyTree
+
+
+.. py:data:: PyTree
+
+   
+
+.. py:class:: MapElementIds
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Ids for different map elements to be mapped into a tensor.
+
+   These integers represent the ID of these specific types as defined in:
+     https://waymo.com/open/data/motion/tfexample.
+
+   .. py:attribute:: LANE_UNDEFINED
+      :value: 0
+
+      
+
+   .. py:attribute:: LANE_FREEWAY
+      :value: 1
+
+      
+
+   .. py:attribute:: LANE_SURFACE_STREET
+      :value: 2
+
+      
+
+   .. py:attribute:: LANE_BIKE_LANE
+      :value: 3
+
+      
+
+   .. py:attribute:: ROAD_LINE_UNKNOWN
+      :value: 5
+
+      
+
+   .. py:attribute:: ROAD_LINE_BROKEN_SINGLE_WHITE
+      :value: 6
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_SINGLE_WHITE
+      :value: 7
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_DOUBLE_WHITE
+      :value: 8
+
+      
+
+   .. py:attribute:: ROAD_LINE_BROKEN_SINGLE_YELLOW
+      :value: 9
+
+      
+
+   .. py:attribute:: ROAD_LINE_BROKEN_DOUBLE_YELLOW
+      :value: 10
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_SINGLE_YELLOW
+      :value: 11
+
+      
+
+   .. py:attribute:: ROAD_LINE_SOLID_DOUBLE_YELLOW
+      :value: 12
+
+      
+
+   .. py:attribute:: ROAD_LINE_PASSING_DOUBLE_YELLOW
+      :value: 13
+
+      
+
+   .. py:attribute:: ROAD_EDGE_UNKNOWN
+      :value: 14
+
+      
+
+   .. py:attribute:: ROAD_EDGE_BOUNDARY
+      :value: 15
+
+      
+
+   .. py:attribute:: ROAD_EDGE_MEDIAN
+      :value: 16
+
+      
+
+   .. py:attribute:: STOP_SIGN
+      :value: 17
+
+      
+
+   .. py:attribute:: CROSSWALK
+      :value: 18
+
+      
+
+   .. py:attribute:: SPEED_BUMP
+      :value: 19
+
+      
+
+   .. py:attribute:: UNKNOWN
+
+      
+
+
+.. py:class:: RoadgraphPoints
+
+
+   Data structure representing roadgraph points.
+
+   It holds the coordinates of the sampled map data points.  Note all attributes
+   have shape (..., num_points), where num_points is the
+   number of road graph points.
+
+   .. attribute:: x
+
+      X coordinate of positions of the sampled map data points of dtype
+      float32.
+
+   .. attribute:: y
+
+      Y coordinate of positions of the sampled map data points of dtype
+      float32.
+
+   .. attribute:: z
+
+      Z coordinate of positions of the sampled map data points of dtype
+      float32.
+
+   .. attribute:: dir_x
+
+      X coordinate of a unit direction vector for each map feature sample
+      point of dtype float32.
+
+   .. attribute:: dir_y
+
+      Y coordinate of a unit direction vector for each map feature sample
+      point of dtype float32.
+
+   .. attribute:: dir_z
+
+      Z coordinate of a unit direction vector for each map feature sample
+      point of dtype float32.
+
+   .. attribute:: types
+
+      A unique integer for each combination of map feature type and
+      properties of dtype int32. See the table in the Value Range column of
+      website: https://waymo.com/open/data/motion/tfexample.
+
+   .. attribute:: ids
+
+      A unique Integer ID for the vector map feature each sample is from of
+      dtype int32.
+
+   .. attribute:: valid
+
+      A valid flag for each map sample point of dtype bool.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of the RoadgraphPoints.
+
+   .. py:property:: num_points
+      :type: int
+
+      The number of points included in this RoadgraphPoints per example.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location for all points.
+
+   .. py:property:: xyz
+      :type: jax.Array
+
+      Stacked xyz location for all points.
+
+   .. py:property:: dir_xy
+      :type: jax.Array
+
+      Stacked xy direction for all points.
+
+   .. py:property:: dir_xyz
+      :type: jax.Array
+
+      Stacked xy direction for all points.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: dir_x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: dir_y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: dir_z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: types
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:function:: filter_topk_roadgraph_points(roadgraph: RoadgraphPoints, reference_points: jax.Array, topk: int) -> RoadgraphPoints
+
+   Returns the topk closest roadgraph points to a reference point.
+
+   If `topk` is larger than the number of points, exception will be raised.
+
+   :param roadgraph: Roadgraph information to filter, (..., num_points).
+   :param reference_points: A tensor of shape (..., 2) - the reference point used to
+                            measure distance.
+   :param topk: Number of points to keep.
+
+   :returns:
+
+             Roadgraph data structure that has been filtered to only contain the `topk`
+               closest points to a reference point.
+
+
+.. py:function:: is_road_edge(types: jax.Array) -> jax.Array
+
+   Determines which map elements in a tensor are road edges.
+
+   :param types: An array of integer values with each integer value representing a
+                 unique map type. These integers are based on a schema defined in
+                 https://waymo.com/open/data/motion/tfexample. This is of shape (...,
+                   num_points).
+
+   :returns: A bool array where an element is true if the map element is a road edge.
+
+

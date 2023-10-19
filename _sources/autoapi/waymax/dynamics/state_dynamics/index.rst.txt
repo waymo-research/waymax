@@ -1,0 +1,63 @@
+:py:mod:`waymax.dynamics.state_dynamics`
+========================================
+
+.. py:module:: waymax.dynamics.state_dynamics
+
+.. autoapi-nested-parse::
+
+   Dynamics model for setting state in global coordinates.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.state_dynamics.StateDynamics
+
+
+
+
+.. py:class:: StateDynamics
+
+
+   Bases: :py:obj:`waymax.dynamics.abstract_dynamics.DynamicsModel`
+
+   Dynamics model for setting state in global coordinates.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for the delta global action space.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+      This dynamics will directly set the next x, y, yaw, vel_x, and vel_y based
+      on the action.
+
+      :param action: Actions to take. Has shape (..., num_objects).
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns: The trajectory update for timestep.
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Runs inverse dynamics model to infer actions for specified timestep.
+
+      :param trajectory: A Trajectory used to infer actions of shape (..., num_objects,
+                         num_timesteps).
+      :param metadata: Object metadata for the trajectory.
+      :param timestep: Index of time for actions.
+
+      :returns: An Action that converts traj[timestep] to traj[timestep+1].
+
+
+

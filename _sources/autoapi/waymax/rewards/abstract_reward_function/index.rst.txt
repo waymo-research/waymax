@@ -1,0 +1,47 @@
+:py:mod:`waymax.rewards.abstract_reward_function`
+=================================================
+
+.. py:module:: waymax.rewards.abstract_reward_function
+
+.. autoapi-nested-parse::
+
+   Abstract reward function definition.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.rewards.abstract_reward_function.AbstractRewardFunction
+
+
+
+
+.. py:class:: AbstractRewardFunction
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   Abstract class that ensures a certain reward function design.
+
+   .. py:method:: compute(simulator_state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action, agent_mask: jax.Array) -> jax.Array
+      :abstractmethod:
+
+      Computes rewards for every agent given a sim state and action.
+
+      :param simulator_state: State of the Waymax environment.
+      :param action: Action taken to control the agent(s) (..., num_objects,
+                     action_space).
+      :param agent_mask: Binary mask indicating which agent inputs are valid (...,
+                         num_objects).
+
+      :returns: An array of rewards, where there is one reward per agent
+                (..., num_objects).
+
+
+

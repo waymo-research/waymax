@@ -1,0 +1,167 @@
+:py:mod:`waymax.dataloader.womd_utils`
+======================================
+
+.. py:module:: waymax.dataloader.womd_utils
+
+.. autoapi-nested-parse::
+
+   General settings and utility functions specifically for the WOMD data.
+
+   These functions are mainly intended to be iternal into the Waymax data library.
+
+   WOMD (go/womd) represents the data we typically use for simulation in our
+   environment. See https://waymo.com/open/data/motion/tfexample for definitions on
+   many of the data fields mentioned in this file.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dataloader.womd_utils.aggregate_time_tensors
+   waymax.dataloader.womd_utils.get_features_description
+   waymax.dataloader.womd_utils.simulator_state_to_womd_dict_tensorflow
+   waymax.dataloader.womd_utils.simulator_state_to_womd_dict
+   waymax.dataloader.womd_utils._roadgraph_to_dict
+   waymax.dataloader.womd_utils._trajectory_to_dict
+   waymax.dataloader.womd_utils._traffic_light_to_dict
+   waymax.dataloader.womd_utils._object_metadata_to_dict
+   waymax.dataloader.womd_utils._get_invalid_future_trajectory
+   waymax.dataloader.womd_utils._get_invalid_future_traffic_light
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dataloader.womd_utils.DEFAULT_FLOAT
+   waymax.dataloader.womd_utils.DEFAULT_INT
+   waymax.dataloader.womd_utils.DEFAULT_BOOL
+   waymax.dataloader.womd_utils._TF_TO_JNP_DTYPE
+   waymax.dataloader.womd_utils.TL_TIMESTAMP_STEP_AXIS
+   waymax.dataloader.womd_utils.TL_STEP_AXIS
+
+
+.. py:data:: DEFAULT_FLOAT
+
+   
+
+.. py:data:: DEFAULT_INT
+
+   
+
+.. py:data:: DEFAULT_BOOL
+   :value: False
+
+   
+
+.. py:data:: _TF_TO_JNP_DTYPE
+
+   
+
+.. py:data:: TL_TIMESTAMP_STEP_AXIS
+
+   
+
+.. py:data:: TL_STEP_AXIS
+
+   
+
+.. py:function:: aggregate_time_tensors(decoded_tensors: dict[str, tensorflow.Tensor]) -> dict[str, tensorflow.Tensor]
+
+   Combines all past/current/future fields into an 'all' field.
+
+   Note the original past/current/future keys are removed in the returned dict.
+
+   :param decoded_tensors: input dict of tensors keyed by string.
+
+   :returns: `past/current/future` are
+             merged into `all`.
+   :rtype: A new dict of tensors keyed by updated string
+
+
+.. py:function:: get_features_description(max_num_objects: int = 128, max_num_rg_points: int = 30000, include_sdc_paths: bool = False, num_paths: Optional[int] = 45, num_points_per_path: Optional[int] = 800, num_tls: Optional[int] = 16) -> dict[str, tensorflow.io.FixedLenFeature]
+
+   Returns a dictionary of all features to be extracted.
+
+   :param max_num_objects: Max number of objects.
+   :param max_num_rg_points: Max number of sampled roadgraph points.
+   :param include_sdc_paths: Whether to include roadgraph traversal paths for the SDC.
+   :param num_paths: Optional number of SDC paths. Must be defined if
+                     `include_sdc_paths` is True.
+   :param num_points_per_path: Optional number of points per SDC path. Must be defined
+                               if `include_sdc_paths` is True.
+   :param num_tls: Maximum number of traffic lights.
+
+   :returns: Dictionary of all features to be extracted.
+
+   :raises ValueError: If `include_sdc_paths` is True but either `num_paths` or
+       `num_points_per_path` is None.
+
+
+.. py:function:: simulator_state_to_womd_dict_tensorflow(state: waymax.datatypes.simulator_state.SimulatorState, feature_description: dict[str, tensorflow.io.FixedLenFeature], validate: bool = False) -> dict[str, tensorflow.Tensor]
+
+   Tensorflow version of the simulator state to WOMD dict converter.
+
+
+.. py:function:: simulator_state_to_womd_dict(state: waymax.datatypes.simulator_state.SimulatorState, feature_description: dict[str, tensorflow.io.FixedLenFeature], validate: bool = False) -> dict[str, jax.Array]
+
+   Converts a simulator state into the WOMD tensor format.
+
+   See https://waymo.com/open/data/motion/tfexample for the tf.Example format
+   which will be returned from this function.
+   Note: This function is compatible with `jax2tf`.
+
+   :param state: State of the simulator from the environment. Should contain at least
+                 num_history + 1 elements in the time dimension for all temporal components
+                 of the simulated trajectory.
+   :param feature_description: Feature description expected out of the dictionary.
+                               This is used to understand the shape of the fields expected such as number
+                               of agents and amount of history.
+   :param validate: Validate whether the simulation has progressed far enough to
+                    ensure that an adequate amount of history is present.
+
+   :returns: A dictionary matching fields as if they were read from the WOMD dataset.
+
+   :raises ValueError: If `validate` is set to `True` and the number of history stored
+       in the observations is not `num_history` + 1.
+
+
+.. py:function:: _roadgraph_to_dict(rg: waymax.datatypes.roadgraph.RoadgraphPoints, prefix: str = 'roadgraph_samples') -> dict[str, jax.Array]
+
+   Gets the roadgrpah mpdata from the simulator state.
+
+
+.. py:function:: _trajectory_to_dict(trajectory: waymax.datatypes.object_state.Trajectory, time_prefix: str) -> dict[str, jax.Array]
+
+   Generates the mpdata fields for Trajectory data.
+
+
+.. py:function:: _traffic_light_to_dict(tls: waymax.datatypes.traffic_lights.TrafficLights, time_prefix: str, timestamp_micros: jax.Array) -> dict[str, jax.Array]
+
+   Generates the corresponding mpdata for TrafficLights fields.
+
+
+.. py:function:: _object_metadata_to_dict(metadata: waymax.datatypes.object_state.ObjectMetadata) -> dict[str, jax.Array]
+
+   Converts object metadata to the original tf.Example format.
+
+
+.. py:function:: _get_invalid_future_trajectory(feature_description: dict[str, tensorflow.io.FixedLenFeature]) -> dict[str, jax.Array]
+
+   Gets an invalid trajectory representing future.
+
+
+.. py:function:: _get_invalid_future_traffic_light(feature_description: dict[str, tensorflow.io.FixedLenFeature]) -> dict[str, jax.Array]
+
+   Gets an invalid traffic light representing future.
+
+

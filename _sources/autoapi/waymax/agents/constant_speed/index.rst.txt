@@ -1,0 +1,68 @@
+:py:mod:`waymax.agents.constant_speed`
+======================================
+
+.. py:module:: waymax.agents.constant_speed
+
+.. autoapi-nested-parse::
+
+   Constant speed agents.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.constant_speed.ConstantSpeedPolicy
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.agents.constant_speed.create_constant_speed_actor
+
+
+
+.. py:function:: create_constant_speed_actor(dynamics_model: waymax.dynamics.DynamicsModel, is_controlled_func: Callable[[waymax.datatypes.SimulatorState], jax.Array], speed: Optional[float] = None) -> waymax.agents.actor_core.WaymaxActorCore
+
+   Creates an actor with constant speed without changing objects' heading.
+
+   Note the difference against ConstantSpeedPolicy is that an actor requires
+   input of a dynamics model, while a policy does not (it assumes to use
+   StateDynamics).
+
+   :param dynamics_model: The dynamics model the actor is using that defines the
+                          action output by the actor.
+   :param is_controlled_func: Defines which objects are controlled by this actor.
+   :param speed: Speed of the actor, if None, speed from previous step is used.
+
+   :returns: An statelss actor that drives the controlled objects with constant speed.
+
+
+.. py:class:: ConstantSpeedPolicy(speed: float = 0.0)
+
+
+   Bases: :py:obj:`waymax.agents.waypoint_following_agent.WaypointFollowingPolicy`
+
+   A policy that maintains a constant speed for all sim agents.
+
+   .. py:method:: update_speed(state: waymax.datatypes.SimulatorState, dt: float = 0.1) -> tuple[jax.Array, jax.Array]
+
+      Sets the speed for each agent in the current sim step to a constant.
+
+      :param state: The simulator state of shape (...).
+      :param dt: Delta between timesteps of the simulator state.
+
+      :returns: A (..., num_objects) float array of constant speeds.
+                valids: A (..., num_objects) bool array of valids.
+      :rtype: speeds
+
+
+

@@ -1,0 +1,185 @@
+:py:mod:`waymax.utils.geometry`
+===============================
+
+.. py:module:: waymax.utils.geometry
+
+.. autoapi-nested-parse::
+
+   JIT-able util functions on array (data_struct agnostic).
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.utils.geometry.rotation_matrix_2d
+   waymax.utils.geometry.rotate_points
+   waymax.utils.geometry.pose_from_xy_yaw
+   waymax.utils.geometry._transform_points
+   waymax.utils.geometry.transform_points
+   waymax.utils.geometry.transform_yaw
+   waymax.utils.geometry.transform_trajectories
+   waymax.utils.geometry.transform_direction
+   waymax.utils.geometry.corners_from_bbox
+   waymax.utils.geometry.corners_from_bboxes
+   waymax.utils.geometry.has_overlap
+   waymax.utils.geometry.compute_pairwise_overlaps
+   waymax.utils.geometry.wrap_yaws
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.utils.geometry.EPS
+
+
+.. py:data:: EPS
+   :value: 1e-10
+
+   
+
+.. py:function:: rotation_matrix_2d(angle: jax.Array) -> jax.Array
+
+   Returns a 2D rotation matrix.
+
+   If an angle with batched dimensions is given, the result will be
+   a batched rotation matrix with the same leading batch dimensions as angle.
+   E.g. if angle is of shape (3, 7), the result will be of shape (3, 7, 2, 2)
+
+   :param angle: Angle to rotate by. The positive direction is counter-clockwise.
+
+   :returns: A 2x2 2D rotation matrix corresponding to angle.
+
+
+.. py:function:: rotate_points(matrix: jax.Array, points: jax.Array) -> jax.Array
+
+   Rotates points by a rotation matrix.
+
+   :param matrix: Matrix specifying the rotation to apply shape (prefix, dof, dof).
+   :param points: Points to rotate given `matrix` of shape (prefix, ..., dof).
+
+   :returns: A rotated set of points of shape (prefix, ..., dof).
+
+
+.. py:function:: pose_from_xy_yaw(xy: jax.Array, yaw: jax.Array) -> tuple[jax.Array, jax.Array]
+
+   Gets 2D transformation matrix and delta yaw with any prefix shape.
+
+   Applying the transformation using returned values will rotate
+   counter-clockwise by yaw, and then translate by xy.
+   Example: a unit vector at xy with direction equals yaw will be at (0, 0)
+   with direction equals 0 after the transformation.
+
+   :param xy: XY positions of points of shape (..., 2).
+   :param yaw: Orientation in radians with shape (...).
+
+   :returns: Transformation matrix and delta yaw. Note it is used as matmul(pose_matrix,
+             pts).
+
+
+.. py:function:: _transform_points(matrix: jax.Array, pts: jax.Array) -> jax.Array
+
+   Helper function for transform_points.
+
+
+.. py:function:: transform_points(pose_matrix: jax.Array, pts: jax.Array) -> jax.Array
+
+   Transforms points into new coordinates with any prefix shape.
+
+   :param pose_matrix: Matrix representing the transformation into the frame of some
+                       pose of shape (prefix, dof+1, dof+1).
+   :param pts: Points to translate of shape (prefix, ..., dof).
+
+   :returns: Points transformed by the `pose_matrix` of shape (prefix, ..., dof).
+
+
+.. py:function:: transform_yaw(pose_yaw: jax.Array, yaw: jax.Array) -> jax.Array
+
+   Transforms yaw with any prefix shape.
+
+
+.. py:function:: transform_trajectories(traj: jax.Array, pose_matrix: jax.Array, pose_yaw: jax.Array) -> jax.Array
+
+   Transforms trajectories by given pose with any prefix shape.
+
+   :param traj: jax.Array of shape (prefix_shape, ..., dof), where prefix_shape can be
+                any dimensions, dof must be either 5 or 7. Dof 5 represents [x, y, length,
+                width, yaw], and 7 represents [x, y, length, width, yaw, vel_x, vel_y]
+   :param pose_matrix: Matrix representing the transformation into the frame of some
+                       pose of shape (prefix_shape, 3, 3).
+   :param pose_yaw: Rotation angle of the transformation of shape (prefix_shape).
+
+   :returns: Transformed trajectories with same shape as inputs traj.
+
+
+.. py:function:: transform_direction(pose_matrix: jax.Array, pts_dir: jax.Array) -> jax.Array
+
+   Transforms direction with any prefix shape.
+
+   :param pose_matrix: Matrix representing the transformation into the frame of some
+                       pose of shape (prefix_shape, 3, 3).
+   :param pts_dir: Vector direction to transform of shape (prefix_shape, ..., 2).
+
+   :returns: Transformed direction.
+
+
+.. py:function:: corners_from_bbox(bbox: jax.Array) -> jax.Array
+
+   Computes corners for one 5 dof bbox.
+
+
+.. py:function:: corners_from_bboxes(bboxes: jax.Array) -> jax.Array
+
+   Computes corners for 5 dof bboxes with any prefix shape.
+
+
+.. py:function:: has_overlap(bboxes_a: jax.Array, bboxes_b: jax.Array) -> jax.Array
+
+   Checks if 5 dof bboxes (with any prefix shape) overlap with each other.
+
+   It does a 1:1 comparison of equivalent batch indices.
+
+   The algorithm first computes bboxes_a's projection on bboxes_b's axes and
+   check if there is an overlap between the projection. It then computes
+   bboxes_b's projection on bboxes_a's axes and check overlap. Two bboxes are
+   overlapped if and only if there is overlap in both steps.
+
+   :param bboxes_a: Bounding boxes of the above format of shape (..., 5). The last
+                    dimension represents [x, y, length, width, yaw].
+   :param bboxes_b: Bounding boxes of the above format of shape (..., 5).
+
+   :returns:
+
+             Boolean array which specifies whether `bboxes_a` and `bboxes_b` overlap each
+               other of shape (...).
+
+
+.. py:function:: compute_pairwise_overlaps(traj: jax.Array) -> jax.Array
+
+   Computes an overlap mask among all agent pairs for all steps.
+
+   5 dof trajectories have [x, y, length, width, yaw] for last dimension.
+
+   :param traj: Bounding boxes of the above format of shape (..., num_objects,
+                num_timesteps, 5).
+
+   :returns:
+
+             Boolean array of shape (..., num_objects, num_objects) which denotes whether
+               any of the objects in the trajectory are in overlap.
+
+
+.. py:function:: wrap_yaws(yaws: jax.Array | tensorflow.Tensor) -> jax.Array | tensorflow.Tensor
+
+   Wraps yaw angles between pi and -pi radians.
+
+

@@ -1,0 +1,174 @@
+:py:mod:`waymax.datatypes.traffic_lights`
+=========================================
+
+.. py:module:: waymax.datatypes.traffic_lights
+
+.. autoapi-nested-parse::
+
+   Custom data structures for traffic light signals in Wayamx.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.traffic_lights.TrafficLightStates
+   waymax.datatypes.traffic_lights.TrafficLights
+
+
+
+
+.. py:class:: TrafficLightStates
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Represents the integer values for all Traffic Light State values.
+
+   .. py:attribute:: UNKNOWN
+      :value: 0
+
+      
+
+   .. py:attribute:: ARROW_STOP
+      :value: 1
+
+      
+
+   .. py:attribute:: ARROW_CAUTION
+      :value: 2
+
+      
+
+   .. py:attribute:: ARROW_GO
+      :value: 3
+
+      
+
+   .. py:attribute:: STOP
+      :value: 4
+
+      
+
+   .. py:attribute:: CAUTION
+      :value: 5
+
+      
+
+   .. py:attribute:: GO
+      :value: 6
+
+      
+
+   .. py:attribute:: FLASHING_STOP
+      :value: 7
+
+      
+
+   .. py:attribute:: FLASHING_CAUTION
+      :value: 8
+
+      
+
+
+.. py:class:: TrafficLights
+
+
+   Data structure representing the dynamic traffic light state information.
+
+   All attributes have shape (..., num_traffic_lights, num_timesteps).
+
+   .. attribute:: x
+
+      The X coordinate of the stop light position of dtype float32.
+
+   .. attribute:: y
+
+      The Y coordinate of the stop light position of dtype float32.
+
+   .. attribute:: z
+
+      The Z coordinate of the stop light position. This point is at the
+      beginning of the lane segment controlled by the traffic signal of dtype
+      float32.
+
+   .. attribute:: state
+
+      The state of each traffic light at each time step of dtype int32. See
+      above enum for integer values of all traffic lights states.
+
+   .. attribute:: lane_ids
+
+      which lane it controls.
+
+   .. attribute:: valid
+
+      A valid flag for all elements of features traffic_light.XX. If set to
+      True, the element is populated with valid data.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The tensor shape of the traffic lights.
+
+   .. py:property:: num_traffic_lights
+      :type: int
+
+      The number of points included in this traffic light per example.
+
+   .. py:property:: num_timesteps
+      :type: int
+
+      The number of timesteps included in this traffic light per example.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location for all points.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: state
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: lane_ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+

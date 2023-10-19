@@ -1,0 +1,348 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "DH236BT5wcH7"
+      },
+      "source": [
+        "# Waymo Open Sim Agents Challenge Submission\n",
+        "\n",
+        "This tutorial covers how to use Waymax to create a Waymo Open Sim Agents Challenge (WOSAC) submission.\n",
+        "\n",
+        "Please also refer to the [WOSAC submission notebook](https://github.com/waymo-research/waymo-open-dataset/blob/master/tutorial/tutorial_sim_agents.ipynb) for additional reference and for setting up a submission without Waymax."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "n-sW1wrcvHys"
+      },
+      "outputs": [],
+      "source": [
+        "!pip install waymo-open-dataset-tf-2-11-0==1.6.0\n",
+        "\n",
+        "import os\n",
+        "import jax\n",
+        "from jax import random\n",
+        "from jax import numpy as jnp\n",
+        "import tensorflow as tf\n",
+        "\n",
+        "from waymo_open_dataset.protos import sim_agents_submission_pb2\n",
+        "from waymax import agents\n",
+        "from waymax import config as _config\n",
+        "from waymax import dynamics\n",
+        "from waymax import dataloader\n",
+        "from waymax import datatypes\n",
+        "from waymax import env as _env\n",
+        "\n",
+        "CURRENT_TIME_INDEX = 10\n",
+        "N_SIMULATION_STEPS = 80\n",
+        "N_ROLLOUTS = 32"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "9YTPFzmMwu-F"
+      },
+      "source": [
+        "## Dataloader\n",
+        "\n",
+        "To load data for a WOSAC submission, we write a custom dataloader that processes the scenario IDs. These are normally discarded in the default Waymax dataloader as they are not used during simulation and JAX does not have native support for string data. The scenario ID is stored in the field `scenario/id` as described in the [`tf.Example` spec](https://waymo.com/open/data/motion/tfexample).\n",
+        "\n",
+        "This custom dataloader defines a preprocessor `_preprocess` that decodes the scenario ID into an array of bytes, and a postprocessor `_postprocess` that converts those bytes into the string scenario ID. The actual scenario data is processed in the same way as the default dataloader in Waymax."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "JJAfGGSF74Ym"
+      },
+      "outputs": [],
+      "source": [
+        "data_config = _config.WOD_1_2_0_TEST\n",
+        "\n",
+        "# Write a custom dataloader that loads scenario IDs.\n",
+        "def _preprocess(serialized: bytes) -\u003e dict[str, tf.Tensor]:\n",
+        "  womd_features = dataloader.womd_utils.get_features_description(\n",
+        "      include_sdc_paths=data_config.include_sdc_paths,\n",
+        "      max_num_rg_points=data_config.max_num_rg_points,\n",
+        "      num_paths=data_config.num_paths,\n",
+        "      num_points_per_path=data_config.num_points_per_path,\n",
+        "  )\n",
+        "  womd_features['scenario/id'] = tf.io.FixedLenFeature([1], tf.string)\n",
+        "\n",
+        "  deserialized = tf.io.parse_example(serialized, womd_features)\n",
+        "  parsed_id = deserialized.pop('scenario/id')\n",
+        "  deserialized['scenario/id'] = tf.io.decode_raw(parsed_id, tf.uint8)\n",
+        "\n",
+        "  return dataloader.preprocess_womd_example(\n",
+        "      deserialized,\n",
+        "      aggregate_timesteps=data_config.aggregate_timesteps,\n",
+        "      max_num_objects=data_config.max_num_objects,\n",
+        "  )\n",
+        "\n",
+        "def _postprocess(example: dict[str, tf.Tensor]):\n",
+        "  scenario = dataloader.simulator_state_from_womd_dict(example)\n",
+        "  scenario_id = example['scenario/id']\n",
+        "  return scenario_id, scenario\n",
+        "\n",
+        "def decode_bytes(data_iter):\n",
+        "  for scenario_id, scenario in data_iter:\n",
+        "    scenario_id = scenario_id.tobytes().decode('utf-8')\n",
+        "    yield scenario_id, scenario\n",
+        "\n",
+        "data_iter = decode_bytes(dataloader.get_data_generator(\n",
+        "      data_config, _preprocess, _postprocess\n",
+        "))"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "hXQk4wG8xmTs"
+      },
+      "source": [
+        "## Environment and Agent Configuration\n",
+        "\n",
+        "The following code initializes the environment and sim agent used for simulation. In this example, we use a constant speed actor which will maintain the course and speed that the agent has at the initial timestep.\n",
+        "\n",
+        "WOSAC evaluates metrics on all agents valid at the initial timestep. Therefore, the `is_controlled` field is set to all valid agents at the 11th timestep.\n",
+        "\n",
+        "Other configurations related to the agent and environment are customizable. This includes the dynamics model (here, we use the `InvertibleBicycleModel`) and the type of sim agent to evaluate."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "XnvXA1z1wwqQ"
+      },
+      "outputs": [],
+      "source": [
+        "env_config = _config.EnvironmentConfig(\n",
+        "    # Ensure that the sim agent can control all valid objects.\n",
+        "    controlled_object=_config.ObjectType.VALID\n",
+        ")\n",
+        "\n",
+        "dynamics_model = dynamics.InvertibleBicycleModel()\n",
+        "env = _env.MultiAgentEnvironment(\n",
+        "    dynamics_model=dynamics_model,\n",
+        "    config=env_config,\n",
+        ")\n",
+        "\n",
+        "agent = agents.create_constant_speed_actor(\n",
+        "    dynamics_model=dynamics_model,\n",
+        "    # Controlled objects are those valid at t=0.\n",
+        "    is_controlled_func=lambda state: state.log_trajectory.valid[..., CURRENT_TIME_INDEX]\n",
+        ")\n",
+        "\n",
+        "jit_step = jax.jit(env.step)\n",
+        "jit_select_action = jax.jit(agent.select_action)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "jGI9vfXFyBEo"
+      },
+      "source": [
+        "## Generating Rollouts\n",
+        "\n",
+        "We can now define a function that will rollout the environment and agent to generate trajectories. The WOSAC submission format consists of multiple protobufs defined in `sim_agents_submission_pb2`. These consist of (copied from the [WOSAC submission notebook](https://github.com/waymo-research/waymo-open-dataset/blob/master/tutorial/tutorial_sim_agents.ipynb)):\n",
+        "\n",
+        "- `SimulatedTrajectory` contains one trajectory for a single object, with the fields we need to simulate (x, y, z, heading).\n",
+        "- `JointScene` is a set of all the object trajectories from a single simulation, describing one of the possible rollouts.\n",
+        "- `ScenarioRollouts` is a collection of all the parallel simulations for a single initial Scenario.\n",
+        "- `SimAgentsChallengeSubmission` is used to package submissions for multiple Scenarios (e.g. for the whole testing dataset).\n",
+        "\n",
+        "Here, we will write a function `generate_scenario_rollout` that generates a `ScenarioRollouts` protobuf from a single input scenario. By default, WOSAC requires 32 rollouts per scenario. Our actor is deterministic so all 32 rollouts will be identical, but we still generate these rollouts to provide an accurate example of a proper submission.\n",
+        "\n",
+        "We also provide a utility function `validate_scenario_rollout` to help ensure that the scenario rollouts have the correct format before uploading.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "-hHb4wXa6Jo-"
+      },
+      "outputs": [],
+      "source": [
+        "def validate_scenario_rollout(scenario_rollouts: sim_agents_submission_pb2.ScenarioRollouts,\n",
+        "                              scenario: datatypes.SimulatorState):\n",
+        "  \"\"\"Verifies if scenario_rollouts has correct formatting.\"\"\"\n",
+        "  valid_sim_agents = scenario.log_trajectory.valid[..., CURRENT_TIME_INDEX]\n",
+        "  sim_agent_id_idxs = jnp.where(valid_sim_agents)[0]\n",
+        "  sim_agent_ids = scenario.object_metadata.ids[sim_agent_id_idxs].tolist()\n",
+        "\n",
+        "  if len(scenario_rollouts.joint_scenes) != N_ROLLOUTS:\n",
+        "    raise ValueError('Incorrect number of parallel simulations. '\n",
+        "                     f'(Actual: {len(scenario_rollouts.joint_scenes)}, '\n",
+        "                     f'Expected: {N_ROLLOUTS})')\n",
+        "\n",
+        "  def _raise_if_wrong_length(trajectory, field_name, expected_length):\n",
+        "    if len(getattr(trajectory, field_name)) != expected_length:\n",
+        "      raise ValueError(f'Invalid {field_name} tensor length '\n",
+        "                     f'(actual: {len(getattr(trajectory, field_name))}, '\n",
+        "                     f'expected: {expected_length})')\n",
+        "\n",
+        "  for joint_scene in scenario_rollouts.joint_scenes:\n",
+        "    simulated_ids = []\n",
+        "    for simulated_trajectory in joint_scene.simulated_trajectories:\n",
+        "      # Check the length of each of the simulated fields.\n",
+        "      _raise_if_wrong_length(simulated_trajectory, 'center_x', N_SIMULATION_STEPS)\n",
+        "      _raise_if_wrong_length(simulated_trajectory, 'center_y', N_SIMULATION_STEPS)\n",
+        "      _raise_if_wrong_length(simulated_trajectory, 'center_z', N_SIMULATION_STEPS)\n",
+        "      _raise_if_wrong_length(simulated_trajectory, 'heading', N_SIMULATION_STEPS)\n",
+        "      # Check that each object ID is present in the original WOMD scenario.\n",
+        "      if simulated_trajectory.object_id not in sim_agent_ids:\n",
+        "        raise ValueError(\n",
+        "            f'Object {simulated_trajectory.object_id} is not a sim agent.')\n",
+        "      simulated_ids.append(simulated_trajectory.object_id)\n",
+        "    # Check that all of the required objects/agents are simulated.\n",
+        "    missing_agents = set(sim_agent_ids) - set(simulated_ids)\n",
+        "    if missing_agents:\n",
+        "      raise ValueError(\n",
+        "          f'Sim agents {missing_agents} are missing from the simulation.')\n",
+        "\n",
+        "\n",
+        "def generate_scenario_rollout(\n",
+        "    scenario_id: str,\n",
+        "    scenario: datatypes.SimulatorState) -\u003e sim_agents_submission_pb2.ScenarioRollouts:\n",
+        "  \"\"\"Simulate 32 rollouts and return a ScenarioRollouts protobuf.\"\"\"\n",
+        "  joint_scenes = []\n",
+        "  key = random.PRNGKey(0)\n",
+        "  for _ in range(N_ROLLOUTS):\n",
+        "    initial_state = current_state = env.reset(scenario)\n",
+        "    # Controlled objects are those valid at t=0.\n",
+        "    is_controlled = scenario.log_trajectory.valid[..., CURRENT_TIME_INDEX]\n",
+        "\n",
+        "    # Run the sim agent for 80 steps.\n",
+        "    for _ in (range(initial_state.remaining_timesteps)):\n",
+        "      key, actor_key = random.split(key, 2)\n",
+        "      actor_output = jit_select_action({}, current_state, None, actor_key)\n",
+        "      next_state = jit_step(current_state, actor_output.action)\n",
+        "      current_state = next_state\n",
+        "\n",
+        "    # Write out result\n",
+        "    final_trajectory = current_state.sim_trajectory\n",
+        "    object_ids = current_state.object_metadata.ids  # Shape (n_objects,)\n",
+        "    object_ids = jnp.where(is_controlled, object_ids, -1)\n",
+        "\n",
+        "    simulated_trajectories = []\n",
+        "    for i, object_id in enumerate(object_ids):\n",
+        "      if object_id != -1:\n",
+        "        simulated_trajectory = sim_agents_submission_pb2.SimulatedTrajectory(\n",
+        "                  center_x=final_trajectory.x[i, env_config.init_steps:],\n",
+        "                  center_y=final_trajectory.y[i, env_config.init_steps:],\n",
+        "                  center_z=final_trajectory.z[i, env_config.init_steps:],\n",
+        "                  heading=final_trajectory.yaw[i, env_config.init_steps:],\n",
+        "                  object_id=object_id,\n",
+        "        )\n",
+        "        simulated_trajectories.append(simulated_trajectory)\n",
+        "    joint_scene = sim_agents_submission_pb2.JointScene(\n",
+        "            simulated_trajectories=simulated_trajectories\n",
+        "    )\n",
+        "    joint_scenes.append(joint_scene)\n",
+        "\n",
+        "  scenario_rollouts =  sim_agents_submission_pb2.ScenarioRollouts(\n",
+        "    scenario_id=scenario_id, joint_scenes=joint_scenes\n",
+        "  )\n",
+        "  validate_scenario_rollout(scenario_rollouts, scenario)\n",
+        "  return scenario_rollouts"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "XPlK3Qp_yD8K"
+      },
+      "source": [
+        "## Generating the Submission\n",
+        "\n",
+        "We are now ready to generate the submission file. Because the data is potentially large (over the 2GB maximum size for a protobuf), we process the data in a streaming fashion and write out results incrementally. The testing set of Waymo Open Motion Dataset v1.2.0 has 44926 segments -- this step may take a significant amount of time if the rollout generation time is long.\n",
+        "\n",
+        "After we process all of the data, we zip the individual shards to create a zip file ready for submission. Please refer to the Open dataset website for further instructions."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "mjOZoUVYT0OW"
+      },
+      "outputs": [],
+      "source": [
+        "OUTPUT_ROOT_DIRECTORY = '/tmp/waymo_sim_agents/'\n",
+        "os.makedirs(OUTPUT_ROOT_DIRECTORY, exist_ok=True)\n",
+        "output_filenames = []\n",
+        "scenario_rollouts = []\n",
+        "\n",
+        "for i, (scenario_id, scenario) in enumerate(data_iter):\n",
+        "  scenario_rollouts.append(generate_scenario_rollout(scenario_id, scenario))\n",
+        "\n",
+        "  if i % 5 == 0 and i \u003e 0:\n",
+        "    shard_suffix = '.%d' % i\n",
+        "    shard_submission = sim_agents_submission_pb2.SimAgentsChallengeSubmission(\n",
+        "          scenario_rollouts=scenario_rollouts,\n",
+        "          submission_type=sim_agents_submission_pb2.SimAgentsChallengeSubmission.SIM_AGENTS_SUBMISSION,\n",
+        "          account_name='your_account@test.com',\n",
+        "          unique_method_name='waymax_sim_agents_tutorial',\n",
+        "          authors=['test'],\n",
+        "          affiliation='waymo',\n",
+        "          description='Submission from the Waymax - Sim Agents tutorial',\n",
+        "          method_link='https://waymo.com/open/'\n",
+        "      )\n",
+        "    scenario_rollouts = []\n",
+        "    output_filename = f'submission.binproto{shard_suffix}'\n",
+        "    with open(os.path.join(OUTPUT_ROOT_DIRECTORY, output_filename), 'wb') as f:\n",
+        "      f.write(shard_submission.SerializeToString())\n",
+        "    output_filenames.append(output_filename)\n",
+        "\n",
+        "# Once we have created all the shards, we can package them directly into a\n",
+        "# tar.gz archive, ready for submission.\n",
+        "with tarfile.open(\n",
+        "    os.path.join(OUTPUT_ROOT_DIRECTORY, 'submission.tar.gz'), 'w:gz') as tar:\n",
+        "    for output_filename in output_filenames:\n",
+        "      tar.add(os.path.join(OUTPUT_ROOT_DIRECTORY, output_filename),\n",
+        "              arcname=output_filename)"
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "last_runtime": {
+        "build_target": "",
+        "kind": "local"
+      },
+      "private_outputs": true,
+      "provenance": [
+        {
+          "file_id": "165MIhRtVwtmR9ontFYJe6suV6CLHerJI",
+          "timestamp": 1695771240550
+        },
+        {
+          "file_id": "1Y3eSCA7LCGrCJ672zHeBnStJKTEorl5z",
+          "timestamp": 1695771147053
+        },
+        {
+          "file_id": "1l1iYQbLAGQ1vv-13AriC2bp78LPv3LH2",
+          "timestamp": 1695668356011
+        }
+      ]
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}

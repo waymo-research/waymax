@@ -1,0 +1,135 @@
+:py:mod:`waymax.utils.test_utils`
+=================================
+
+.. py:module:: waymax.utils.test_utils
+
+.. autoapi-nested-parse::
+
+   Helper functions and utilities to provide test states for Waymax.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.utils.test_utils.make_test_dataset
+   waymax.utils.test_utils.simulated_trajectory_no_overlap
+   waymax.utils.test_utils.simulated_trajectory_with_overlap
+   waymax.utils.test_utils.simulator_state_with_overlap
+   waymax.utils.test_utils.create_metadata
+   waymax.utils.test_utils.create_invalid_traffic_lights
+   waymax.utils.test_utils.simulator_state_with_offroad
+   waymax.utils.test_utils.simulator_state_without_offroad
+   waymax.utils.test_utils.create_test_map_element
+   waymax.utils.test_utils.create_test_trajectory_from_position
+   waymax.utils.test_utils.make_zeros_state
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.utils.test_utils.ROUTE_DATA_PATH
+   waymax.utils.test_utils.ROUTE_NUM_PATHS
+   waymax.utils.test_utils.ROUTE_NUM_POINTS_PER_PATH
+
+
+.. py:data:: ROUTE_DATA_PATH
+
+   
+
+.. py:data:: ROUTE_NUM_PATHS
+   :value: 30
+
+   
+
+.. py:data:: ROUTE_NUM_POINTS_PER_PATH
+   :value: 200
+
+   
+
+.. py:function:: make_test_dataset(batch_dims: tuple[int, Ellipsis] = (), **kwargs)
+
+   Create a test dataset using ROUTE_DATA_PATH.
+
+
+.. py:function:: simulated_trajectory_no_overlap() -> waymax.datatypes.Trajectory
+
+   Creates a simulated trajectory where there are no object overlaps.
+
+
+.. py:function:: simulated_trajectory_with_overlap() -> waymax.datatypes.Trajectory
+
+   Creates a simulated trajectory where the SDC has overlaps.
+
+
+.. py:function:: simulator_state_with_overlap() -> waymax.datatypes.SimulatorState
+
+   Creates a simulator state where the SDC has overlaps.
+
+
+.. py:function:: create_metadata(num_agents: int) -> waymax.datatypes.ObjectMetadata
+
+   Returns a sample metadata object.
+
+
+.. py:function:: create_invalid_traffic_lights() -> waymax.datatypes.TrafficLights
+
+   Creates invalid traffic lights with shape ().
+
+
+.. py:function:: simulator_state_with_offroad() -> waymax.datatypes.SimulatorState
+
+   Creates a simulator state with the SDC off of the road.
+
+
+.. py:function:: simulator_state_without_offroad() -> waymax.datatypes.SimulatorState
+
+   Creates a simulator state with the SDC off of the road.
+
+
+.. py:function:: create_test_map_element(element_type: waymax.datatypes.MapElementIds, position: collections.abc.Sequence[float], direction: collections.abc.Sequence[float], repeat: int = 1) -> waymax.datatypes.RoadgraphPoints
+
+   Creates a test map element given specification in arguments.
+
+   :param element_type: Type of map element to create. See
+                        `waymax/open_motion_data/constants.py` for the list of map elements.
+   :param position: 3D position of the map element in the global coordinate system in
+                    meters.
+   :param direction: 3D direction of the map elemnt (i.e. direction of lane) in the
+                     global coordinate system in meters.
+   :param repeat: How many times to repeat the map element.
+
+   :returns:
+
+             A map element with `repeat` number of versions that contains the fields
+               specified in the arguments.
+
+   :raises ValueError: If the provided `position` does not have three elements.
+   :raises ValueError: If the provided `direction` does not have three elements.
+
+
+.. py:function:: create_test_trajectory_from_position(position: collections.abc.Sequence[float] = (1.0, 1.0, 1.0)) -> waymax.datatypes.Trajectory
+
+   Creates a trajectory with default metadata fields at a position.
+
+   :param position: Position of the trajectory point in global coordinates.
+
+   :returns: Filled trajectory with a single point at `position`.
+
+   :raises If `position` does not have three elements.:
+
+
+.. py:function:: make_zeros_state(config: waymax.config.DatasetConfig) -> waymax.datatypes.simulator_state.SimulatorState
+
+   Returns a SimulatorState containing zeros.
+
+

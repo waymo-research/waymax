@@ -1,0 +1,157 @@
+:py:mod:`waymax.dynamics.abstract_dynamics`
+===========================================
+
+.. py:module:: waymax.dynamics.abstract_dynamics
+
+.. autoapi-nested-parse::
+
+   Library for different object dynamics model for Waymax.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.abstract_dynamics.DynamicsModel
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.abstract_dynamics.apply_trajectory_update_to_state
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.abstract_dynamics.CONTROLLABLE_FIELDS
+
+
+.. py:data:: CONTROLLABLE_FIELDS
+   :value: ['x', 'y', 'yaw', 'vel_x', 'vel_y']
+
+   
+
+.. py:class:: DynamicsModel
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   Object dynamics base class.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+      :abstractmethod:
+
+      Returns the dm_env bounded action spec.
+
+
+   .. py:method:: forward(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory, reference_trajectory: waymax.datatypes.Trajectory, is_controlled: jax.Array, timestep: int, allow_object_injection: bool = False) -> waymax.datatypes.Trajectory
+
+      Updates a simulated trajectory to the next timestep given an update.
+
+      :param action: Actions to be applied to the trajectory to produce updates at the
+                     next timestep of shape (..., num_objects).
+      :param trajectory: Simulated trajectory up to the current timestep. This
+                         trajectory will be updated by this function updated with the trajectory
+                         update. It is expected that this trajectory will have been updated up to
+                         `timestep`. This is of shape: (..., num_objects, num_timesteps).
+      :param reference_trajectory: Default trajectory for all objects over the entire
+                                   run segment. Certain fields such as valid are optionally taken from this
+                                   trajectory. This is of shape: (..., num_objects, num_timesteps).
+      :param is_controlled: Boolean array specifying which objects are to be controlled
+                            by the trajectory update of shape (..., num_objects).
+      :param timestep: Timestep of the current simulation.
+      :param allow_object_injection: Whether to allow new objects to enter the scene.
+                                     If this is set to False, all objects that are not valid at the current
+                                     timestep will not be valid at the next timestep and vice versa.
+
+      :returns:
+
+                Updated trajectory given update from a dynamics model at `timestep` + 1 of
+                  shape (..., num_objects, num_timesteps).
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+      :abstractmethod:
+
+      Applies actions to current trajectory to produce next timestep update.
+
+      Only the fields updated as part of the `TrajectoryUpdate` are allowed to be
+      updated by the dynamics models. All other fields in `Trajectory` are to be
+      updated by the simulator.
+
+      :param action: Actions to be applied to the trajectory to produce updates at the
+                     next timestep of shape (..., num_objects, dim).
+      :param trajectory: Current trajectory for all agents being controlled, of shape
+                         (..., num_objects, num_timesteps=1). The actions will be applied to this
+                         trajectory to produce the update.
+
+      :returns:
+
+                Updated fields of the trajectory after applying the actions for the given
+                  dynamics model of shape (..., num_objects).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+      :abstractmethod:
+
+      Computes actions converting traj[timestep] to traj[timestep+1].
+
+      :param trajectory: Full trajectory to compute the inverse actions from of shape
+                         (..., num_objects, num_timesteps). This trajectory is for the entire
+                         simulation so that dynamics models can use optimization techniques to
+                         find the best fitting actions.
+      :param metadata: Metadata describing the types of all objects in the scene, of
+                       shape (..., num_objects).
+      :param timestep: Current timestep of the simulation.
+
+      :returns:
+
+                Action which will take a set of objects from trajectory[timestep] to
+                  trajectory[timestep + 1] of shape (..., num_objects, dim).
+
+
+
+.. py:function:: apply_trajectory_update_to_state(trajectory_update: waymax.datatypes.TrajectoryUpdate, sim_trajectory: waymax.datatypes.Trajectory, reference_trajectory: waymax.datatypes.Trajectory, is_controlled: jax.Array, timestep: int, allow_object_injection: bool = False) -> waymax.datatypes.Trajectory
+
+   Applies a TrajectoryUpdate to the sim trajectory at the next timestep.
+
+   When applying a dynamics update, the trajectory will be updated with the
+   most recent updates in the trajectory for controlled objects after a dynamics
+   update. Fields that are not part of the trajectory update (such as length,
+   width, height, valid, etc.) may not be updated in this function.
+
+   For objects not in is_controlled, reference_trajectory is used.
+   For objects in is_controlled, but not valid in trajectory_update, fall back to
+   constant speed behaviour.
+
+   :param trajectory_update: Updated trajectory fields for all objects after the
+                             dynamics update of shape (..., num_objects, num_timesteps=1).
+   :param sim_trajectory: Simulated trajectory up to the current timestep. This
+                          trajectory will be modified using the trajectory_update. It is expected
+                          that this trajectory will have been updated up to `timestep`. This is of
+                          shape (..., num_objects, num_timesteps).
+   :param reference_trajectory: Default trajectory for all objects over the entire run
+                                segment. Certain fields such as valid are optionally taken from this
+                                trajectory. This is of shape: (..., num_objects, num_timesteps).
+   :param is_controlled: Boolean array specifying which objects are to be controlled
+                         by the trajectory update of shape (..., num_objects).
+   :param timestep: Timestep of the current simulation.
+   :param allow_object_injection: Whether to allow new objects to enter the scene. If
+                                  this is set to False, all objects that are not valid at the current
+                                  timestep will not be valid at the next timestep and visa versa.
+
+   :returns: Updated trajectory given update from a dynamics model at `timestep` + 1.
+
+

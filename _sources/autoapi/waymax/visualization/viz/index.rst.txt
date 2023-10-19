@@ -1,0 +1,149 @@
+:py:mod:`waymax.visualization.viz`
+==================================
+
+.. py:module:: waymax.visualization.viz
+
+.. autoapi-nested-parse::
+
+   Visualization functions for Waymax data structures.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.visualization.viz._plot_bounding_boxes
+   waymax.visualization.viz._index_pytree
+   waymax.visualization.viz.plot_trajectory
+   waymax.visualization.viz.plot_roadgraph_points
+   waymax.visualization.viz.plot_traffic_light_signals_as_points
+   waymax.visualization.viz._plot_path_points
+   waymax.visualization.viz.plot_simulator_state
+   waymax.visualization.viz.plot_observation
+   waymax.visualization.viz.plot_single_agent_brax_timestep
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.visualization.viz._RoadGraphShown
+   waymax.visualization.viz._RoadGraphDefaultColor
+
+
+.. py:data:: _RoadGraphShown
+   :value: (1, 2, 3, 15, 16, 17, 18, 19)
+
+   
+
+.. py:data:: _RoadGraphDefaultColor
+   :value: (0.9, 0.9, 0.9)
+
+   
+
+.. py:function:: _plot_bounding_boxes(ax: matplotlib.axes.Axes, traj_5dof: numpy.ndarray, time_idx: int, is_controlled: numpy.ndarray, valid: numpy.ndarray) -> None
+
+   Helper function to plot multiple bounding boxes across time.
+
+
+.. py:function:: _index_pytree(inputs: Any, idx: int) -> Any
+
+   Helper function to get idx-th example in a batch.
+
+
+.. py:function:: plot_trajectory(ax: matplotlib.axes.Axes, traj: waymax.datatypes.Trajectory, is_controlled: numpy.ndarray, time_idx: Optional[int] = None, indices: Optional[numpy.ndarray] = None) -> None
+
+   Plots a Trajectory with different color for controlled and context.
+
+   Plots the full bounding_boxes only for time_idx step, overlap is
+   highlighted.
+
+   Notation: A: number of agents; T: numbe of time steps; 5 degree of freedom:
+   center x, center y, length, width, yaw.
+
+   :param ax: matplotlib axes.
+   :param traj: a Trajectory with shape (A, T).
+   :param is_controlled: binary mask for controlled object, shape (A,).
+   :param time_idx: step index to highlight bbox, -1 for last step. Default(None) for
+                    not showing bbox.
+   :param indices: ids to show for each agents if not None, shape (A,).
+
+
+.. py:function:: plot_roadgraph_points(ax: matplotlib.axes.Axes, rg_pts: waymax.datatypes.RoadgraphPoints, verbose: bool = False) -> None
+
+   Plots road graph as points.
+
+   :param ax: matplotlib axes.
+   :param rg_pts: a RoadgraphPoints with shape (1,)
+   :param verbose: print roadgraph points count if set to True.
+
+
+.. py:function:: plot_traffic_light_signals_as_points(ax: matplotlib.axes.Axes, tls: waymax.datatypes.TrafficLights, timestep: int = 0, verbose: bool = False) -> None
+
+   Plots traffic lights for timestep.
+
+   :param ax: matplotlib axes.
+   :param tls: a TrafficLightStates to show.
+   :param timestep: draw traffi lights at this given timestep.
+   :param verbose: print traffic lights count if set to True.
+
+
+.. py:function:: _plot_path_points(ax: matplotlib.axes.Axes, paths: waymax.datatypes.Paths) -> None
+
+   Plots on/off route paths.
+
+
+.. py:function:: plot_simulator_state(state: waymax.datatypes.SimulatorState, use_log_traj: bool = True, viz_config: Optional[dict[str, Any]] = None, batch_idx: int = -1, highlight_obj: waymax.config.ObjectType = waymax_config.ObjectType.SDC) -> numpy.ndarray
+
+   Plots np array image for SimulatorState.
+
+   :param state: A SimulatorState instance.
+   :param use_log_traj: Set True to use logged trajectory, o/w uses simulated
+                        trajectory.
+   :param viz_config: dict for optional config.
+   :param batch_idx: optional batch index.
+   :param highlight_obj: Represents the type of objects that will be highlighted with
+                         `color.COLOR_DICT['controlled']` color.
+
+   :returns: np image.
+
+
+.. py:function:: plot_observation(obs: waymax.datatypes.Observation, obj_idx: int, viz_config: Optional[dict[str, Any]] = None, batch_idx: int = -1, highlight_obj: waymax.config.ObjectType = waymax_config.ObjectType.SDC) -> numpy.ndarray
+
+   Plots np array image for an Observation.
+
+   :param obs: An Observation instance, with shape (..., obs_A), where obs_A
+               represents the number of objects that have observation view over things
+               including other objects, roadgraph, and traffic lights.
+   :param obj_idx: The object index in obs_A.
+   :param viz_config: Dict for optional config.
+   :param batch_idx: Optional batch index.
+   :param highlight_obj: Represents the type of objects that will be highlighted with
+                         `color.COLOR_DICT['controlled']` color.
+
+   :returns: np image.
+
+
+.. py:function:: plot_single_agent_brax_timestep(waymax_ts: waymax.env.wrappers.brax_wrapper.TimeStep, use_log_traj: bool = False, viz_config: Optional[dict[str, Any]] = None, batch_idx: int = -1) -> numpy.ndarray
+
+   Plots np array image for Brax TimeStep with metrics.
+
+   Currently only for single-agent env outputs.
+
+   :param waymax_ts: Timestep returned from Waymax env step or reset.
+   :param use_log_traj: Set True to use logged trajectory, o/w uses simulated
+                        trajectory.
+   :param viz_config: dict for optional config.
+   :param batch_idx: optional batch index.
+
+   :returns: np image.
+
+

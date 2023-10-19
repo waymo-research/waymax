@@ -1,0 +1,37 @@
+:py:mod:`waymax.metrics.metric_factory`
+=======================================
+
+.. py:module:: waymax.metrics.metric_factory
+
+.. autoapi-nested-parse::
+
+   Utility function that runs all metrics according to an environment config.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.metrics.metric_factory.run_metrics
+
+
+
+.. py:function:: run_metrics(simulator_state: waymax.datatypes.SimulatorState, metrics_config: waymax.config.MetricsConfig) -> dict[str, waymax.metrics.abstract_metric.MetricResult]
+
+   Runs all metrics with config flags set to True.
+
+   :param simulator_state: The current simulator state of shape (...).
+   :param metrics_config: Waymax metrics config.
+
+   :returns:
+
+             A dictionary of metric names mapping to metric result arrays where each
+               metric is of shape (..., num_objects).
+
+

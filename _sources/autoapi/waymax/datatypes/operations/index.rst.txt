@@ -1,0 +1,200 @@
+:py:mod:`waymax.datatypes.operations`
+=====================================
+
+.. py:module:: waymax.datatypes.operations
+
+.. autoapi-nested-parse::
+
+   Common data operations made to work on PyTree data structures.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.operations.update_by_mask
+   waymax.datatypes.operations._vmap_over_batch_dims
+   waymax.datatypes.operations.dynamic_slice
+   waymax.datatypes.operations.dynamic_index
+   waymax.datatypes.operations.update_by_slice_in_dim
+   waymax.datatypes.operations.compare_all_leaf_nodes
+   waymax.datatypes.operations.select_by_onehot
+   waymax.datatypes.operations.make_invalid_data
+   waymax.datatypes.operations.masked_mean
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.operations.ArrayLike
+   waymax.datatypes.operations.F
+   waymax.datatypes.operations.PyTree
+   waymax.datatypes.operations.Axis
+   waymax.datatypes.operations.dynamic_update_slice_in_dim
+
+
+.. py:data:: ArrayLike
+
+   
+
+.. py:data:: F
+
+   
+
+.. py:data:: PyTree
+
+   
+
+.. py:data:: Axis
+
+   
+
+.. py:function:: update_by_mask(inputs: PyTree, updates: PyTree, mask: jax.Array) -> PyTree
+
+   Updates inputs by updates (with same struct) for masked values.
+
+   Uses `jax.tree_util` to update each field as such:
+     inputs.field = jnp.where(mask, updates.field, inputs.field)
+
+   :param inputs: Represents the data to be updated and returned.
+   :param updates: Represents the data that is passed in to update all fields. It is
+                   assumed that the `updates` and the `inputs` have the same structure. These
+                   fields must be broadcastable to the same shape as `inputs` after applying
+                   the mask.
+   :param mask: Mask that represents which elements of the `inputs` array tree to
+                update with the `updates` field. Shape must be broadcastable to the leaf
+                nodes of inputs and updates.
+
+   :returns:
+
+             Updated tree array of the same structure as `inputs` which has had all its
+               fields updated with the corresponding fields in `updates` conditioned on
+               whether `mask` requests it.
+
+
+.. py:function:: _vmap_over_batch_dims(func: F, batch_element: ArrayLike) -> F
+
+   Apply vmap to a function based on the number of batch dimensions.
+
+
+.. py:function:: dynamic_slice(inputs: PyTree, start_index: ArrayLike, slice_size: int, axis: int = 0) -> PyTree
+
+   Wraps dynamic_slice_in_dim on a PyTree.
+
+   :param inputs: Object where each element in its tree is to be sliced.
+   :param start_index: Start index of slicing function.
+   :param slice_size: Size of slice applied to `inputs` starting from `start_index` to
+                      `start_index` + `slice_size`.
+   :param axis: Axis of each array to perform the slicing in.
+
+   :returns:
+
+             Array tree which has been sliced along an axis which maintains the same
+               rank as `inputs`.
+
+
+.. py:function:: dynamic_index(inputs: PyTree, index: ArrayLike, axis: int = 0, keepdims: bool = True) -> PyTree
+
+   Wraps dynamic_index_in_dim on a PyTree.
+
+   :param inputs: Object where each element in it is to be indexed.
+   :param index: Element number to index into each array in the tree.
+   :param axis: Axis of each array to perform the indexing in.
+   :param keepdims: Whether or not to keep the same rank as `inputs`. If this is set
+                    to `True` then the return value will be such that `.shape[axis]` == 1.
+
+   :returns:
+
+             Array tree where every element of the tree has been indexed at the same
+               specified axis.
+
+
+.. py:function:: update_by_slice_in_dim(inputs: PyTree, updates: PyTree, inputs_start_idx: ArrayLike, updates_start_idx: Optional[ArrayLike] = None, slice_size: Optional[int] = None, axis: int = 0) -> PyTree
+
+   Updates a slice in inputs using slices from updates.
+
+   It replaces inputs[inputs_start_idx:inputs_start_idx+slice_size] by
+   updates[updates_start_idx:updates_start_idx+slice_size] for specified axis
+   only.
+
+   If updates_start_idx and slice_size are both None, the behavior of this
+   function will default to dynamic_update_slice_in_dim.
+
+   :param inputs: Represents the data to be updated and returned.
+   :param updates: Represents the data that is passed in to update all fields. It is
+                   assumed that the `updates` and the `inputs` have the same structure.
+   :param inputs_start_idx: starting index in inputs.
+   :param updates_start_idx: starting index in updates.
+   :param slice_size: the slice size used for update. If slice size is None, uses the
+                      entire array and updates_start_idx will be ignored.
+   :param axis: Axis of each array to perform the slicing in.
+
+   :returns: A PyTree with same structure as inputs.
+
+
+.. py:data:: dynamic_update_slice_in_dim
+
+   
+
+.. py:function:: compare_all_leaf_nodes(first: PyTree, second: PyTree, compare_func: Callable[[jax.Array, jax.Array], bool] = jnp.array_equal) -> bool
+
+   Checks if all leaf nodes are consistent via compare_func.
+
+   The default behaviour (with compare_func as jnp.array_equal) is to
+   compare if two PyTree are equal (i.e. all leaf nodes of array are equal).
+   One can also use compare_func as jnp.allclose to give some tolerance
+   for numerical difference.
+
+   :param first: A PyTree for comparison.
+   :param second: A PyTree for comparison.
+   :param compare_func: A function comparing nodes between two input arrays.
+
+   :returns: True if inputs PyTrees are consistent by func.
+
+
+.. py:function:: select_by_onehot(data: PyTree, selection: jax.Array, keepdims: bool = False) -> PyTree
+
+   Selects data using a one-hot vector.
+
+   :param data: A pytree with leaf shapes (..., N, ...).
+   :param selection: A one-hot vector with shape (..., N).
+   :param keepdims: Whether to leave a (1,) dimension on the selected axis.
+
+   :returns: A pytree with leaf shapes (..., 1) if keepdims=True.
+             A pytree with leaf shapes (..., ) if keepdims=False.
+
+
+.. py:function:: make_invalid_data(data: jax.Array) -> jax.Array
+
+   Returns a tensor of invalid values with identical shape to data.
+
+   Invalid values are defined as False for booleans, and -1 for numerical values.
+
+   :param data: Tensor to invalidate.
+
+   :returns: A tensor of invalid values of the same shape and dtype as data.
+
+
+.. py:function:: masked_mean(x: jax.Array, valid: jax.Array, axis: Axis = 0, invalid_value: float = -1.0) -> jax.Array
+
+   Calculates the mean of the array removing invalid values.
+
+   :param x: Input to the masked mean function.
+   :param valid: Boolean array with the same shape as x which indicates which values
+                 should be included in the mean.
+   :param axis: Axis to reduce along.
+   :param invalid_value: If there is no valid fields, the value will be replaced by
+                         this invalid value.
+
+   :returns: Array representing the mean of the array of all valid values.
+
+

@@ -1,0 +1,112 @@
+:py:mod:`waymax.env.wrappers.dm_env_wrapper`
+============================================
+
+.. py:module:: waymax.env.wrappers.dm_env_wrapper
+
+.. autoapi-nested-parse::
+
+   Library for wrapping Waymax environments in a DMEnv interface.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.wrappers.dm_env_wrapper.DMEnvWrapper
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.wrappers.dm_env_wrapper.make_sdc_dm_environment
+
+
+
+.. py:class:: DMEnvWrapper(data_generator: Iterator[waymax.datatypes.SimulatorState], stateless_env: waymax.env.abstract_environment.AbstractEnvironment, squeeze_scalar_actions: bool = True)
+
+
+   Bases: :py:obj:`dm_env.Environment`
+
+   A stateful environment wrapper implementing the DMEnv interface.
+
+   .. py:property:: config
+      :type: waymax.config.EnvironmentConfig
+
+
+   .. py:property:: simulation_state
+      :type: waymax.datatypes.SimulatorState
+
+      The current simulation state.
+
+   .. py:property:: stateless_env
+      :type: waymax.env.abstract_environment.AbstractEnvironment
+
+      The underlying stateless Waymax environment.
+
+   .. py:method:: observe(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Observation
+
+      Runs the stateless environment observation function.
+
+
+   .. py:method:: reset() -> dm_env.TimeStep
+
+      Resets the environment and returns the initial TimeStep.
+
+
+   .. py:method:: step(action: jax.Array) -> dm_env.TimeStep
+
+      Advances the state given an action.
+
+      :param action: An action with shape compatible with self.action_spec()
+
+      :returns:
+
+                The TimeStep corresponding to the transition taken by applying
+                  action to the current state.
+
+      :raises SimulationNotInitializedError: If reset() has not been called before
+          this method is called.
+      :raises EpisodeAlreadyFinishedError: If this method is called after an episode
+          has been terminated or truncated.
+
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      The action specs of this environment, without batch dimension.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      The discount specs of this environment, without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.PyTree
+
+      The observation specs of this environment, without batch dimension.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      The reward specs of this environment, without batch dimension.
+
+
+
+.. py:function:: make_sdc_dm_environment(dynamics_model: waymax.dynamics.DynamicsModel, data_config: waymax.config.DatasetConfig, env_config: waymax.config.EnvironmentConfig) -> DMEnvWrapper
+
+   Makes a DM environment for controlling SDC only.
+
+   :param dynamics_model: A dynamics model used to transit state of the environment.
+   :param data_config: Config for dataset, see details in config.DatasetConfig
+   :param env_config: Config for environment, see details in config.EnvironmentConfig.
+
+   :returns: The single agent (SDC) Waymax DM environment that has not been reset.
+
+

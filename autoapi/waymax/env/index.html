@@ -1,0 +1,1458 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="waymax.env.wrappers" href="wrappers/index.html" /><link rel="prev" title="waymax.datatypes.traffic_lights" href="../datatypes/traffic_lights/index.html" />
+
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>waymax.env - Waymax documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Waymax  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Waymax  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Tutorials</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../agents/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../agents/actor_core/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.actor_core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agents/agent_builder/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.agent_builder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agents/constant_speed/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.constant_speed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agents/expert/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.expert</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agents/sim_agent/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.sim_agent</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agents/waypoint_following_agent/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.agents.waypoint_following_agent</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader/dataloader_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.dataloader_utils</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader/womd_dataloader/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_dataloader</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader/womd_factories/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_factories</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader/womd_factories_internal/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_factories_internal</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataloader/womd_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.dataloader.womd_utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datatypes/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/action/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.action</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/array/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.array</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/constant/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.constant</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/object_state/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.object_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/observation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.observation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/operations/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.operations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/roadgraph/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.roadgraph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/route/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.route</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/simulator_state/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.simulator_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datatypes/traffic_lights/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.traffic_lights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="wrappers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="wrappers/brax_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.brax_wrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="wrappers/dm_env_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.dm_env_wrapper</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="abstract_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.abstract_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.base_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.errors</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="planning_agent_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.planning_agent_environment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rollout/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.rollout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typedefs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.typedefs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/abstract_metric/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.abstract_metric</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/comfort/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.comfort</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/imitation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.imitation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/metric_factory/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.metric_factory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/overlap/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.overlap</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/roadgraph/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.roadgraph</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metrics/route/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.metrics.route</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../rewards/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../rewards/abstract_reward_function/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards.abstract_reward_function</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rewards/linear_combination_reward/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.rewards.linear_combination_reward</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../utils/geometry/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils.geometry</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils/test_utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.utils.test_utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visualization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visualization/color/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.color</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visualization/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.utils</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visualization/viz/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.visualization.viz</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.config</span></code></a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Further Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../py-modindex.html">Module Index</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="module-waymax.env">
+<span id="waymax-env"></span><h1><a class="reference internal" href="#module-waymax.env" title="waymax.env"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env</span></code></a><a class="headerlink" href="#module-waymax.env" title="Permalink to this heading">#</a></h1>
+<p>Reinforcement learning environment interfaces.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="wrappers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wrappers/brax_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.brax_wrapper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="wrappers/dm_env_wrapper/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers.dm_env_wrapper</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="abstract_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.abstract_environment</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.base_environment</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.errors</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="planning_agent_environment/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.planning_agent_environment</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rollout/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.rollout</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="typedefs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.typedefs</span></code></a></li>
+</ul>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.AbstractEnvironment" title="waymax.env.AbstractEnvironment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractEnvironment</span></code></a></p></td>
+<td><p>A stateless environment interface for Waymax.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.BaseEnvironment" title="waymax.env.BaseEnvironment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseEnvironment</span></code></a></p></td>
+<td><p>Waymax environment for multi-agent scenarios.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.PlanningAgentDynamics" title="waymax.env.PlanningAgentDynamics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlanningAgentDynamics</span></code></a></p></td>
+<td><p>A dynamics wrapper for converting multi-agent dynamics to single-agent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment" title="waymax.env.PlanningAgentEnvironment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlanningAgentEnvironment</span></code></a></p></td>
+<td><p>An environment wrapper allowing for controlling a single agent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.RolloutOutput" title="waymax.env.RolloutOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RolloutOutput</span></code></a></p></td>
+<td><p>Rollout output datatypes.structure for using as output of rollout function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.BraxWrapper" title="waymax.env.BraxWrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BraxWrapper</span></code></a></p></td>
+<td><p>Brax-like interface wrapper for the Waymax environment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.DMEnvWrapper" title="waymax.env.DMEnvWrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DMEnvWrapper</span></code></a></p></td>
+<td><p>A stateful environment wrapper implementing the DMEnv interface.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="rollout/index.html#module-waymax.env.rollout" title="waymax.env.rollout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rollout</span></code></a></p></td>
+<td><p>Utilities for fast jittable rollout of environments in Waymax.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.rollout_log_by_expert_sdc" title="waymax.env.rollout_log_by_expert_sdc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rollout_log_by_expert_sdc</span></code></a>(→ RolloutOutput)</p></td>
+<td><p>Rollouts state using logged expert actions specified by dynamics_model.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.MultiAgentEnvironment" title="waymax.env.MultiAgentEnvironment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiAgentEnvironment</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.Metrics" title="waymax.env.Metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Metrics</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.Observation" title="waymax.env.Observation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Observation</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.ObservationFn" title="waymax.env.ObservationFn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObservationFn</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.env.PyTree" title="waymax.env.PyTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PyTree</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.env.RewardFn" title="waymax.env.RewardFn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RewardFn</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">AbstractEnvironment</span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>A stateless environment interface for Waymax.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.reset">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericScenario</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericState</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Initializes a simulation state.</p>
+<p>This method allows the environment to perform optional postprocessing
+on the state before the episode begins. By default this method is a
+no-op.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> – Scenario used to generate the initial state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized simulation state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.step">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericState</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.step" title="Permalink to this definition">#</a></dt>
+<dd><p>Advances the simulation by one timestep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The current state of the simulator.</p></li>
+<li><p><strong>actions</strong> – Action to apply to the state to produce the updated simulator
+state.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The next simulation state after taking an action.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.reward">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.reward" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the reward for a transition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The state used to compute the reward.</p></li>
+<li><p><strong>action</strong> – The action applied to state.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A (…, num_objects) tensor of rewards.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.metrics">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Metrics</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.metrics" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes a set of metrics which score a given simulator state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – The state used to compute the metrics.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A mapping from metric name to metrics which evaluate a simulator state at</dt><dd><p>state.timestep where all of the metrics are of shape (…, num_objects).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.observe">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Observation</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.observe" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the observation of the simulator for the actor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – The state used to compute the observation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>An observation of the simulator state for the given timestep of shape</dt><dd><p>(…).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.action_spec">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericAction</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the action specs of the environment without batch dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The action specs represented as a PyTree where the leaves</dt><dd><p>are instances of specs.Array.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.reward_spec">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reward_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.Array</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.reward_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the reward specs of the environment without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.discount_spec">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">discount_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.discount_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the discount specs of the environment without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.observation_spec">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.PyTree</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.observation_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the observation specs of the environment without batch dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The observation specs represented as a PyTree where the</dt><dd><p>leaves are instances of specs.Array.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.termination">
+<span class="sig-name descname"><span class="pre">termination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.termination" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns whether the current state is an episode termination.</p>
+<p>A termination marks the end of an episode where the cost-to-go from
+this state is 0.</p>
+<p>The equivalent step type in DMEnv is dm_env.termination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – The current simulator state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A boolean (…) tensor indicating whether the current state is the end of</dt><dd><p>an episode as a termination.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.AbstractEnvironment.truncation">
+<span class="sig-name descname"><span class="pre">truncation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.AbstractEnvironment.truncation" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns whether the current state should truncate the episode.</p>
+<p>A truncation denotes that an episode has ended due to reaching the step
+limit of an episode. In these cases dynamic programming methods (e.g.
+Q-learning) should still compute cost-to-go assuming the episode will
+continue running.</p>
+<p>The equivalent step type in DMEnv is dm_env.truncation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – The current simulator state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A boolean (…) tensor indicating whether the current state is the end of</dt><dd><p>an episode as a truncation.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">BaseEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dynamics_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><span class="pre">waymax.dynamics.DynamicsModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../config/index.html#waymax.config.EnvironmentConfig" title="waymax.config.EnvironmentConfig"><span class="pre">waymax.config.EnvironmentConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.env.BaseEnvironment" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="abstract_environment/index.html#waymax.env.abstract_environment.AbstractEnvironment" title="waymax.env.abstract_environment.AbstractEnvironment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waymax.env.abstract_environment.AbstractEnvironment</span></code></a></p>
+<p>Waymax environment for multi-agent scenarios.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.dynamics">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dynamics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><span class="pre">waymax.dynamics.DynamicsModel</span></a></em><a class="headerlink" href="#waymax.env.BaseEnvironment.dynamics" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Metrics</span></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.metrics" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes metrics (lower is better) from state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Initializes the simulation state.</p>
+<p>This initializer sets the initial timestep and fills the initial simulation
+trajectory with invalid values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – An uninitialized state of shape (…).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized simulation state of shape (…).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Observation</span></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.observe" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the observation for the given simulation state.</p>
+<p>Here we assume that the default observation is just the simulator state. We
+leave this for the user to override in order to provide a user-specific
+observation function. A user can use this to move some of their model
+specific post-processing into the environment rollout in the actor nodes. If
+they want this post-processing on the accelertor, they can keep this the
+same and implement it on the learner side. We provide some helper functions
+at datatypes.observation.py to help write your own observation functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – Current state of the simulator of shape (…).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Simulator state as an observation without modifications of shape (…).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.step" title="Permalink to this definition">#</a></dt>
+<dd><p>Advances simulation by one timestep using the dynamics model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The current state of the simulator of shape (…).</p></li>
+<li><p><strong>action</strong> – The action to apply, of shape (…, num_objects). The
+actions.valid field is used to denote which objects are being controlled
+- objects whose valid is False will fallback to default behavior
+specified by self.dynamics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The next simulation state after taking an action of shape (…).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.reward">
+<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.reward" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the reward for a transition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The state used to compute the reward at state.timestep of shape
+(…).</p></li>
+<li><p><strong>action</strong> – The action applied to state of shape (…, num_objects, dim).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array of rewards of shape (…, num_objects).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.action_spec">
+<span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the action specs of the environment without batch dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The action specs represented as a PyTree where the leaves</dt><dd><p>are instances of specs.Array.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.reward_spec">
+<span class="sig-name descname"><span class="pre">reward_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.Array</span></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.reward_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the reward specs of the environment without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.discount_spec">
+<span class="sig-name descname"><span class="pre">discount_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.discount_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the discount specs of the environment without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BaseEnvironment.observation_spec">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observation_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Observation</span></span></span><a class="headerlink" href="#waymax.env.BaseEnvironment.observation_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the observation specs of the environment without batch dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The observation specs represented as a PyTree where the</dt><dd><p>leaves are instances of specs.Array.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.env.MultiAgentEnvironment">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">MultiAgentEnvironment</span></span><a class="headerlink" href="#waymax.env.MultiAgentEnvironment" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="waymax.env.EpisodeAlreadyFinishedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">EpisodeAlreadyFinishedError</span></span><a class="headerlink" href="#waymax.env.EpisodeAlreadyFinishedError" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error thrown when attempting to advance an episode that is finished.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="waymax.env.SimulationNotInitializedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">SimulationNotInitializedError</span></span><a class="headerlink" href="#waymax.env.SimulationNotInitializedError" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></p>
+<p>Error thrown when attempting to advance an episode before reset.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentDynamics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">PlanningAgentDynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">multi_agent_dynamics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><span class="pre">waymax.dynamics.DynamicsModel</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.env.PlanningAgentDynamics" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waymax.dynamics.DynamicsModel</span></code></a></p>
+<p>A dynamics wrapper for converting multi-agent dynamics to single-agent.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentDynamics.action_spec">
+<span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.env.PlanningAgentDynamics.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Action spec of the action containing the bounds.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentDynamics.compute_update">
+<span class="sig-name descname"><span class="pre">compute_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.TrajectoryUpdate" title="waymax.datatypes.TrajectoryUpdate"><span class="pre">waymax.datatypes.TrajectoryUpdate</span></a></span></span><a class="headerlink" href="#waymax.env.PlanningAgentDynamics.compute_update" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the pose and velocity updates at timestep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentDynamics.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_controlled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_new_objects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></span><a class="headerlink" href="#waymax.env.PlanningAgentDynamics.forward" title="Permalink to this definition">#</a></dt>
+<dd><p>Updates a simulated trajectory to the next timestep given an update.</p>
+<p>Runs the forward model for the planning agent by taking in a single object’s
+action and tiling it for all others and then running the wrapped action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> – Actions to be applied to the trajectory to produce updates at the
+next timestep of shape (…, dim).</p></li>
+<li><p><strong>trajectory</strong> – Simulated trajectory up to the current timestep. This
+trajectory will be updated by this function updated with the trajectory
+update. It is expected that this trajectory will have been updated up to
+<cite>timestep</cite>. This is of shape: (…, num_objects, num_timesteps).</p></li>
+<li><p><strong>log_trajectory</strong> – Logged trajectory for all objects over the entire run
+segment. Certain fields such as valid are optionally taken from this
+trajectory. This is of shape: (…, num_objects, num_timesteps).</p></li>
+<li><p><strong>is_controlled</strong> – Boolean array specifying which objects are to be controlled
+by the trajectory update of shape (…, num_objects).</p></li>
+<li><p><strong>timestep</strong> – Timestep of the current simulation.</p></li>
+<li><p><strong>allow_new_objects</strong> – Whether to allow new objects to enter the secene. If
+this is set to False, all objects that are not valid at the current
+timestep will not be valid at the next timestep and visa versa.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Updated trajectory given update from a dynamics model at <cite>timestep</cite> + 1</dt><dd><p>of shape (…, num_objects, num_timesteps).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentDynamics.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Trajectory" title="waymax.datatypes.Trajectory"><span class="pre">waymax.datatypes.Trajectory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.ObjectMetadata" title="waymax.datatypes.ObjectMetadata"><span class="pre">waymax.datatypes.ObjectMetadata</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></span><a class="headerlink" href="#waymax.env.PlanningAgentDynamics.inverse" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes actions converting traj[timestep] to traj[timestep+1].</p>
+<p>Runs the wrapped dynamics inverse and slices out the sdc’s action
+specifically.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trajectory</strong> – Full trajectory to compute the inverse actions from of shape
+(…, num_objects, num_timesteps). This trajectory is for the entire
+simulation so that dynamics models can use sophisticated otpimization
+techniques to find the best fitting actions.</p></li>
+<li><p><strong>metadata</strong> – Metadata on all objects in the scene which contains information
+about what types of objects are in the scene of shape (…,
+num_objects).</p></li>
+<li><p><strong>timestep</strong> – Current timestpe of the simulation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Action which will take a set of objects from trajectory[timestep] to</dt><dd><p>trajectory[timestep + 1] of shape (…, num_objects, dim).</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentEnvironment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">PlanningAgentEnvironment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dynamics_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><span class="pre">waymax.dynamics.DynamicsModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../config/index.html#waymax.config.EnvironmentConfig" title="waymax.config.EnvironmentConfig"><span class="pre">waymax.config.EnvironmentConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_agent_actors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../agents/actor_core/index.html#waymax.agents.actor_core.WaymaxActorCore" title="waymax.agents.actor_core.WaymaxActorCore"><span class="pre">waymax.agents.actor_core.WaymaxActorCore</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.env.PlanningAgentEnvironment" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base_environment/index.html#waymax.env.base_environment.BaseEnvironment" title="waymax.env.base_environment.BaseEnvironment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">waymax.env.base_environment.BaseEnvironment</span></code></a></p>
+<p>An environment wrapper allowing for controlling a single agent.</p>
+<p>The PlanningAgentEnvironment inherits from a multi-agent BaseEnvironment
+to build a single-agent environment by returning only the observations and
+rewards corresponding to the ego-agent (i.e. ADV).</p>
+<p>Note that while the action and reward no longer have an obj dimension as
+expected for a single agent env, the observation retains the obj dimension
+set to 1 to conform with the observation datastructure.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentEnvironment.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Metrics</span></span></span><a class="headerlink" href="#waymax.env.PlanningAgentEnvironment.metrics" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the metrics for the single agent wrapper.</p>
+<p>The metrics to be computed are based on those specified by the configuration
+passed into the environment. This runs metrics that may be specific to the
+planning agent case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – State of simulation to compute the metrics for. This will compute
+metrics for the timestep corresponding to <cite>state.timestep</cite> of shape
+(…).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Dictionary from metric name to metrics.MetricResult which represents the</dt><dd><p>metrics calculated at <cite>state.timestep</cite>. All metrics assumed to be shaped
+(…, num_objects=1) unless specified in the metrics implementation.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentEnvironment.reward">
+<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.PlanningAgentEnvironment.reward" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the reward for a transition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – State of simulation to compute the metrics for. This will compute
+reward for the timestep corresponding to <cite>state.timestep</cite> of shape
+(…).</p></li>
+<li><p><strong>action</strong> – The action applied for the state.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A float (…) tensor of rewards for the single agent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentEnvironment.action_spec">
+<span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></span><a class="headerlink" href="#waymax.env.PlanningAgentEnvironment.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the action specs of the environment without batch dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The action specs represented as a PyTree where the leaves</dt><dd><p>are instances of specs.Array.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentEnvironment.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></span><a class="headerlink" href="#waymax.env.PlanningAgentEnvironment.step" title="Permalink to this definition">#</a></dt>
+<dd><p>Advances simulation by one timestep using the dynamics model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The current state of the simulator of shape (…).</p></li>
+<li><p><strong>action</strong> – The action to apply, of shape (…, num_objects). The
+actions.valid field is used to denote which objects are being controlled
+- objects whose valid is False will fallback to default behavior
+specified by self.dynamics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The next simulation state after taking an action of shape (…).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.PlanningAgentEnvironment.reward_spec">
+<span class="sig-name descname"><span class="pre">reward_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.Array</span></span></span><a class="headerlink" href="#waymax.env.PlanningAgentEnvironment.reward_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Specify the reward spec as just for one object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waymax.env.rollout">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">rollout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericScenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../agents/actor_core/index.html#waymax.agents.actor_core.WaymaxActorCore" title="waymax.agents.actor_core.WaymaxActorCore"><span class="pre">waymax.agents.actor_core.WaymaxActorCore</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="abstract_environment/index.html#waymax.env.abstract_environment.AbstractEnvironment" title="waymax.env.abstract_environment.AbstractEnvironment"><span class="pre">waymax.env.abstract_environment.AbstractEnvironment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rollout_num_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.agents.actor_core.Params</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#waymax.env.RolloutOutput" title="waymax.env.RolloutOutput"><span class="pre">RolloutOutput</span></a></span></span><a class="headerlink" href="#waymax.env.rollout" title="Permalink to this definition">#</a></dt>
+<dd><p>Performs a rollout from the beginning of a run segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> – initial SimulatorState to start the rollout of shape (…).</p></li>
+<li><p><strong>actor</strong> – The action function used to select actions during the rollout.</p></li>
+<li><p><strong>env</strong> – A stateless Waymax environment used for computing steps, observations,
+and rewards.</p></li>
+<li><p><strong>rng</strong> – Random key used for generate stochastic actions if needed.</p></li>
+<li><p><strong>rollout_num_steps</strong> – number of rollout steps.</p></li>
+<li><p><strong>actor_params</strong> – Parameters used by actor to select actions. It can be None if
+the actor does not require parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Stacked rollout output  of shape (rollout_num_steps + 1, …) from the</dt><dd><p>simulator when taking an action given the action_fn. There is one extra in
+the time dimension compared to <cite>rollout_num_steps</cite>. This is because we
+prepend the initial timetep to the <cite>timestep</cite> field and append an invalid
+action into the <cite>action</cite> field.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waymax.env.rollout_log_by_expert_sdc">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">rollout_log_by_expert_sdc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericScenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="abstract_environment/index.html#waymax.env.abstract_environment.AbstractEnvironment" title="waymax.env.abstract_environment.AbstractEnvironment"><span class="pre">waymax.env.abstract_environment.AbstractEnvironment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamics_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><span class="pre">waymax.dynamics.DynamicsModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rollout_num_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#waymax.env.RolloutOutput" title="waymax.env.RolloutOutput"><span class="pre">RolloutOutput</span></a></span></span><a class="headerlink" href="#waymax.env.rollout_log_by_expert_sdc" title="Permalink to this definition">#</a></dt>
+<dd><p>Rollouts state using logged expert actions specified by dynamics_model.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">RolloutOutput</span></span><a class="headerlink" href="#waymax.env.RolloutOutput" title="Permalink to this definition">#</a></dt>
+<dd><p>Rollout output datatypes.structure for using as output of rollout function.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.action">
+<span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#waymax.env.RolloutOutput.action" title="Permalink to this definition">#</a></dt>
+<dd><p>Action produced by a functional corresponding to <cite>ActionFuncType</cite>
+which after taking by calling some <cite>environment.step(action)</cite> produces the
+<cite>timestep</cite> information. This is aggregated over a number of timesteps and
+so the shape is (num_timesteps, …, num_objects, action_dim). The <cite>…</cite>
+of the shapes correspond to any kind of prefix for batching that might be
+applied.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.state">
+<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#waymax.env.RolloutOutput.state" title="Permalink to this definition">#</a></dt>
+<dd><p>Temporally aggregated information of the output of the simulation
+after calling <cite>environment.step(action)</cite>. This information represents the
+important information from the simulation aggregated through the rollout
+of shape (num_timesteps, …). The first element of <cite>state</cite> corresponds to
+the initial simulation state.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.observation">
+<span class="sig-name descname"><span class="pre">observation</span></span><a class="headerlink" href="#waymax.env.RolloutOutput.observation" title="Permalink to this definition">#</a></dt>
+<dd><p>Temporally aggregated information of the output of the
+simulation after calling <cite>observe(environment.step(action))</cite>. This
+information  represents the observation of the agent of the simulator
+state aggregated through the rollout of shape (num_timesteps, …). The
+first element of <cite>observation</cite> corresponds to the initial simulation
+state.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><a class="headerlink" href="#waymax.env.RolloutOutput.metrics" title="Permalink to this definition">#</a></dt>
+<dd><p>Mapping from metric name to metric which contains metrics computed
+on the simulator states aggregated in time of shape (num_timestpes, …).
+These functions are defined in the <cite>env.metrics(state)</cite> function. As this
+is a mapping, these metrics could be empty if the environment decides not
+to produce metrics. This could be due to speed reasons during the rollout.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.reward">
+<span class="sig-name descname"><span class="pre">reward</span></span><a class="headerlink" href="#waymax.env.RolloutOutput.reward" title="Permalink to this definition">#</a></dt>
+<dd><p>Scalar value of shape (num_timesteps, …, num_objects) which
+represents the reward achieved at a certain simulator state at the given
+<cite>state.timestep</cite>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.shape">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ellipsis</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#waymax.env.RolloutOutput.shape" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the shape prefix for the rollout type.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">action</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">waymax.env.typedefs.GenericAction</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">waymax.env.typedefs.GenericState</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">waymax.env.typedefs.Observation</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">waymax.env.typedefs.Metrics</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">jax.Array</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.RolloutOutput.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#waymax.env.RolloutOutput.validate" title="Permalink to this definition">#</a></dt>
+<dd><p>Validates the shape prefix of the actions and timesteps.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.env.Metrics">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">Metrics</span></span><a class="headerlink" href="#waymax.env.Metrics" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.env.Observation">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">Observation</span></span><a class="headerlink" href="#waymax.env.Observation" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.env.ObservationFn">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">ObservationFn</span></span><a class="headerlink" href="#waymax.env.ObservationFn" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.env.PyTree">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">PyTree</span></span><a class="headerlink" href="#waymax.env.PyTree" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="waymax.env.RewardFn">
+<span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">RewardFn</span></span><a class="headerlink" href="#waymax.env.RewardFn" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">BraxWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapped_env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="base_environment/index.html#waymax.env.base_environment.BaseEnvironment" title="waymax.env.base_environment.BaseEnvironment"><span class="pre">waymax.env.base_environment.BaseEnvironment</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.env.BraxWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Brax-like interface wrapper for the Waymax environment.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.dynamics">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dynamics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../dynamics/index.html#waymax.dynamics.DynamicsModel" title="waymax.dynamics.DynamicsModel"><span class="pre">waymax.dynamics.DynamicsModel</span></a></em><a class="headerlink" href="#waymax.env.BraxWrapper.dynamics" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Metrics</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.metrics" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes metrics (lower is better) from state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="wrappers/brax_wrapper/index.html#waymax.env.wrappers.brax_wrapper.TimeStep" title="waymax.env.wrappers.brax_wrapper.TimeStep"><span class="pre">TimeStep</span></a></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Resets the environment and initializes the simulation state.</p>
+<p>This initializer sets the initial timestep and fills the initial simulation
+trajectory with invalid values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – An uninitialized state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The initialized simulation state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Observation</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.observe" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the observation for the given simulation state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="wrappers/brax_wrapper/index.html#waymax.env.wrappers.brax_wrapper.TimeStep" title="waymax.env.wrappers.brax_wrapper.TimeStep"><span class="pre">TimeStep</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="wrappers/brax_wrapper/index.html#waymax.env.wrappers.brax_wrapper.TimeStep" title="waymax.env.wrappers.brax_wrapper.TimeStep"><span class="pre">TimeStep</span></a></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.step" title="Permalink to this definition">#</a></dt>
+<dd><p>Advances simulation by one timestep using the dynamics model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestep</strong> – The timestep containing the current state.</p></li>
+<li><p><strong>action</strong> – The action to apply, of shape (…, num_objects). The
+actions.valid field is used to denote which objects are being controlled
+- objects whose valid is False will fallback to default behavior
+specified by self.dynamics.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The timestep corresponding to the transition taken.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.reward">
+<span class="sig-name descname"><span class="pre">reward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.reward" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes the reward for a transition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> – The state used to compute the reward at state.timestep.</p></li>
+<li><p><strong>action</strong> – The action applied to state.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A (…, num_objects) tensor of rewards.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.termination">
+<span class="sig-name descname"><span class="pre">termination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.termination" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns whether the current state is an episode termination.</p>
+<p>A termination marks the end of an episode where the cost-to-go from
+this state is 0.</p>
+<p>The equivalent step type in DMEnv is dm_env.termination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – The current simulator state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A boolean (…) tensor indicating whether the current state is the end</dt><dd><p>of an episode as a termination.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.truncation">
+<span class="sig-name descname"><span class="pre">truncation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">jax.Array</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.truncation" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns whether the current state should truncate the episode.</p>
+<p>A truncation denotes that an episode has ended due to reaching the step
+limit of an episode. In these cases dynamic programming methods (e.g.
+Q-learning) should still compute cost-to-go assuming the episode will
+continue running.</p>
+<p>The equivalent step type in DMEnv is dm_env.truncation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> – The current simulator state.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A boolean (…) tensor indicating whether the current state is the end of</dt><dd><p>an episode as a truncation.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.action_spec">
+<span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.Action" title="waymax.datatypes.Action"><span class="pre">waymax.datatypes.Action</span></a></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Action spec of the environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.reward_spec">
+<span class="sig-name descname"><span class="pre">reward_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.Array</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.reward_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Reward spec of the environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.discount_spec">
+<span class="sig-name descname"><span class="pre">discount_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.discount_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Discount spec of the environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.BraxWrapper.observation_spec">
+<span class="sig-name descname"><span class="pre">observation_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.PyTree</span></span></span><a class="headerlink" href="#waymax.env.BraxWrapper.observation_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>Observation spec of the environment.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.env.</span></span><span class="sig-name descname"><span class="pre">DMEnvWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_generator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stateless_env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="abstract_environment/index.html#waymax.env.abstract_environment.AbstractEnvironment" title="waymax.env.abstract_environment.AbstractEnvironment"><span class="pre">waymax.env.abstract_environment.AbstractEnvironment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">squeeze_scalar_actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.env.DMEnvWrapper" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">dm_env.Environment</span></code></p>
+<p>A stateful environment wrapper implementing the DMEnv interface.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.config">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../config/index.html#waymax.config.EnvironmentConfig" title="waymax.config.EnvironmentConfig"><span class="pre">waymax.config.EnvironmentConfig</span></a></em><a class="headerlink" href="#waymax.env.DMEnvWrapper.config" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.simulation_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">simulation_state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></em><a class="headerlink" href="#waymax.env.DMEnvWrapper.simulation_state" title="Permalink to this definition">#</a></dt>
+<dd><p>The current simulation state.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.stateless_env">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stateless_env</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="abstract_environment/index.html#waymax.env.abstract_environment.AbstractEnvironment" title="waymax.env.abstract_environment.AbstractEnvironment"><span class="pre">waymax.env.abstract_environment.AbstractEnvironment</span></a></em><a class="headerlink" href="#waymax.env.DMEnvWrapper.stateless_env" title="Permalink to this definition">#</a></dt>
+<dd><p>The underlying stateless Waymax environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.Observation</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.observe" title="Permalink to this definition">#</a></dt>
+<dd><p>Runs the stateless environment observation function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.TimeStep</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.reset" title="Permalink to this definition">#</a></dt>
+<dd><p>Resets the environment and returns the initial TimeStep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.TimeStep</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.step" title="Permalink to this definition">#</a></dt>
+<dd><p>Advances the state given an action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>action</strong> – An action with shape compatible with self.action_spec()</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The TimeStep corresponding to the transition taken by applying</dt><dd><p>action to the current state.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#waymax.env.SimulationNotInitializedError" title="waymax.env.SimulationNotInitializedError"><strong>SimulationNotInitializedError</strong></a> – If reset() has not been called before
+this method is called.</p></li>
+<li><p><a class="reference internal" href="#waymax.env.EpisodeAlreadyFinishedError" title="waymax.env.EpisodeAlreadyFinishedError"><strong>EpisodeAlreadyFinishedError</strong></a> – If this method is called after an episode
+has been terminated or truncated.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.action_spec">
+<span class="sig-name descname"><span class="pre">action_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.action_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>The action specs of this environment, without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.discount_spec">
+<span class="sig-name descname"><span class="pre">discount_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.BoundedArray</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.discount_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>The discount specs of this environment, without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.observation_spec">
+<span class="sig-name descname"><span class="pre">observation_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.PyTree</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.observation_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>The observation specs of this environment, without batch dimension.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="waymax.env.DMEnvWrapper.reward_spec">
+<span class="sig-name descname"><span class="pre">reward_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dm_env.specs.Array</span></span></span><a class="headerlink" href="#waymax.env.DMEnvWrapper.reward_spec" title="Permalink to this definition">#</a></dt>
+<dd><p>The reward specs of this environment, without batch dimension.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="wrappers/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env.wrappers</span></code></div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../datatypes/traffic_lights/index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.datatypes.traffic_lights</span></code></div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, The Waymax Authors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">waymax.env</span></code></a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#package-contents">Package Contents</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.reset"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.reset()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.step"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.step()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.reward"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.reward()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.metrics"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.metrics()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.observe"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.observe()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.action_spec"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.reward_spec"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.reward_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.discount_spec"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.discount_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.observation_spec"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.observation_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.termination"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.termination()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.AbstractEnvironment.truncation"><code class="docutils literal notranslate"><span class="pre">AbstractEnvironment.truncation()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.dynamics"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.dynamics</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.metrics"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.metrics()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.reset"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.reset()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.observe"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.observe()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.step"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.step()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.reward"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.reward()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.action_spec"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.reward_spec"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.reward_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.discount_spec"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.discount_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BaseEnvironment.observation_spec"><code class="docutils literal notranslate"><span class="pre">BaseEnvironment.observation_spec()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.env.MultiAgentEnvironment"><code class="docutils literal notranslate"><span class="pre">MultiAgentEnvironment</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.EpisodeAlreadyFinishedError"><code class="docutils literal notranslate"><span class="pre">EpisodeAlreadyFinishedError</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.SimulationNotInitializedError"><code class="docutils literal notranslate"><span class="pre">SimulationNotInitializedError</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentDynamics"><code class="docutils literal notranslate"><span class="pre">PlanningAgentDynamics</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentDynamics.action_spec"><code class="docutils literal notranslate"><span class="pre">PlanningAgentDynamics.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentDynamics.compute_update"><code class="docutils literal notranslate"><span class="pre">PlanningAgentDynamics.compute_update()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentDynamics.forward"><code class="docutils literal notranslate"><span class="pre">PlanningAgentDynamics.forward()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentDynamics.inverse"><code class="docutils literal notranslate"><span class="pre">PlanningAgentDynamics.inverse()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment"><code class="docutils literal notranslate"><span class="pre">PlanningAgentEnvironment</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment.metrics"><code class="docutils literal notranslate"><span class="pre">PlanningAgentEnvironment.metrics()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment.reward"><code class="docutils literal notranslate"><span class="pre">PlanningAgentEnvironment.reward()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment.action_spec"><code class="docutils literal notranslate"><span class="pre">PlanningAgentEnvironment.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment.step"><code class="docutils literal notranslate"><span class="pre">PlanningAgentEnvironment.step()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PlanningAgentEnvironment.reward_spec"><code class="docutils literal notranslate"><span class="pre">PlanningAgentEnvironment.reward_spec()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.env.rollout"><code class="docutils literal notranslate"><span class="pre">rollout()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.rollout_log_by_expert_sdc"><code class="docutils literal notranslate"><span class="pre">rollout_log_by_expert_sdc()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput"><code class="docutils literal notranslate"><span class="pre">RolloutOutput</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.action"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.action</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.state"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.state</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.observation"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.observation</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.metrics"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.metrics</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.reward"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.reward</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.shape"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.shape</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.action</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.state</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.observation</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.metrics</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.reward</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RolloutOutput.validate"><code class="docutils literal notranslate"><span class="pre">RolloutOutput.validate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.env.Metrics"><code class="docutils literal notranslate"><span class="pre">Metrics</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.Observation"><code class="docutils literal notranslate"><span class="pre">Observation</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.ObservationFn"><code class="docutils literal notranslate"><span class="pre">ObservationFn</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.PyTree"><code class="docutils literal notranslate"><span class="pre">PyTree</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.RewardFn"><code class="docutils literal notranslate"><span class="pre">RewardFn</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper"><code class="docutils literal notranslate"><span class="pre">BraxWrapper</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.dynamics"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.dynamics</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.metrics"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.metrics()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.reset"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.reset()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.observe"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.observe()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.step"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.step()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.reward"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.reward()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.termination"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.termination()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.truncation"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.truncation()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.action_spec"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.reward_spec"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.reward_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.discount_spec"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.discount_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.BraxWrapper.observation_spec"><code class="docutils literal notranslate"><span class="pre">BraxWrapper.observation_spec()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper</span></code></a><ul>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.config"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.config</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.simulation_state"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.simulation_state</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.stateless_env"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.stateless_env</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.observe"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.observe()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.reset"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.reset()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.step"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.step()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.action_spec"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.action_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.discount_spec"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.discount_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.observation_spec"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.observation_spec()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.env.DMEnvWrapper.reward_spec"><code class="docutils literal notranslate"><span class="pre">DMEnvWrapper.reward_spec()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/design-tabs.js"></script>
+    </body>
+</html>

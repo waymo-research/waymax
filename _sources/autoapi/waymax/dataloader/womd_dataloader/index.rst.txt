@@ -1,0 +1,69 @@
+:py:mod:`waymax.dataloader.womd_dataloader`
+===========================================
+
+.. py:module:: waymax.dataloader.womd_dataloader
+
+.. autoapi-nested-parse::
+
+   Waymax data loading functions.
+
+   WOMD represents the data we typically use for simulation in our environment. See
+   https://waymo.com/open/data/motion/tfexample for definitions on many of the data
+   fields mentioned in this file.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dataloader.womd_dataloader.preprocess_serialized_womd_data
+   waymax.dataloader.womd_dataloader.preprocess_womd_example
+   waymax.dataloader.womd_dataloader.simulator_state_generator
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dataloader.womd_dataloader.T
+   waymax.dataloader.womd_dataloader.AUTOTUNE
+
+
+.. py:data:: T
+
+   
+
+.. py:data:: AUTOTUNE
+
+   
+
+.. py:function:: preprocess_serialized_womd_data(serialized: bytes, config: waymax.config.DatasetConfig) -> dict[str, tensorflow.Tensor]
+
+   Parses serialized tf example into tf Tensor dict.
+
+
+.. py:function:: preprocess_womd_example(example: dict[str, tensorflow.Tensor], aggregate_timesteps: bool, max_num_objects: Optional[int] = None) -> dict[str, tensorflow.Tensor]
+
+   Preprocesses dict of tf tensors, keyed by str.
+
+
+.. py:function:: simulator_state_generator(config: waymax.config.DatasetConfig) -> Iterator[waymax.datatypes.simulator_state.SimulatorState]
+
+   Wrapper for SimulatorState iterator.
+
+   This is the high level api for Waymax data loading that takes Waymax data
+   config and outputs generator of SimulatorState.
+
+   :param config: dataset config.
+
+   :returns: A SimulatorState iterator.
+
+

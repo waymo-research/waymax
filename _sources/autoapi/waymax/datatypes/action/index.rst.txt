@@ -1,0 +1,135 @@
+:py:mod:`waymax.datatypes.action`
+=================================
+
+.. py:module:: waymax.datatypes.action
+
+.. autoapi-nested-parse::
+
+   Dataclass definitions for dynamics models.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.action.Action
+   waymax.datatypes.action.TrajectoryUpdate
+
+
+
+
+.. py:class:: Action
+
+
+   Raw actions tensor and validity mask.
+
+   .. attribute:: data
+
+      Action array for all agents in the scene of shape (..., num_objects,
+      dim).
+
+   .. attribute:: valid
+
+      Whether or not an action is valid for a given agent of shape (...,
+      num_objects, 1).
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The tensor shape of actions.
+
+   .. py:attribute:: data
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+
+.. py:class:: TrajectoryUpdate
+
+
+   A datastructure holding the controllable parts of a Trajectory.
+
+   The TrajectoryUpdate class contains the fields that a dynamics model is
+   allowed to update (pose and velocity). Remaining fields, such as object
+   dimensions and timestamps, are computed using common code
+   (see `update_state_with_dynamics_trajectory`).
+
+   As all dynamics produce a TrajectoryUpdate (via the `compute_update` method),
+   the TrajectoryUpdate serves as an intermediate update format that is common
+   to all dynamics models. This allows handling of multiple agents using
+   heterogeneous dynamics models.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The tensor shape of actions.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+   .. py:method:: as_action() -> Action
+
+      Returns this trajectory update as a 5D Action for StateDynamics.
+
+      :returns: An action data structure with data of shape (..., 5) containing
+                x, y, yaw, vel_x, and vel_y.
+
+
+

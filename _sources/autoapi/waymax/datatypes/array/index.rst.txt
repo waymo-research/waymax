@@ -1,0 +1,91 @@
+:py:mod:`waymax.datatypes.array`
+================================
+
+.. py:module:: waymax.datatypes.array
+
+.. autoapi-nested-parse::
+
+   Array data structures.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.array.MaskedArray
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.array.PyTree
+
+
+.. py:data:: PyTree
+
+   
+
+.. py:class:: MaskedArray
+
+
+   A dataclass holding values and a validity mask.
+
+   .. attribute:: value
+
+      A valid.shape + (...) array of values.
+
+   .. attribute:: valid
+
+      A boolean validity mask.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array prefix shape of the value.
+
+   .. py:attribute:: value
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate() -> None
+
+      Validates shape and type.
+
+
+   .. py:method:: create_and_validate(value: jax.Array, valid: jax.Array) -> MaskedArray
+      :classmethod:
+
+      Creates an instance of the class.
+
+
+   .. py:method:: masked_value(fill_value: Any = 0.0) -> jax.Array
+
+      Returns `value` where invalid elements are replaced with `fill_value`.
+
+      :param fill_value: Value with which to replace invalid elements. Must be castable
+                         to the dtype of `value`.
+
+      :returns: `value` where invalid elements are replaced with `fill_value`.
+
+
+

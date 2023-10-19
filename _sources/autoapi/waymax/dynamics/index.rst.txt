@@ -1,0 +1,402 @@
+:py:mod:`waymax.dynamics`
+=========================
+
+.. py:module:: waymax.dynamics
+
+.. autoapi-nested-parse::
+
+   Implementations of vehicle dynamics models.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   abstract_dynamics/index.rst
+   bicycle_model/index.rst
+   delta/index.rst
+   discretizer/index.rst
+   state_dynamics/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.DynamicsModel
+   waymax.dynamics.InvertibleBicycleModel
+   waymax.dynamics.DeltaGlobal
+   waymax.dynamics.DeltaLocal
+   waymax.dynamics.DiscreteActionSpaceWrapper
+   waymax.dynamics.Discretizer
+   waymax.dynamics.StateDynamics
+
+
+
+
+.. py:class:: DynamicsModel
+
+
+   Bases: :py:obj:`abc.ABC`
+
+   Object dynamics base class.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+      :abstractmethod:
+
+      Returns the dm_env bounded action spec.
+
+
+   .. py:method:: forward(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory, reference_trajectory: waymax.datatypes.Trajectory, is_controlled: jax.Array, timestep: int, allow_object_injection: bool = False) -> waymax.datatypes.Trajectory
+
+      Updates a simulated trajectory to the next timestep given an update.
+
+      :param action: Actions to be applied to the trajectory to produce updates at the
+                     next timestep of shape (..., num_objects).
+      :param trajectory: Simulated trajectory up to the current timestep. This
+                         trajectory will be updated by this function updated with the trajectory
+                         update. It is expected that this trajectory will have been updated up to
+                         `timestep`. This is of shape: (..., num_objects, num_timesteps).
+      :param reference_trajectory: Default trajectory for all objects over the entire
+                                   run segment. Certain fields such as valid are optionally taken from this
+                                   trajectory. This is of shape: (..., num_objects, num_timesteps).
+      :param is_controlled: Boolean array specifying which objects are to be controlled
+                            by the trajectory update of shape (..., num_objects).
+      :param timestep: Timestep of the current simulation.
+      :param allow_object_injection: Whether to allow new objects to enter the scene.
+                                     If this is set to False, all objects that are not valid at the current
+                                     timestep will not be valid at the next timestep and vice versa.
+
+      :returns:
+
+                Updated trajectory given update from a dynamics model at `timestep` + 1 of
+                  shape (..., num_objects, num_timesteps).
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+      :abstractmethod:
+
+      Applies actions to current trajectory to produce next timestep update.
+
+      Only the fields updated as part of the `TrajectoryUpdate` are allowed to be
+      updated by the dynamics models. All other fields in `Trajectory` are to be
+      updated by the simulator.
+
+      :param action: Actions to be applied to the trajectory to produce updates at the
+                     next timestep of shape (..., num_objects, dim).
+      :param trajectory: Current trajectory for all agents being controlled, of shape
+                         (..., num_objects, num_timesteps=1). The actions will be applied to this
+                         trajectory to produce the update.
+
+      :returns:
+
+                Updated fields of the trajectory after applying the actions for the given
+                  dynamics model of shape (..., num_objects).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+      :abstractmethod:
+
+      Computes actions converting traj[timestep] to traj[timestep+1].
+
+      :param trajectory: Full trajectory to compute the inverse actions from of shape
+                         (..., num_objects, num_timesteps). This trajectory is for the entire
+                         simulation so that dynamics models can use optimization techniques to
+                         find the best fitting actions.
+      :param metadata: Metadata describing the types of all objects in the scene, of
+                       shape (..., num_objects).
+      :param timestep: Current timestep of the simulation.
+
+      :returns:
+
+                Action which will take a set of objects from trajectory[timestep] to
+                  trajectory[timestep + 1] of shape (..., num_objects, dim).
+
+
+
+.. py:class:: InvertibleBicycleModel(dt: float = 0.1, max_accel: float = 6.0, max_steering: float = 0.3, normalize_actions: bool = False)
+
+
+   Bases: :py:obj:`DynamicsModel`
+
+   Dynamics model using acceleration and steering curvature for control.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for the acceleration steering continuous action space.
+
+
+   .. py:method:: _clip_values(action_array: jax.Array) -> jax.Array
+
+      Clip action values to be within the allowable ranges.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+      Forward dynamics:
+        new_x = x + vel_x * t + 1/2 * accel * cos(yaw) * t ** 2
+        new_y = y + vel_y * t + 1/2 * accel * sin(yaw) * t ** 2
+        new_yaw = yaw + steering * (speed * t + 1/2 * accel * t ** 2)
+        new_vel = vel + accel * t
+
+      :param action: Actions of shape (..., num_objects) containing acceleration and
+                     steering controls.
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns:
+
+                The trajectory update for timestep of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Runs inverse dynamics model to infer actions for specified timestep.
+
+      Inverse dynamics:
+        accel = (new_vel - vel) / dt
+        steering = (new_yaw - yaw) / (speed * dt + 1/2 * accel * dt ** 2)
+
+      :param trajectory: A Trajectory used to infer actions (..., num_objects,
+                         num_timesteps),
+      :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+      :param timestep: Index of time for actions.
+
+      :returns:
+
+                An Action that converts traj[timestep] to traj[timestep+1] of shape
+                  (..., num_objects, dim=2).
+
+
+
+.. py:class:: DeltaGlobal(dt: float = 0.1, max_dx: float = 6.0, max_dy: float = 6.0, max_dyaw: float = jnp.pi)
+
+
+   Bases: :py:obj:`waymax.dynamics.abstract_dynamics.DynamicsModel`
+
+   Dynamics model operating in global coordinates.
+
+   Deltas (displacements) are computed in the global coordinate frame,
+   regardless of the orientation of the objects.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for the delta global action space.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+      :param action: Actions to take. Has shape (..., num_objects).
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns:
+
+                The trajectory update for timestep of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: _clip_values(action: jax.Array) -> jax.Array
+
+      Clips action values to the action spec.
+
+      :param action: A tensor of shape (..., 3) containing x, y, and yaw values.
+
+      :returns: A tensor of shape (..., 3) containing action values clipped to the
+                minimum/maximum bounds.
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Runs inverse dynamics model to infer actions for specified timestep.
+
+      :param trajectory: A Trajectory used to infer actions of shape (..., num_objects,
+                         num_timesteps).
+      :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+      :param timestep: Index of time for actions.
+
+      :returns:
+
+                An Action that converts traj[timestep] to traj[timestep+1] of shape
+                  (..., num_objects, dim=2).
+
+
+
+.. py:class:: DeltaLocal(dt: float = 0.1, max_dx: float = 6.0, max_dy: float = 6.0, max_dyaw: float = jnp.pi)
+
+
+   Bases: :py:obj:`DeltaGlobal`
+
+   Dynamics model operating in global coordinates.
+
+   Actions are defined as (dx, dy, dyaw) in local coordinates.
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Converts to global actions and calls DeltaGlobal.compute_update.
+
+      :param action: Actions to take. Has shape (..., num_objects).
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns:
+
+                The trajectory update for timestep of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Calls DeltaGlobal's inverse and converts to local coordinates.
+
+      :param trajectory: A Trajectory used to infer actions of shape (..., num_objects,
+                         num_timesteps=1).
+      :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+      :param timestep: index of time for actions.
+
+      :returns:
+
+                An Action that converts traj[timestep] to traj[timestep+1] of shape
+                  (..., num_objects, dim=2).
+
+
+
+.. py:class:: DiscreteActionSpaceWrapper(dynamics_model: waymax.dynamics.abstract_dynamics.DynamicsModel, bins: jax.Array, bin_inverse: bool = True)
+
+
+   Bases: :py:obj:`waymax.dynamics.abstract_dynamics.DynamicsModel`
+
+   Discrete action version of any dynamics model.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for discrete dynamics model.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates.
+
+      This function converts the discrete action into a continuous action and
+      then runs the underlying continuous action space.
+
+      :param action: Actions to take. Has shape (..., num_objects).
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns:
+
+                The trajectory update for timestep of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Calculates the inverse to generate the best fit discrete action.
+
+      If `self._bin_inverse` is False, a discrete optimization algorithm is
+      performed to produce the best fit action by searching over the discrete
+      action space. If `self._bin_inverse` is True, we discretize the continuous
+      inverse. This might be noisier than `self._bin_inverse` = False.
+
+      :param trajectory: A Trajectory used to infer actions of shape (..., num_objects,
+                         num_timesteps=1).
+      :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+      :param timestep: index of time for actions.
+
+      :returns:
+
+                An Action that converts traj[timestep] to traj[timestep+1] of shape
+                  (..., num_objects, dim=2).
+
+
+
+.. py:class:: Discretizer(min_value: jax.Array, max_value: jax.Array, bins: jax.Array)
+
+
+   Discretizes continuous values into a 1-dimensional array.
+
+   The total number of discrete actions is equal to the product of (all
+   bins + 1). We add +1 to be inclusive of boundaries of the min and max values.
+   If the continuous value has a shape of (..., 3), and 3 bins are used
+   with bin sizes [2, 3, 4], then there will be a total of 60 discrete actions
+   (3 * 4 * 5).
+
+   .. py:method:: discretize(values: jax.Array) -> jax.Array
+
+      Discretizes a continuous batched n-d vector of values to 1d indices.
+
+      :param values: Vector of continuous values of shape (..., num_vector_elements) to
+                     discretize.
+
+      :returns:
+
+                Discretized values in a tensor of shape (..., 1) with maximum
+                  value self._max_discrete_idx.
+
+
+   .. py:method:: make_continuous(indices_1d: jax.Array) -> jax.Array
+
+      Takes a discretized matrix and converts it back to continuous values.
+
+      :param indices_1d: Discrete matrix of shape (..., 1) to convert back to
+                         continuous matrices of shape (..., num_vector_elements).
+
+      :returns:
+
+                Continuous values of shape (..., num_vector_elements) corresponding to the
+                  value discretized by `indices_1d`.
+
+
+
+.. py:class:: StateDynamics
+
+
+   Bases: :py:obj:`waymax.dynamics.abstract_dynamics.DynamicsModel`
+
+   Dynamics model for setting state in global coordinates.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for the delta global action space.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+      This dynamics will directly set the next x, y, yaw, vel_x, and vel_y based
+      on the action.
+
+      :param action: Actions to take. Has shape (..., num_objects).
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns: The trajectory update for timestep.
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Runs inverse dynamics model to infer actions for specified timestep.
+
+      :param trajectory: A Trajectory used to infer actions of shape (..., num_objects,
+                         num_timesteps).
+      :param metadata: Object metadata for the trajectory.
+      :param timestep: Index of time for actions.
+
+      :returns: An Action that converts traj[timestep] to traj[timestep+1].
+
+
+

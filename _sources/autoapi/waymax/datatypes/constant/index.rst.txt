@@ -1,0 +1,24 @@
+:py:mod:`waymax.datatypes.constant`
+===================================
+
+.. py:module:: waymax.datatypes.constant
+
+.. autoapi-nested-parse::
+
+   Predefined constant values.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: TIME_INTERVAL
+   :value: 0.1
+
+   
+
+.. py:data:: TIMESTEP_MICROS_INTERVAL
+   :value: 100000
+
+   
+

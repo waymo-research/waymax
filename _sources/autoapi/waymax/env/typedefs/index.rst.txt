@@ -1,0 +1,46 @@
+:py:mod:`waymax.env.typedefs`
+=============================
+
+.. py:module:: waymax.env.typedefs
+
+.. autoapi-nested-parse::
+
+   Manages types specific to Waymax environments used in this library.
+
+
+
+Module Contents
+---------------
+
+.. py:data:: PyTree
+
+   
+
+.. py:data:: GenericScenario
+
+   
+
+.. py:data:: GenericAction
+
+   
+
+.. py:data:: GenericState
+
+   
+
+.. py:data:: Observation
+
+   
+
+.. py:data:: ObservationFn
+
+   
+
+.. py:data:: RewardFn
+
+   
+
+.. py:data:: Metrics
+
+   
+

@@ -1,0 +1,159 @@
+:py:mod:`waymax.env.base_environment`
+=====================================
+
+.. py:module:: waymax.env.base_environment
+
+.. autoapi-nested-parse::
+
+   Core class definitions for MultiAgentEnvironment.
+
+   This environment is designed to work with multiple objects (autonomous driving
+   vehicle and other objects).
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.base_environment.BaseEnvironment
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.base_environment._get_control_mask
+   waymax.env.base_environment._multi_agent_reward_spec
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.base_environment.MultiAgentEnvironment
+
+
+.. py:class:: BaseEnvironment(dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig)
+
+
+   Bases: :py:obj:`waymax.env.abstract_environment.AbstractEnvironment`
+
+   Waymax environment for multi-agent scenarios.
+
+   .. py:property:: dynamics
+      :type: waymax.dynamics.DynamicsModel
+
+
+   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+
+      Computes metrics (lower is better) from state.
+
+
+   .. py:method:: reset(state: waymax.datatypes.SimulatorState) -> waymax.datatypes.SimulatorState
+
+      Initializes the simulation state.
+
+      This initializer sets the initial timestep and fills the initial simulation
+      trajectory with invalid values.
+
+      :param state: An uninitialized state of shape (...).
+
+      :returns: The initialized simulation state of shape (...).
+
+
+   .. py:method:: observe(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Observation
+
+      Computes the observation for the given simulation state.
+
+      Here we assume that the default observation is just the simulator state. We
+      leave this for the user to override in order to provide a user-specific
+      observation function. A user can use this to move some of their model
+      specific post-processing into the environment rollout in the actor nodes. If
+      they want this post-processing on the accelertor, they can keep this the
+      same and implement it on the learner side. We provide some helper functions
+      at datatypes.observation.py to help write your own observation functions.
+
+      :param state: Current state of the simulator of shape (...).
+
+      :returns: Simulator state as an observation without modifications of shape (...).
+
+
+   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> waymax.datatypes.SimulatorState
+
+      Advances simulation by one timestep using the dynamics model.
+
+      :param state: The current state of the simulator of shape (...).
+      :param action: The action to apply, of shape (..., num_objects). The
+                     actions.valid field is used to denote which objects are being controlled
+                     - objects whose valid is False will fallback to default behavior
+                     specified by self.dynamics.
+
+      :returns: The next simulation state after taking an action of shape (...).
+
+
+   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+
+      Computes the reward for a transition.
+
+      :param state: The state used to compute the reward at state.timestep of shape
+                    (...).
+      :param action: The action applied to state of shape (..., num_objects, dim).
+
+      :returns: An array of rewards of shape (..., num_objects).
+
+
+   .. py:method:: action_spec() -> waymax.datatypes.Action
+
+      Returns the action specs of the environment without batch dimension.
+
+      :returns:
+
+                The action specs represented as a PyTree where the leaves
+                  are instances of specs.Array.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      Returns the reward specs of the environment without batch dimension.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      Returns the discount specs of the environment without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.Observation
+      :abstractmethod:
+
+      Returns the observation specs of the environment without batch dimension.
+
+      :returns:
+
+                The observation specs represented as a PyTree where the
+                  leaves are instances of specs.Array.
+
+
+
+.. py:function:: _get_control_mask(state: waymax.datatypes.SimulatorState, config: waymax.config.EnvironmentConfig) -> jax.Array
+
+   Gets the control mask for a multi-agent environment.
+
+
+.. py:function:: _multi_agent_reward_spec(config: waymax.config.EnvironmentConfig) -> dm_env.specs.Array
+
+   Gets the reward spec for a multi-agent environment.
+
+
+.. py:data:: MultiAgentEnvironment
+
+   
+

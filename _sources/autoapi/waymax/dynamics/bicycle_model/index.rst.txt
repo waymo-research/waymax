@@ -1,0 +1,145 @@
+:py:mod:`waymax.dynamics.bicycle_model`
+=======================================
+
+.. py:module:: waymax.dynamics.bicycle_model
+
+.. autoapi-nested-parse::
+
+   Implementation of the bicycle (acceleration, steering) dynamics model.
+
+   The bicycle model uses acceleration and curvature as the action space, with
+   the max/min bounds on acceleration and curvature tuned to minimize error
+   on the Waymo Open Motion dataset. Unlike the Ackermann steering model,
+   this dynamics model has an analytical inverse that can be used to compute
+   expert actions from logged behavior.
+
+
+   This action space always uses the [-1.0, 1.0] as the range for acceleration
+   and steering commands to be consistent with other RL training pipeline since
+   many algorithms' hyperparameters are tuned based on this assumption. The actual
+   acceleration and steering command range can still be specified by `max_accel`
+   and `max_steering` in the class definition function.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.bicycle_model.InvertibleBicycleModel
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.bicycle_model.compute_inverse
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.dynamics.bicycle_model.DynamicsModel
+   waymax.dynamics.bicycle_model._SPEED_LIMIT
+
+
+.. py:data:: DynamicsModel
+
+   
+
+.. py:data:: _SPEED_LIMIT
+   :value: 0.6
+
+   
+
+.. py:function:: compute_inverse(traj: waymax.datatypes.Trajectory, timestep: jax.typing.ArrayLike, dt: float = 0.1, estimate_yaw_with_velocity: bool = True) -> waymax.datatypes.Action
+
+   Runs inverse dynamics model to infer actions for specified timestep.
+
+   Inverse dynamics:
+     accel = (new_vel - vel) / dt
+     steering = (new_yaw - yaw) / (speed * dt + 1/2 * accel * dt ** 2)
+
+   :param traj: A Trajectory used to infer actions of shape (..., num_objects,
+                num_timesteps).
+   :param timestep: Index of time for actions.
+   :param dt: The time step length used in the simulator.
+   :param estimate_yaw_with_velocity: Whether to use the yaw recorded in `traj` for
+                                      estimating the inverse action or use the yaw estimated from velocities. It
+                                      is recommended to set this to True, as using the estimated yaw is
+                                      generally less noisy than using the yaw directly recorded in the
+                                      trajectory.
+
+   :returns:
+
+             An Action that converts traj[timestep] to traj[timestep+1] of shape
+               (..., num_objects, dim=2).
+
+
+.. py:class:: InvertibleBicycleModel(dt: float = 0.1, max_accel: float = 6.0, max_steering: float = 0.3, normalize_actions: bool = False)
+
+
+   Bases: :py:obj:`DynamicsModel`
+
+   Dynamics model using acceleration and steering curvature for control.
+
+   .. py:method:: action_spec() -> dm_env.specs.BoundedArray
+
+      Action spec for the acceleration steering continuous action space.
+
+
+   .. py:method:: _clip_values(action_array: jax.Array) -> jax.Array
+
+      Clip action values to be within the allowable ranges.
+
+
+   .. py:method:: compute_update(action: waymax.datatypes.Action, trajectory: waymax.datatypes.Trajectory) -> waymax.datatypes.TrajectoryUpdate
+
+      Computes the pose and velocity updates at timestep.
+
+      Forward dynamics:
+        new_x = x + vel_x * t + 1/2 * accel * cos(yaw) * t ** 2
+        new_y = y + vel_y * t + 1/2 * accel * sin(yaw) * t ** 2
+        new_yaw = yaw + steering * (speed * t + 1/2 * accel * t ** 2)
+        new_vel = vel + accel * t
+
+      :param action: Actions of shape (..., num_objects) containing acceleration and
+                     steering controls.
+      :param trajectory: Trajectory to be updated. Has shape of (..., num_objects,
+                         num_timesteps=1).
+
+      :returns:
+
+                The trajectory update for timestep of shape
+                  (..., num_objects, num_timesteps=1).
+
+
+   .. py:method:: inverse(trajectory: waymax.datatypes.Trajectory, metadata: waymax.datatypes.ObjectMetadata, timestep: int) -> waymax.datatypes.Action
+
+      Runs inverse dynamics model to infer actions for specified timestep.
+
+      Inverse dynamics:
+        accel = (new_vel - vel) / dt
+        steering = (new_yaw - yaw) / (speed * dt + 1/2 * accel * dt ** 2)
+
+      :param trajectory: A Trajectory used to infer actions (..., num_objects,
+                         num_timesteps),
+      :param metadata: Object metadata for the trajectory of shape (..., num_objects).
+      :param timestep: Index of time for actions.
+
+      :returns:
+
+                An Action that converts traj[timestep] to traj[timestep+1] of shape
+                  (..., num_objects, dim=2).
+
+
+

@@ -1,0 +1,223 @@
+:py:mod:`waymax.env.wrappers.brax_wrapper`
+==========================================
+
+.. py:module:: waymax.env.wrappers.brax_wrapper
+
+.. autoapi-nested-parse::
+
+   Library for wrapping Waymax environments in a Brax-like interface.
+
+   For more information on the Brax interface see: https://github.com/google/brax.
+
+   The Waymax/Brax interface primarily differs from the Google/Brax interface in
+   the reset function. Because Waymax uses data to instantiate a new episode,
+   the reset function requires a SimulatorState argument, whereas the Google/Brax
+   interface requires only a random key.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.env.wrappers.brax_wrapper.TimeStep
+   waymax.env.wrappers.brax_wrapper.BraxWrapper
+
+
+
+
+.. py:class:: TimeStep
+
+
+   Container class for Waymax transitions.
+
+   .. attribute:: state
+
+      The current simulation state of shape (...).
+
+   .. attribute:: observation
+
+      The current observation of shape (..,).
+
+   .. attribute:: reward
+
+      The reward obtained in the current transition of shape (...,
+      num_objects).
+
+   .. attribute:: done
+
+      A boolean array denoting the end of an episode of shape (...).
+
+   .. attribute:: discount
+
+      An array of discount values of shape (...).
+
+   .. attribute:: metrics
+
+      Optional dictionary of metrics.
+
+   .. attribute:: info
+
+      Optional dictionary of arbitrary logging information.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      Shape of TimeStep.
+
+   .. py:attribute:: state
+      :type: waymax.datatypes.SimulatorState
+
+      
+
+   .. py:attribute:: observation
+      :type: waymax.env.typedefs.Observation
+
+      
+
+   .. py:attribute:: reward
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: done
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: discount
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: metrics
+      :type: waymax.env.typedefs.Metrics
+
+      
+
+   .. py:attribute:: info
+      :type: dict[str, Any]
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+
+.. py:class:: BraxWrapper(wrapped_env: waymax.env.base_environment.BaseEnvironment)
+
+
+   Brax-like interface wrapper for the Waymax environment.
+
+   .. py:property:: dynamics
+      :type: waymax.dynamics.DynamicsModel
+
+
+   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+
+      Computes metrics (lower is better) from state.
+
+
+   .. py:method:: reset(state: waymax.datatypes.SimulatorState) -> TimeStep
+
+      Resets the environment and initializes the simulation state.
+
+      This initializer sets the initial timestep and fills the initial simulation
+      trajectory with invalid values.
+
+      :param state: An uninitialized state.
+
+      :returns: The initialized simulation state.
+
+
+   .. py:method:: observe(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Observation
+
+      Computes the observation for the given simulation state.
+
+
+   .. py:method:: step(timestep: TimeStep, action: waymax.datatypes.Action) -> TimeStep
+
+      Advances simulation by one timestep using the dynamics model.
+
+      :param timestep: The timestep containing the current state.
+      :param action: The action to apply, of shape (..., num_objects). The
+                     actions.valid field is used to denote which objects are being controlled
+                     - objects whose valid is False will fallback to default behavior
+                     specified by self.dynamics.
+
+      :returns: The timestep corresponding to the transition taken.
+
+
+   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+
+      Computes the reward for a transition.
+
+      :param state: The state used to compute the reward at state.timestep.
+      :param action: The action applied to state.
+
+      :returns: A (..., num_objects) tensor of rewards.
+
+
+   .. py:method:: termination(state: waymax.datatypes.SimulatorState) -> jax.Array
+
+      Returns whether the current state is an episode termination.
+
+      A termination marks the end of an episode where the cost-to-go from
+      this state is 0.
+
+      The equivalent step type in DMEnv is dm_env.termination.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end
+                  of an episode as a termination.
+
+
+   .. py:method:: truncation(state: waymax.datatypes.SimulatorState) -> jax.Array
+
+      Returns whether the current state should truncate the episode.
+
+      A truncation denotes that an episode has ended due to reaching the step
+      limit of an episode. In these cases dynamic programming methods (e.g.
+      Q-learning) should still compute cost-to-go assuming the episode will
+      continue running.
+
+      The equivalent step type in DMEnv is dm_env.truncation.
+
+      :param state: The current simulator state.
+
+      :returns:
+
+                A boolean (...) tensor indicating whether the current state is the end of
+                  an episode as a truncation.
+
+
+   .. py:method:: action_spec() -> waymax.datatypes.Action
+
+      Action spec of the environment.
+
+
+   .. py:method:: reward_spec() -> dm_env.specs.Array
+
+      Reward spec of the environment.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      Discount spec of the environment.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.PyTree
+
+      Observation spec of the environment.
+
+
+

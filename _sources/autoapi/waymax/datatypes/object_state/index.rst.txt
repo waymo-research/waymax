@@ -1,0 +1,386 @@
+:py:mod:`waymax.datatypes.object_state`
+=======================================
+
+.. py:module:: waymax.datatypes.object_state
+
+.. autoapi-nested-parse::
+
+   Data structures for trajectory and metadata information for scene objects.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.object_state.ObjectTypeIds
+   waymax.datatypes.object_state.ObjectMetadata
+   waymax.datatypes.object_state.Trajectory
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.object_state.fill_invalid_trajectory
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   waymax.datatypes.object_state._INVALID_FLOAT_VALUE
+   waymax.datatypes.object_state._INVALID_INT_VALUE
+
+
+.. py:data:: _INVALID_FLOAT_VALUE
+
+   
+
+.. py:data:: _INVALID_INT_VALUE
+
+   
+
+.. py:class:: ObjectTypeIds
+
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   Ids for different map elements to be mapped into a tensor.
+
+   These integers represent the ID of these specific types as defined in:
+     https://waymo.com/open/data/motion/tfexample.
+
+   .. py:attribute:: UNSET
+      :value: 0
+
+      
+
+   .. py:attribute:: VEHICLE
+      :value: 1
+
+      
+
+   .. py:attribute:: PEDESTRIAN
+      :value: 2
+
+      
+
+   .. py:attribute:: CYCLIST
+      :value: 3
+
+      
+
+   .. py:attribute:: OTHER
+      :value: 4
+
+      
+
+
+.. py:class:: ObjectMetadata
+
+
+   Time-independent object metadata.
+
+   All arrays are of shape (..., num_objects).
+
+   .. attribute:: ids
+
+      A unique integer id for each object which is consistent over time of
+      data type int32.
+
+   .. attribute:: object_types
+
+      An integer representing each different class of object
+      (Unset=0, Vehicle=1, Pedestrian=2, Cyclist=3, Other=4) of data type int32.
+      This definition is from Waymo Open Motion Dataset (WOMD).
+
+   .. attribute:: is_sdc
+
+      Binary mask of data type bool representing whether an object
+      represents the sdc or some other object.
+
+   .. attribute:: is_modeled
+
+      Whether a specific object is one designated by WOMD to be
+      predicted of data type bool.
+
+   .. attribute:: is_valid
+
+      Whether an object is valid at any part of the run segment of data
+      type bool.
+
+   .. attribute:: objects_of_interest
+
+      A vector of type bool to indicate which objects in the
+      scene corresponding to the first dimension of the object tensors have
+      interactive behavior. Up to 2 objects will be selected. The objects in
+      this list form an interactive group.
+
+   .. attribute:: is_controlled
+
+      Whether an object will be controlled by external agents in an
+      environment.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of the metadata.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects in metadata.
+
+   .. py:attribute:: ids
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: object_types
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_sdc
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_modeled
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_valid
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: objects_of_interest
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: is_controlled
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:class:: Trajectory
+
+
+   Data structure representing a trajectory.
+
+   The shapes of all objects are of shape (..., num_objects, num_timesteps).
+
+   .. attribute:: x
+
+      The x coordinate of each object at each time step of data type float32.
+
+   .. attribute:: y
+
+      The y coordinate of each object at each time step of data type float32.
+
+   .. attribute:: z
+
+      The z coordinate of each object at each time step of data type float32.
+
+   .. attribute:: vel_x
+
+      The x component of the object velocity at each time step of data type
+      float32.
+
+   .. attribute:: vel_y
+
+      The y component of the object velocity at each time step of data type
+      float32.
+
+   .. attribute:: yaw
+
+      Counter-clockwise yaw in top-down view (rotation about the Z axis from
+      a unit X vector to the object direction vector) of shape of data type
+      float32.
+
+   .. attribute:: valid
+
+      Validity bit for all object at all times steps of data type bool.
+
+   .. attribute:: timestamp_micros
+
+      A timestamp in microseconds for each time step of data
+      type int32.
+
+   .. attribute:: length
+
+      The length of each object at each time step of data type float32.
+      Note for each object, its length is fixed for all time steps.
+
+   .. attribute:: width
+
+      The width of each object at each time step of data type float32. Note
+      for each object, its width is fixed for all time steps.
+
+   .. attribute:: height
+
+      The height of each object at each time step of data type float32.
+      Note for each object, its height is fixed for all time steps.
+
+   .. py:property:: shape
+      :type: tuple[int, Ellipsis]
+
+      The Array shape of this trajectory.
+
+   .. py:property:: num_objects
+      :type: int
+
+      The number of objects included in this trajectory per example.
+
+   .. py:property:: num_timesteps
+      :type: int
+
+      The length of this trajectory in time.
+
+   .. py:property:: xy
+      :type: jax.Array
+
+      Stacked xy location.
+
+   .. py:property:: xyz
+      :type: jax.Array
+
+      Stacked xyz location.
+
+   .. py:property:: vel_xy
+      :type: jax.Array
+
+      Stacked xy velocity.
+
+   .. py:property:: speed
+      :type: jax.Array
+
+      Speed on x-y plane.
+
+   .. py:property:: vel_yaw
+      :type: jax.Array
+
+      Angle of the velocity on x-y plane.
+
+   .. py:property:: bbox_corners
+      :type: jax.Array
+
+      Corners of the bounding box spanning the object's shape.
+
+      :returns:
+
+                Box corners' (x, y) coordinates spanning the object of shape
+                  (..., num_objects, num_timesteps, 4, 2). The 4 corners start from the
+                  objects' front right corner and go counter-clockwise.
+
+   .. py:attribute:: x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: z
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_x
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: vel_y
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: yaw
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: valid
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: timestamp_micros
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: length
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: width
+      :type: jax.Array
+
+      
+
+   .. py:attribute:: height
+      :type: jax.Array
+
+      
+
+   .. py:method:: __eq__(other: Any) -> bool
+
+      Return self==value.
+
+
+   .. py:method:: stack_fields(field_names: collections.abc.Sequence[str]) -> jax.Array
+
+      Returns a concatenated version of a set of field names for Trajectory.
+
+
+   .. py:method:: zeros(shape: collections.abc.Sequence[int]) -> Trajectory
+      :classmethod:
+
+      Creates a Trajectory containing zeros of the specified shape.
+
+
+   .. py:method:: validate()
+
+      Validates shape and type.
+
+
+
+.. py:function:: fill_invalid_trajectory(traj: Trajectory) -> Trajectory
+
+   Fills a trajectory with invalid values.
+
+   An invalid value is -1 for numerical fields and False for booleans.
+
+   :param traj: Trajectory to fill.
+
+   :returns: A new trajectory with invalid values.
+
+
