@@ -1,5 +1,6 @@
 # Waymax: An accelerated simulator for autonomous driving research.
 
+![Continuous integration](https://github.com/waymo-research/waymax/actions/workflows/ci-build.yml/badge.svg)
 [![arXiv](https://img.shields.io/badge/cs.RO-2310.08710-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2310.08710)
 
 [**Documentation**](https://waymo-research.github.io/waymax/docs/)
@@ -18,9 +19,6 @@ distill behavior research into its simplest form.
 As all components are entirely written in JAX, Waymax is easily distributed and
 deployed on hardware accelerators, such as GPUs and
 [TPUs](https://cloud.google.com/tpu).
-
-Disclaimer: Waymax is a tool intended for research, and not an official Waymo
-product.
 
 ## Installation
 
@@ -138,8 +136,9 @@ getting started:
 
 ## Citing Waymax
 
-If you use Waymax for your own research, please cite Waymax using the following
-bibtex entry:
+If you use Waymax for your own research, please cite Waymax in accordance with
+the requirements of the Waymax License Agreement for Non-Commercial Use,
+including using the following bibtex entry:
 
 ```
 @inproceedings{waymax,
