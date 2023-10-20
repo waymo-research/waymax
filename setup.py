@@ -31,7 +31,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Waymax team',
     author_email='waymo-waymax@google.com',
-    python_requires='>=3.8',
+    python_requires='>=3.10',
     packages=find_packages(),
     install_requires=[
         'numpy>=1.20',
