@@ -108,7 +108,7 @@ class ConstantSpeedPolicy(waypoint_following_agent.WaypointFollowingPolicy):
     Args:
       speed: Speed in m/s to set as the speed for all agents.
     """
-    super().__init__()
+    super().__init__(invalidate_on_end=True)
     self._speed = speed
 
   def update_speed(

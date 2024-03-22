@@ -13,6 +13,8 @@
 # limitations under the License.
 
 """Utility function that runs all metrics according to an environment config."""
+from collections.abc import Iterable
+
 from waymax import config as _config
 from waymax import datatypes
 from waymax.metrics import abstract_metric
@@ -23,11 +25,24 @@ from waymax.metrics import roadgraph
 from waymax.metrics import route
 
 
+_METRICS_REGISTRY: dict[str, abstract_metric.AbstractMetric] = {
+    'log_divergence': imitation.LogDivergenceMetric(),
+    'overlap': overlap.OverlapMetric(),
+    'offroad': roadgraph.OffroadMetric(),
+    'kinematic_infeasibility': comfort.KinematicsInfeasibilityMetric(),
+    'sdc_wrongway': roadgraph.WrongWayMetric(),
+    'sdc_progression': route.ProgressionMetric(),
+    'sdc_off_route': route.OffRouteMetric(),
+}
+
+
 def run_metrics(
     simulator_state: datatypes.SimulatorState,
     metrics_config: _config.MetricsConfig,
 ) -> dict[str, abstract_metric.MetricResult]:
   """Runs all metrics with config flags set to True.
+
+  User-defined metrics must be registered using the `register_metric` function.
 
   Args:
     simulator_state: The current simulator state of shape (...).
@@ -37,20 +52,33 @@ def run_metrics(
     A dictionary of metric names mapping to metric result arrays where each
       metric is of shape (..., num_objects).
   """
-  name_to_metric = {
-      'log_divergence': imitation.LogDivergenceMetric,
-      'overlap': overlap.OverlapMetric,
-      'offroad': roadgraph.OffroadMetric,
-      'sdc_wrongway': roadgraph.WrongWayMetric,
-      'sdc_progression': route.ProgressionMetric,
-      'sdc_off_route': route.OffRouteMetric,
-      'sdc_kinematic_infeasibility': comfort.KinematicsInfeasibilityMetric,
-  }
-
   results = {}
-  for metric_name, metric_fn in name_to_metric.items():
-    # If flag set to True, compute and store metric.
-    if getattr(metrics_config, f'run_{metric_name}'):
-      results[metric_name] = metric_fn().compute(simulator_state)
+  for metric_name in metrics_config.metrics_to_run:
+    if metric_name in _METRICS_REGISTRY:
+      results[metric_name] = _METRICS_REGISTRY[metric_name].compute(
+          simulator_state
+      )
+    else:
+      raise ValueError(f'Metric {metric_name} not registered.')
 
   return results
+
+
+def register_metric(metric_name: str, metric: abstract_metric.AbstractMetric):
+  """Register a metric.
+
+  This function registers a metric so that it can be included in a MetricsConfig
+  and computed by `run_metrics`.
+
+  Args:
+    metric_name: String name to register the metric with.
+    metric: The metric to register.
+  """
+  if metric_name in _METRICS_REGISTRY:
+    raise ValueError(f'Metric {metric_name} has already been registered.')
+  _METRICS_REGISTRY[metric_name] = metric
+
+
+def get_metric_names() -> Iterable[str]:
+  """Returns the names of all registered metrics."""
+  return _METRICS_REGISTRY.keys()

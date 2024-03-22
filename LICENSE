@@ -84,7 +84,14 @@ https://github.com/waymo-research/waymax/blob/main/LICENSE,
 and your access and use of the Waymx Licensed Materials are governed by the
 terms and conditions contained therein.
 
-@inproceedings{waymax, title={Waymax: An Accelerated, Data-Driven Simulator for Large-Scale Autonomous Driving Research}, author={Cole Gulino and Justin Fu and Wenjie Luo and George Tucker and Eli Bronstein and Yiren Lu and Jean Harb and Xinlei Pan and Yan Wang and Xiangyu Chen and John D. Co-Reyes and Rishabh Agarwal and Rebecca Roelofs and Yao Lu and Nico Montali and Paul Mougin and Zoey Yang and Brandyn White and Aleksandra Faust, and Rowan McAllister and Dragomir Anguelov and Benjamin Sapp}, booktitle={Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks},year={2023}}
+@inproceedings{waymax, title={Waymax: An Accelerated, Data-Driven Simulator for
+Large-Scale Autonomous Driving Research}, author={Cole Gulino and Justin Fu and
+Wenjie Luo and George Tucker and Eli Bronstein and Yiren Lu and Jean Harb and
+Xinlei Pan and Yan Wang and Xiangyu Chen and John D. Co-Reyes and Rishabh
+Agarwal and Rebecca Roelofs and Yao Lu and Nico Montali and Paul Mougin and
+Zoey Yang and Brandyn White and Aleksandra Faust, and Rowan McAllister and
+Dragomir Anguelov and Benjamin Sapp}, booktitle={Proceedings of the Neural
+Information Processing Systems Track on Datasets and Benchmarks},year={2023}}
 
 ii. In any license granting or any agreement governing use or access to Your
 Derivative IP, You must, and must require recipients of Your Derivative IP to

@@ -16,12 +16,14 @@
 
 from jax import numpy as jnp
 import tensorflow as tf
-
-from absl.testing import parameterized
 from waymax import config as _config
 from waymax import dataloader
+from waymax.metrics import abstract_metric
 from waymax.metrics import metric_factory
 from waymax.utils import test_utils
+
+from absl.testing import parameterized
+
 
 TEST_DATA_PATH = test_utils.ROUTE_DATA_PATH
 
@@ -31,9 +33,7 @@ class MetricFactoryTest(tf.test.TestCase, parameterized.TestCase):
   @parameterized.parameters(((),), ((2, 1),))
   def test_all_false_flags_results_in_empty_results_dict(self, batch_dims):
     config = _config.EnvironmentConfig(
-        metrics=_config.MetricsConfig(
-            run_log_divergence=False, run_overlap=False, run_offroad=False
-        )
+        metrics=_config.MetricsConfig(metrics_to_run=tuple())
     )
 
     dataset = test_utils.make_test_dataset(batch_dims=batch_dims)
@@ -50,10 +50,9 @@ class MetricFactoryTest(tf.test.TestCase, parameterized.TestCase):
 
   @parameterized.parameters(((),), ((2, 1),))
   def test_true_flags_results_in_correct_number_of_results(self, batch_dims):
+    metric_names = ('log_divergence', 'overlap', 'offroad')
     config = _config.EnvironmentConfig(
-        metrics=_config.MetricsConfig(
-            run_log_divergence=True, run_overlap=True, run_offroad=True
-        )
+        metrics=_config.MetricsConfig(metrics_to_run=metric_names)
     )
 
     dataset = test_utils.make_test_dataset(batch_dims=batch_dims)
@@ -65,7 +64,6 @@ class MetricFactoryTest(tf.test.TestCase, parameterized.TestCase):
     metric_results = metric_factory.run_metrics(
         simulator_state=sim_state, metrics_config=config.metrics
     )
-    metric_names = ['log_divergence', 'overlap', 'offroad']
 
     with self.subTest('check_correct_number_of_elements'):
       self.assertLen(metric_results, 3)
@@ -80,9 +78,7 @@ class MetricFactoryTest(tf.test.TestCase, parameterized.TestCase):
 
   def test_offroad_is_detected_in_metric(self):
     config = _config.EnvironmentConfig(
-        metrics=_config.MetricsConfig(
-            run_log_divergence=False, run_overlap=False, run_offroad=True
-        )
+        metrics=_config.MetricsConfig(metrics_to_run=('offroad',))
     )
 
     sim_state = test_utils.simulator_state_with_offroad()
@@ -112,9 +108,7 @@ class MetricFactoryTest(tf.test.TestCase, parameterized.TestCase):
   )
   def test_overlap_is_detected_in_metric(self, valid, expected):
     config = _config.EnvironmentConfig(
-        metrics=_config.MetricsConfig(
-            run_log_divergence=False, run_overlap=True, run_offroad=False
-        )
+        metrics=_config.MetricsConfig(metrics_to_run=('overlap',))
     )
 
     sim_state = test_utils.simulator_state_with_overlap()
@@ -137,6 +131,26 @@ class MetricFactoryTest(tf.test.TestCase, parameterized.TestCase):
           jnp.full(sim_traj.num_objects, valid, dtype=jnp.bool_),
       )
 
+  def test_user_defined_metric_detected(self):
+    config = _config.EnvironmentConfig(
+        metrics=_config.MetricsConfig(metrics_to_run=('custom_metric',))
+    )
+
+    class CustomMetric(abstract_metric.AbstractMetric):
+
+      def compute(self, _) -> abstract_metric.MetricResult:
+        return abstract_metric.MetricResult(
+            value=jnp.array([123]), valid=jnp.array([True])
+        )
+
+    metric_factory.register_metric('custom_metric', CustomMetric())
+
+    sim_state = test_utils.simulator_state_with_overlap()
+    metric_results = metric_factory.run_metrics(
+        simulator_state=sim_state, metrics_config=config.metrics
+    )
+    custom_metric_result = metric_results['custom_metric']
+    self.assertAllEqual(custom_metric_result.value, jnp.array([123]))
 
 
 if __name__ == '__main__':

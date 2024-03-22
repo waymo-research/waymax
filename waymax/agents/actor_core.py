@@ -14,12 +14,11 @@
 
 """Abstract definition of a Waymax actor for use at inference-time."""
 import abc
-from typing import Callable, TypeVar, Sequence
+from typing import Callable, Sequence, TypeVar
 
 import chex
 import jax
 import jax.numpy as jnp
-
 from waymax import datatypes
 
 # This is the internal state for whatever the agent needs to keep as its state.
@@ -28,6 +27,7 @@ ActorState = datatypes.PyTree
 # This is the dictionary of parameters passed into the model which represents
 # the parameters to run the network.
 Params = datatypes.PyTree
+Action = datatypes.PyTree
 
 
 @chex.dataclass(frozen=True)
@@ -45,7 +45,7 @@ class WaymaxActorOutput:
   """
 
   actor_state: ActorState
-  action: datatypes.Action
+  action: Action
   is_controlled: jax.Array
 
   def validate(self):

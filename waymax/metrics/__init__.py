@@ -13,9 +13,12 @@
 # limitations under the License.
 
 """Metrics for agent evaluation."""
+
 from waymax.metrics.abstract_metric import AbstractMetric
 from waymax.metrics.abstract_metric import MetricResult
 from waymax.metrics.imitation import LogDivergenceMetric
+from waymax.metrics.metric_factory import get_metric_names
+from waymax.metrics.metric_factory import register_metric
 from waymax.metrics.metric_factory import run_metrics
 from waymax.metrics.overlap import OverlapMetric
 from waymax.metrics.roadgraph import OffroadMetric

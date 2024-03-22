@@ -46,11 +46,19 @@ class BraxWrapperTest(parameterized.TestCase, tf.test.TestCase):
     multi_stateless_env = base_environment.MultiAgentEnvironment(
         dynamics_model=dynamics.DeltaGlobal(), config=self.env_config
     )
-    self.multi_env = brax_wrapper.BraxWrapper(multi_stateless_env)
+    self.multi_env = brax_wrapper.BraxWrapper(
+        multi_stateless_env,
+        multi_stateless_env.dynamics,
+        multi_stateless_env.config,
+    )
     single_stateless_env = planning_agent_environment.PlanningAgentEnvironment(
         dynamics_model=dynamics.DeltaGlobal(), config=self.env_config
     )
-    self.single_env = brax_wrapper.BraxWrapper(single_stateless_env)
+    self.single_env = brax_wrapper.BraxWrapper(
+        single_stateless_env,
+        single_stateless_env.dynamics,
+        single_stateless_env.config,
+    )
 
   @parameterized.parameters(True, False)
   def test_reset_returns_first_timestep(self, multi=False):

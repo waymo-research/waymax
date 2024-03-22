@@ -15,7 +15,6 @@
 """Reward functions for the Waymax environment."""
 import jax
 import jax.numpy as jnp
-
 from waymax import config as _config
 from waymax import datatypes
 from waymax import metrics
@@ -64,9 +63,7 @@ class LinearCombinationReward(abstract_reward_function.AbstractRewardFunction):
 
 def _validate_reward_metrics(config: _config.LinearCombinationRewardConfig):
   """Checks that all metrics in the RewardConfigs are valid."""
-  metrics_config = _config.MetricsConfig()
-  metric_names_with_run = metrics_config.__dict__.keys()
-  metric_names = set(name[4:] for name in metric_names_with_run)
+  metric_names = metrics.get_metric_names()
   for reward_metric_name in config.rewards.keys():
     if reward_metric_name not in metric_names:
       raise ValueError(
@@ -80,13 +77,4 @@ def _linear_config_to_metric_config(
     config: _config.LinearCombinationRewardConfig,
 ) -> _config.MetricsConfig:
   """Converts a LinearCombinationRewardConfig into a MetricsConfig."""
-  reward_metric_names = config.rewards.keys()
-  temp_metrics_configs = _config.MetricsConfig()
-  metric_flags = {}
-  for metric_name in temp_metrics_configs.__dict__.keys():
-    # MetricsConfig attributes are stored as f'run_{metric}'. The following line
-    # removes 'run_' from the name and checks if the metric is present in the
-    # reward config. If so, the metric is stored in the dictionary as True,
-    # otherwise False.
-    metric_flags[metric_name] = metric_name[4:] in reward_metric_names
-  return _config.MetricsConfig(**metric_flags)
+  return _config.MetricsConfig(metrics_to_run=tuple(config.rewards.keys()))

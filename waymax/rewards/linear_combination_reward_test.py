@@ -63,13 +63,13 @@ class LinearCombinationRewardTest(tf.test.TestCase):
       self.assertAllClose(combination_reward, manual_combination_reward)
 
     with self.subTest('combination_equals_manual_entry'):
-      self.assertAllClose(combination_reward, [0, 0, -1, 0, 0, -1, -1])
+      self.assertAllClose(combination_reward, [0, 0, -1, 0, 0, -0, -0])
 
     with self.subTest('overlap_reward_is_correct'):
       self.assertAllClose(negative_overlap_reward, [-1] * 7)
 
     with self.subTest('offroad_reward_is_correct'):
-      self.assertAllClose(offroad_reward, [1, 1, 0, 1, 1, 0, 0])
+      self.assertAllClose(offroad_reward, [1, 1, 0, 1, 1, 1, 1])
 
   def test_returns_zero_for_invalid_trajectory(self):
     combination_config = _config.LinearCombinationRewardConfig({
