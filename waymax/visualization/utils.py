@@ -118,6 +118,7 @@ def plot_numpy_bounding_boxes(
     color: np.ndarray,
     alpha: Optional[float] = 1.0,
     as_center_pts: bool = False,
+    label: Optional[str] = None,
 ) -> None:
   """Plots multiple bounding boxes.
 
@@ -129,6 +130,7 @@ def plot_numpy_bounding_boxes(
     alpha: Alpha value for drawing, i.e. 0 means fully transparent.
     as_center_pts: If set to True, bboxes will be drawn as center points,
       instead of full bboxes.
+    label: String, represents the meaning of the color for different boxes.
   """
   if bboxes.ndim != 2 or bboxes.shape[1] != 5 or color.shape != (3,):
     raise ValueError(
@@ -139,7 +141,15 @@ def plot_numpy_bounding_boxes(
     )
 
   if as_center_pts:
-    ax.plot(bboxes[:, 0], bboxes[:, 1], 'o', color=color, ms=2, alpha=alpha)
+    ax.plot(
+        bboxes[:, 0],
+        bboxes[:, 1],
+        'o',
+        color=color,
+        ms=2,
+        alpha=alpha,
+        label=label,
+    )
   else:
     c = np.cos(bboxes[:, 4])
     s = np.sin(bboxes[:, 4])
@@ -166,6 +176,7 @@ def plot_numpy_bounding_boxes(
         color=color,
         zorder=4,
         alpha=alpha,
+        label=label,
     )
 
     # Draw heading arrow.
@@ -175,4 +186,5 @@ def plot_numpy_bounding_boxes(
         color=color,
         zorder=4,
         alpha=alpha,
+        label=label,
     )

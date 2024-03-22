@@ -285,17 +285,19 @@ class IDMRoutePolicyTest(tf.test.TestCase, parameterized.TestCase):
     cur_speed = jnp.array([10.0, 10.0])
     cur_position = jax.tree_util.tree_map(lambda x: x[..., :1], objects)
     max_accel = 1.13
-    max_deccel = 1.78
+    max_decel = 1.78
     delta = 4.0
     desired_vel = 30.0
     result = waypoint_following_agent.IDMRoutePolicy(
         max_accel=max_accel,
-        max_deccel=max_deccel,
+        max_decel=max_decel,
         desired_vel=desired_vel,
         min_spacing=1.0,
         safe_time_headway=1.0,
         max_lookahead=6,
         delta=delta,
+        lookahead_from_current_position=False,
+        invalidate_on_end=True,
     )._get_accel(objects, objects.xyz[:, 0, :], cur_speed, cur_position)
     # First agent should yield to second agent.
     # Second agent for free-road behavior.
@@ -313,7 +315,7 @@ class IDMRoutePolicyTest(tf.test.TestCase, parameterized.TestCase):
     cur_position = jax.tree_util.tree_map(lambda x: x[..., :1], waypoints)
     result = waypoint_following_agent.IDMRoutePolicy(
         max_accel=max_accel,
-        max_deccel=max_accel,
+        max_decel=max_accel,
         desired_vel=desired_speed,
         max_lookahead=6,
         delta=delta,

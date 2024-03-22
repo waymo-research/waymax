@@ -61,7 +61,9 @@ class BaseEnvironment(abstract_environment.AbstractEnvironment):
         simulator_state=state, metrics_config=self.config.metrics
     )
 
-  def reset(self, state: datatypes.SimulatorState) -> datatypes.SimulatorState:
+  def reset(
+      self, state: datatypes.SimulatorState, rng: jax.Array | None = None
+  ) -> datatypes.SimulatorState:
     """Initializes the simulation state.
 
     This initializer sets the initial timestep and fills the initial simulation
@@ -69,6 +71,7 @@ class BaseEnvironment(abstract_environment.AbstractEnvironment):
 
     Args:
       state: An uninitialized state of shape (...).
+      rng: Optional random number generator for stochastic environments.
 
     Returns:
       The initialized simulation state of shape (...).
@@ -109,7 +112,10 @@ class BaseEnvironment(abstract_environment.AbstractEnvironment):
 
   @jax.named_scope('BaseEnvironment.step')
   def step(
-      self, state: datatypes.SimulatorState, action: datatypes.Action
+      self,
+      state: datatypes.SimulatorState,
+      action: datatypes.Action,
+      rng: jax.Array | None = None,
   ) -> datatypes.SimulatorState:
     """Advances simulation by one timestep using the dynamics model.
 
@@ -119,6 +125,7 @@ class BaseEnvironment(abstract_environment.AbstractEnvironment):
         actions.valid field is used to denote which objects are being controlled
         - objects whose valid is False will fallback to default behavior
         specified by self.dynamics.
+      rng: Optional random number generator for stochastic environments.
 
     Returns:
       The next simulation state after taking an action of shape (...).

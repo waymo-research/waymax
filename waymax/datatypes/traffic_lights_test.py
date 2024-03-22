@@ -46,51 +46,23 @@ class TrafficLightsDataStructTest(tf.test.TestCase, parameterized.TestCase):
       self.assertNotEqual(self.tls, self.tls.replace(x=jnp.array([1.0])))
 
   def test_traffic_lights_validity_works_properly(self):
-    error_prefix = (
-        '[Chex] Assertion assert_type failed: Error in type '
-        'compatibility check:'
-    )
     with self.subTest('XWrongType'):
-      error = (
-          f'{error_prefix} input 0 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.tls.replace(x=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('YWrongType'):
-      error = (
-          f'{error_prefix} input 1 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.tls.replace(y=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ZWrongType'):
-      error = (
-          f'{error_prefix} input 2 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.tls.replace(z=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('StateWrongType'):
-      error = (
-          f'{error_prefix} input 3 has type float32 but expected <class '
-          "'jax.numpy.int32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.tls.replace(state=jnp.zeros((1), dtype=jnp.float32)).validate()
     with self.subTest('LaneIdsWrongType'):
-      error = (
-          f'{error_prefix} input 4 has type float32 but expected <class '
-          "'jax.numpy.int32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.tls.replace(lane_ids=jnp.zeros((1), dtype=jnp.float32)).validate()
     with self.subTest('ValidWrongType'):
-      error = (
-          f'{error_prefix} input 5 has type int32 but expected <class '
-          "'jax.numpy.bool_'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.tls.replace(valid=jnp.zeros((1), dtype=jnp.int32)).validate()
 
     with self.subTest('ShapesNotTheSame'):

@@ -25,7 +25,9 @@ class AbstractEnvironment(abc.ABC):
   """A stateless environment interface for Waymax."""
 
   @abc.abstractmethod
-  def reset(self, scenario: types.GenericScenario) -> types.GenericState:
+  def reset(
+      self, scenario: types.GenericScenario, rng: jax.Array | None = None
+  ) -> types.GenericState:
     """Initializes a simulation state.
 
     This method allows the environment to perform optional postprocessing
@@ -34,6 +36,7 @@ class AbstractEnvironment(abc.ABC):
 
     Args:
       scenario: Scenario used to generate the initial state.
+      rng: Optional random number generator for stochastic environments.
 
     Returns:
       The initialized simulation state.
@@ -41,7 +44,10 @@ class AbstractEnvironment(abc.ABC):
 
   @abc.abstractmethod
   def step(
-      self, state: types.GenericState, actions: types.GenericAction
+      self,
+      state: types.GenericState,
+      actions: types.GenericAction,
+      rng: jax.Array | None = None,
   ) -> types.GenericState:
     """Advances the simulation by one timestep.
 
@@ -49,6 +55,7 @@ class AbstractEnvironment(abc.ABC):
       state: The current state of the simulator.
       actions: Action to apply to the state to produce the updated simulator
         state.
+      rng: Optional random number generator for stochastic environments.
 
     Returns:
       The next simulation state after taking an action.

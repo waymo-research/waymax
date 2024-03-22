@@ -18,7 +18,9 @@ distill behavior research into its simplest form.
 
 As all components are entirely written in JAX, Waymax is easily distributed and
 deployed on hardware accelerators, such as GPUs and
-[TPUs](https://cloud.google.com/tpu).
+[TPUs](https://cloud.google.com/tpu). Waymax is provided free of charge under
+the terms of the [Waymax License Agreement for Non-Commercial Use](https://github.com/waymo-research/waymax/blob/main/LICENSE).
+
 
 ## Installation
 
@@ -36,7 +38,7 @@ instructions on how to setup JAX with GPU/CUDA support if needed.
 
 Waymax is designed to work with the Waymo Open Motion dataset out of the box.
 
-A simple way to configure access is the following:
+A simple way to configure access via command line is the following:
 
 1.  Apply for [Waymo Open Dataset](https://waymo.com/open) access.
 
@@ -45,6 +47,13 @@ A simple way to configure access is the following:
 3.  Run `gcloud auth login <your_email>` with the same email used for step 1.
 
 4.  Run `gcloud auth application-default login`.
+
+If you are using [colab](https://colab.google), run the following inside of the colab after registering in step 1:
+
+```python
+from google.colab import auth
+auth.authenticate_user()
+```
 
 Please reference
 [TF Datasets](https://www.tensorflow.org/datasets/gcs#authentication) for
@@ -151,3 +160,7 @@ Brandyn White and Aleksandra Faust, and Rowan McAllister and Dragomir Anguelov a
 booktitle={Proceedings of the Neural Information Processing Systems Track on Datasets and
 Benchmarks},year={2023}}
 ```
+
+## Contact
+
+Please email any questions to [waymax@google.com](mailto:waymax@google.com), or raise an issue on Github.

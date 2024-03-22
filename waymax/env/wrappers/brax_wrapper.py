@@ -28,9 +28,10 @@ from dm_env import specs
 from flax import struct
 import jax
 from jax import numpy as jnp
+from waymax import config as _config
 from waymax import datatypes
 from waymax import dynamics
-from waymax.env import base_environment
+from waymax.env import abstract_environment
 from waymax.env import typedefs as types
 
 
@@ -69,18 +70,23 @@ class TimeStep:
 class BraxWrapper:
   """Brax-like interface wrapper for the Waymax environment."""
 
-  def __init__(self, wrapped_env: base_environment.BaseEnvironment) -> None:
+  def __init__(
+      self,
+      wrapped_env: abstract_environment.AbstractEnvironment,
+      dynamics_model: dynamics.DynamicsModel,
+      config: _config.EnvironmentConfig,
+  ) -> None:
     """Constracts the Brax wrapper over a Waymax environment.
 
     Args:
       wrapped_env: Waymax environment to wrap with the Brax interface.
+      dynamics_model: Dynamics model to use which transitions the simulator
+        state to the next timestep given an action.
+      config: Waymax environment configs.
     """
     self._wrapped_env = wrapped_env
-    self.config = self._wrapped_env.config
-
-  @property
-  def dynamics(self) -> dynamics.DynamicsModel:
-    return self._wrapped_env.dynamics
+    self.dynamics = dynamics_model
+    self.config = config
 
   def metrics(self, state: datatypes.SimulatorState) -> types.Metrics:
     """Computes metrics (lower is better) from state."""

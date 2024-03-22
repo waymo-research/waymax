@@ -120,32 +120,12 @@ class MetricsConfig:
   """Config for the built-in Waymax Metrics functions.
 
   Attributes:
-    run_log_divergence: Whether log_divergence metric will be computed in the
-      `step` function.
-    run_overlap: Whether overlap metric will be computed in the `step` function.
-    run_offroad: Whether offroad metric will be computed in the `step` function.
-    run_sdc_wrongway: Whether wrong-way metric will be computed for SDC in the
-      `step` function. Note this is only for single-agent env currently since
-      there is no route for sim-agents in data.
-    run_sdc_progression: Whether progression metric will be computed for SDC in
-      the `step` function. Note this is only for single-agent env currently
-      since there is no route for sim-agents in data.
-    run_sdc_off_route: Whether the off-route metric will be computed for SDC in
-      the `step` function. Note this is only for single-agent env currently
-      since there is no route for sim-agents in data.
-    run_sdc_kinematic_infeasibility: Whether the kinematics infeasibility metric
-      will be computed for SDC in the `step` function. Note this is only for
-      single-agent env currently since other agents may have different dynamics
-      and cannot be evaluated using the current kinematics infeasibility metrics
+    metrics_to_run: A list of metric names to run. Available metrics are:
+      log_divergence, overlap, offroad, sdc_wrongway, sdc_off_route,
+      sdc_progression, kinematic_infeasibility. Additional custom metrics can be
+      registered with `metric_factory.register_metric`.
   """
-
-  run_log_divergence: bool = True
-  run_overlap: bool = True
-  run_offroad: bool = True
-  run_sdc_wrongway: bool = False
-  run_sdc_progression: bool = False
-  run_sdc_off_route: bool = False
-  run_sdc_kinematic_infeasibility: bool = False
+  metrics_to_run: tuple[str, ...] = ('log_divergence', 'overlap', 'offroad')
 
 
 @dataclasses.dataclass(frozen=True)
@@ -154,11 +134,7 @@ class LinearCombinationRewardConfig:
 
   Attributes:
     rewards: Dictionary of metric names to floats indicating the weight of each
-      metric to create a reward of a linear combination. Valid metric names are
-      taken from the MetricConfig and removing 'run_'. For example, to create a
-      reward using the progression metric, the name would have to be
-      'sdc_progression', since 'run_sdc_progression' is used in the config
-      above.
+      metric to create a reward of a linear combination.
   """
 
   rewards: dict[str, float]
@@ -263,9 +239,9 @@ class WaymaxConfig:
 
   def __post_init__(self):
     if not self.data_config.include_sdc_paths and (
-        self.env_config.metrics.run_sdc_wrongway
-        | self.env_config.metrics.run_sdc_progression
-        | self.env_config.metrics.run_sdc_off_route
+        ('sdc_wrongway' in self.env_config.metrics.metrics_to_run)
+        | ('sdc_progression' in self.env_config.metrics.metrics_to_run)
+        | ('sdc_off_route' in self.env_config.metrics.metrics_to_run)
     ):
       raise ValueError(
           'Need to set data_config.include_sdc_paths True in  '

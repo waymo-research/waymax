@@ -14,11 +14,10 @@
 
 from typing import Optional
 
+import chex
 import jax
 from jax import numpy as jnp
 import tensorflow as tf
-
-from absl.testing import parameterized
 from waymax import config as _config
 from waymax import dataloader
 from waymax import datatypes
@@ -27,6 +26,8 @@ from waymax.agents import actor_core
 from waymax.agents import sim_agent
 from waymax.env import planning_agent_environment
 from waymax.utils import test_utils
+
+from absl.testing import parameterized
 
 TEST_DATA_PATH = test_utils.ROUTE_DATA_PATH
 ROUTE_NUM_PATHS = test_utils.ROUTE_NUM_PATHS
@@ -85,7 +86,8 @@ class PlanningAgentEnvironmentTest(parameterized.TestCase, tf.test.TestCase):
     env = planning_agent_environment.PlanningAgentEnvironment(
         dynamics_model=dynamics.DeltaGlobal(), config=env_config
     )
-    reward = env.reward(self.sample_state, self.sample_action)
+    sample_state = env.reset(self.sample_state)
+    reward = env.reward(sample_state, self.sample_action)
     self.assertAllEqual(reward.shape, ())
     self.assertAllEqual(reward.dtype, jnp.float32)
 
@@ -93,16 +95,22 @@ class PlanningAgentEnvironmentTest(parameterized.TestCase, tf.test.TestCase):
     env_config = _config.EnvironmentConfig(
         init_steps=10,
         metrics=_config.MetricsConfig(
-            run_sdc_wrongway=True,
-            run_sdc_progression=True,
-            run_sdc_off_route=True,
-            run_sdc_kinematic_infeasibility=True,
+            metrics_to_run=(
+                'log_divergence',
+                'overlap',
+                'offroad',
+                'sdc_wrongway',
+                'sdc_progression',
+                'sdc_off_route',
+                'kinematic_infeasibility',
+            ),
         ),
     )
     env = planning_agent_environment.PlanningAgentEnvironment(
         dynamics_model=dynamics.DeltaGlobal(), config=env_config
     )
-    metrics_dict = env.metrics(self.sample_state)
+    sample_state = env.reset(self.sample_state)
+    metrics_dict = env.metrics(sample_state)
     num_metrics = 7
     metric_shape_targets = tuple([() for _ in range(num_metrics)])
     metric_shapes = [v.shape for _, v in metrics_dict.items()]
@@ -111,20 +119,25 @@ class PlanningAgentEnvironmentTest(parameterized.TestCase, tf.test.TestCase):
     with self.subTest('all_metrics_are_populated'):
       self.assertAllEqual(metric_shapes, metric_shape_targets)
 
-  def test_planning_agent_environment_with_sim_agents_works(self):
+  @parameterized.named_parameters(('without_keys', None), ('with_keys', 100))
+  def test_planning_agent_environment_with_sim_agents_works(self, key):
     state = test_utils.make_zeros_state(self.dataset_config)
+    state = planning_agent_environment.PlanningAgentSimulatorState(**state)
     state = state.replace(timestep=0)
     env = planning_agent_environment.PlanningAgentEnvironment(
         dynamics_model=dynamics.DeltaGlobal(),
         config=self.env_config,
         sim_agent_actors=[constant_velocity_actor()],
+        sim_agent_params=[{}],
     )
+    key = jax.random.PRNGKey(key) if key is not None else key
+    state = env.reset(state, rng=key)
     action_spec = self.env.action_spec()
     action = datatypes.Action(
         data=jnp.array([0.7, 0.8, 0.05]),
         valid=jnp.ones(action_spec.valid.shape, dtype=jnp.bool_),
     )
-    state = env.step(state, action)
+    state = env.step(state, action, rng=key)
 
     traj = state.current_sim_trajectory
     is_sdc = state.object_metadata.is_sdc
@@ -139,6 +152,21 @@ class PlanningAgentEnvironmentTest(parameterized.TestCase, tf.test.TestCase):
       self.assertAllClose(traj.y[~is_sdc], jnp.ones_like(traj.x[~is_sdc]) * 0.6)
       self.assertAllClose(
           traj.yaw[~is_sdc], jnp.ones_like(traj.x[~is_sdc]) * 0.1
+      )
+      self.assertEqual(
+          state.sim_agent_actor_states, [ConstantSimAgentState(state_num=1)]
+      )
+
+  def test_planning_agent_environment_raises_with_sim_actor_params(self):
+    with self.assertRaisesWithLiteralMatch(
+        ValueError,
+        'Number of sim agents must match number of sim agent params.',
+    ):
+      planning_agent_environment.PlanningAgentEnvironment(
+          dynamics_model=dynamics.DeltaGlobal(),
+          config=self.env_config,
+          sim_agent_actors=[constant_velocity_actor()],
+          sim_agent_params=[{}, {}],
       )
 
   def test_initialized_overlap_mask(self):
@@ -178,27 +206,36 @@ class ConstantSimAgentActor(sim_agent.SimAgentActor):
     )
 
 
+@chex.dataclass(frozen=True)
+class ConstantSimAgentState:
+  state_num: int = 0
+
+
 def constant_velocity_actor() -> actor_core.WaymaxActorCore:
   agent = ConstantSimAgentActor()
+
+  def init(rng, state: datatypes.SimulatorState) -> ConstantSimAgentState:
+    del rng, state
+    return ConstantSimAgentState()
 
   def select_action(
       params: Optional[actor_core.Params],
       state: datatypes.SimulatorState,
-      actor_state=None,
+      actor_state: ConstantSimAgentState,
       rng: Optional[jax.Array] = None,
   ) -> actor_core.WaymaxActorOutput:
-    del params, actor_state, rng
+    del params, rng
     action = agent.update_trajectory(state).as_action()
     output = actor_core.WaymaxActorOutput(
         action=action,
-        actor_state=None,
+        actor_state=actor_state.replace(state_num=actor_state.state_num + 1),
         is_controlled=~state.object_metadata.is_sdc,
     )
     output.validate()
     return output
 
   return actor_core.actor_core_factory(
-      init=lambda rng, state: None,
+      init=init,
       select_action=select_action,
       name='constant_vel',
   )

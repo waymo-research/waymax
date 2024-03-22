@@ -20,6 +20,7 @@ from waymax.env.errors import EpisodeAlreadyFinishedError
 from waymax.env.errors import SimulationNotInitializedError
 from waymax.env.planning_agent_environment import PlanningAgentDynamics
 from waymax.env.planning_agent_environment import PlanningAgentEnvironment
+from waymax.env.planning_agent_environment import PlanningAgentSimulatorState
 from waymax.env.rollout import rollout
 from waymax.env.rollout import rollout_log_by_expert_sdc
 from waymax.env.rollout import RolloutOutput

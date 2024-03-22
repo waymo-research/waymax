@@ -39,6 +39,7 @@ def _plot_bounding_boxes(
     time_idx: int,
     is_controlled: np.ndarray,
     valid: np.ndarray,
+    add_label: bool = False,
 ) -> None:
   """Helper function to plot multiple bounding boxes across time."""
   # Plots bounding boxes (traj_5dof) with shape: (A, T)
@@ -57,6 +58,7 @@ def _plot_bounding_boxes(
       ax=ax,
       bboxes=traj_5dof[(time_indices >= time_idx) & valid_controlled],
       color=color.COLOR_DICT['controlled'],
+      label='controlled' if add_label else None,
   )
 
   utils.plot_numpy_bounding_boxes(
@@ -64,12 +66,14 @@ def _plot_bounding_boxes(
       bboxes=traj_5dof[(time_indices < time_idx) & valid],
       color=color.COLOR_DICT['history'],
       as_center_pts=True,
+      label='history' if add_label else None,
   )
 
   utils.plot_numpy_bounding_boxes(
       ax=ax,
       bboxes=traj_5dof[(time_indices >= time_idx) & valid_context],
       color=color.COLOR_DICT['context'],
+      label='context' if add_label else None,
   )
 
   # Shows current overlap
@@ -87,6 +91,7 @@ def _plot_bounding_boxes(
       ax=ax,
       bboxes=traj_5dof[:, time_idx][overlap_mask & valid[:, time_idx]],
       color=color.COLOR_DICT['overlap'],
+      label='overlap' if add_label else None,
   )
 
 
@@ -108,6 +113,7 @@ def plot_trajectory(
     is_controlled: np.ndarray,
     time_idx: Optional[int] = None,
     indices: Optional[np.ndarray] = None,
+    add_label: bool = False,
 ) -> None:
   """Plots a Trajectory with different color for controlled and context.
 
@@ -124,6 +130,9 @@ def plot_trajectory(
     time_idx: step index to highlight bbox, -1 for last step. Default(None) for
       not showing bbox.
     indices: ids to show for each agents if not None, shape (A,).
+    add_label: a boolean that indicates whether or not to plot labels that
+      indicates different agent types, including 'controlled', 'overlap',
+      'history', 'context'.
   """
   if len(traj.shape) != 2:
     raise ValueError('traj should have shape (A, T)')
@@ -150,7 +159,14 @@ def plot_trajectory(
           f'{indices[i]}',
           zorder=10,
       )
-  _plot_bounding_boxes(ax, traj_5dof, time_idx, is_controlled, traj.valid)  # pytype: disable=wrong-arg-types  # jax-ndarray
+  _plot_bounding_boxes(
+      ax=ax,
+      traj_5dof=traj_5dof,
+      time_idx=time_idx,
+      is_controlled=is_controlled,
+      valid=traj.valid,
+      add_label=add_label,
+  )  # pytype: disable=wrong-arg-types  # jax-ndarray
 
 
 def plot_roadgraph_points(

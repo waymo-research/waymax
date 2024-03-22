@@ -60,8 +60,10 @@ class WaypointFollowingPolicy(sim_agent.SimAgentActor):
       is_controlled_func: Optional[
           Callable[[datatypes.SimulatorState], jax.Array]
       ] = None,
+      invalidate_on_end: bool = False,
   ):
     super().__init__(is_controlled_func=is_controlled_func)
+    self.invalidate_on_end = invalidate_on_end
 
   def update_trajectory(
       self, state: datatypes.SimulatorState
@@ -129,19 +131,25 @@ class WaypointFollowingPolicy(sim_agent.SimAgentActor):
     next_xy, next_yaw, reached_last_waypoint = _project_to_a_trajectory(
         jnp.stack([next_x, next_y], axis=-1),
         log_traj,
-        extrapolate_traj=False,
+        extrapolate_traj=not self.invalidate_on_end,
     )
 
     # Freeze the speed for agents that have reached the last waypoint to
     # prevent drift.
+    if self.invalidate_on_end:
+      default_x_vel = jnp.zeros_like(cur_sim_traj.vel_x)
+      default_y_vel = jnp.zeros_like(cur_sim_traj.vel_y)
+    else:
+      default_x_vel = cur_sim_traj.vel_x
+      default_y_vel = cur_sim_traj.vel_y
     new_vel_x = jnp.where(
         reached_last_waypoint,
-        cur_sim_traj.vel_x,
+        default_x_vel,
         new_speed * jnp.cos(cur_sim_traj.yaw),
     )
     new_vel_y = jnp.where(
         reached_last_waypoint,
-        cur_sim_traj.vel_y,
+        default_y_vel,
         new_speed * jnp.sin(cur_sim_traj.yaw),
     )
 
@@ -149,10 +157,11 @@ class WaypointFollowingPolicy(sim_agent.SimAgentActor):
     # This is to avoid invalidating parked cars. Use a threshold velocity
     # since some sim agents will tell the parked cars to move forward since
     # nothing is in front (e.g. IDM).
-    moving_after_last_waypoint = reached_last_waypoint & (
-        new_speed > _STATIC_SPEED_THRESHOLD
-    )
-    valid = valid & ~moving_after_last_waypoint
+    if self.invalidate_on_end:
+      moving_after_last_waypoint = reached_last_waypoint & (
+          new_speed > _STATIC_SPEED_THRESHOLD
+      )
+      valid = valid & ~moving_after_last_waypoint
 
     next_traj = cur_sim_traj.replace(
         x=next_xy[..., 0],
@@ -204,23 +213,28 @@ class IDMRoutePolicy(WaypointFollowingPolicy):
       min_spacing: float = 2.0,
       safe_time_headway: float = 2.0,
       max_accel: float = 2.0,
-      max_deccel: float = 4.0,
+      max_decel: float = 4.0,
       delta: float = 4.0,
       max_lookahead: int = 10,
+      lookahead_from_current_position: bool = True,
       additional_lookahead_points: int = 10,
       additional_lookahead_distance: float = 10.0,
+      invalidate_on_end: bool = False,
   ):
-    super().__init__(is_controlled_func=is_controlled_func)
+    super().__init__(
+        is_controlled_func=is_controlled_func,
+        invalidate_on_end=invalidate_on_end,
+    )
     self.desired_vel = desired_vel
     self.min_spacing_s0 = min_spacing
     self.safe_time_headway = safe_time_headway
     self.max_accel = max_accel
-    self.max_deccel = max_deccel
+    self.max_decel = max_decel
     self.delta = delta
     self.max_lookahead = max_lookahead
+    self.lookahead_from_current_position = lookahead_from_current_position
     self.additional_lookahead_distance = additional_lookahead_distance
     self.additional_headway_points = additional_lookahead_points
-    self.total_lookahead = max_lookahead + additional_lookahead_points
 
   def update_speed(
       self, state: datatypes.SimulatorState, dt: float = _DEFAULT_TIME_DELTA
@@ -287,9 +301,18 @@ class IDMRoutePolicy(WaypointFollowingPolicy):
     log_waypoints.validate()
     obj_curr_traj.validate()
     # 1. Find the closest waypoint and slice the future from that waypoint.
-    traj = _find_reference_traj_from_log_traj(
-        cur_position, log_waypoints, self.max_lookahead
-    )
+    if self.lookahead_from_current_position:
+      traj = _find_reference_traj_from_log_traj(cur_position, obj_curr_traj, 1)
+      chex.assert_shape(traj.xyz, prefix_shape + (num_obj, 1, 3))
+      total_lookahead = 1 + self.additional_headway_points
+    else:
+      traj = _find_reference_traj_from_log_traj(
+          cur_position, log_waypoints, self.max_lookahead
+      )
+      chex.assert_shape(
+          traj.xyz, prefix_shape + (num_obj, self.max_lookahead, 3)
+      )
+      total_lookahead = self.max_lookahead + self.additional_headway_points
 
 
     if self.additional_headway_points > 0:
@@ -303,7 +326,7 @@ class IDMRoutePolicy(WaypointFollowingPolicy):
     # max_lookahead) between traj (..., num_objects, max_lookahead) and
     # obj_curr_traj (..., num_objects, 1). Make common shape for bboxes:
     # (..., num_objects, num_objects, max_lookahead, 5).
-    broadcast_shape = prefix_shape + (num_obj, num_obj, self.total_lookahead, 5)
+    broadcast_shape = prefix_shape + (num_obj, num_obj, total_lookahead, 5)
     traj_5dof = traj.stack_fields(['x', 'y', 'length', 'width', 'yaw'])
     traj_bbox = jnp.broadcast_to(
         jnp.expand_dims(traj_5dof, axis=-3), broadcast_shape
@@ -356,7 +379,7 @@ class IDMRoutePolicy(WaypointFollowingPolicy):
         cur_speed * self.safe_time_headway
         + cur_speed
         * (cur_speed - lead_vel)
-        / (2 * jnp.sqrt(self.max_accel * self.max_deccel)),
+        / (2 * jnp.sqrt(self.max_accel * self.max_decel)),
     )
     # Set 0 for free-road behaviour.
     s_star = jnp.where(
@@ -521,21 +544,21 @@ def _project_to_a_trajectory(
     src_yaw = traj.yaw[idx]
     src_dir = jnp.stack([jnp.cos(src_yaw), jnp.sin(src_yaw)], axis=-1)
 
+    last_valid_idx = jnp.where(traj.valid, jnp.arange(traj.shape[0]), 0)
+    last_valid_idx = jnp.argmax(last_valid_idx, axis=-1)
+    last_point = traj.xy[last_valid_idx, :]
+    reached_last_point = (
+        jnp.linalg.norm(last_point - src_xy, axis=-1)
+        < _REACHED_END_OF_TRAJECTORY_THRESHOLD
+    )
+    # Secondary detection: If a vehicle strays too far from the traj,
+    # also mark it as reaching the end.
+    reached_last_point = jnp.logical_or(
+        reached_last_point, dist[idx] > _DISTANCE_TO_REF_THRESHOLD
+    )
+
     # Prevent points from extrapolating beyond traj.
-    reached_last_point = jnp.zeros_like(idx, dtype=jnp.bool_)
     if not extrapolate_traj:
-      last_valid_idx = jnp.where(traj.valid, jnp.arange(traj.shape[0]), 0)
-      last_valid_idx = jnp.argmax(last_valid_idx, axis=-1)
-      last_point = traj.xy[last_valid_idx, :]
-      reached_last_point = (
-          jnp.linalg.norm(last_point - src_xy, axis=-1)
-          < _REACHED_END_OF_TRAJECTORY_THRESHOLD
-      )
-      # Secondary detection: If a vehicle strays too far from the traj,
-      # also mark it as reaching the end.
-      reached_last_point = jnp.logical_or(
-          reached_last_point, dist[idx] > _DISTANCE_TO_REF_THRESHOLD
-      )
       src_dir = jnp.where(reached_last_point, jnp.zeros_like(src_dir), src_dir)
 
     # Shape: (2).

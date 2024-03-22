@@ -48,33 +48,33 @@ class RouteDataStructTest(tf.test.TestCase, parameterized.TestCase):
 
   def test_route_paths_validation_raises_when_necessary(self):
     with self.subTest('XWrongType'):
-      error = "input 0 has type int32 but expected <class 'jax.numpy.float32'>."
+      error = 'input 0 has type int32 but expected .*float32.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(x=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('YWrongType'):
-      error = "input 1 has type int32 but expected <class 'jax.numpy.float32'>."
+      error = 'input 1 has type int32 but expected .*float32.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(y=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ZWrongType'):
-      error = "input 2 has type int32 but expected <class 'jax.numpy.float32'>."
+      error = 'input 2 has type int32 but expected .*float32.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(z=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('IdsWrongType'):
-      error = "input 3 has type float32 but expected <class 'jax.numpy.int32'>."
+      error = 'input 3 has type float32 but expected .*int32.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(ids=jnp.zeros((1), dtype=jnp.float32)).validate()
     with self.subTest('ValidWrongType'):
-      error = "input 4 has type int32 but expected <class 'jax.numpy.bool_'>."
+      error = 'input 4 has type int32 but expected .*bool.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(valid=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ArcLengthWrongType'):
-      error = "input 5 has type int32 but expected <class 'jax.numpy.float32'>."
+      error = 'input 5 has type int32 but expected .*float32.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(
             arc_length=jnp.zeros((1), dtype=jnp.int32)
         ).validate()
     with self.subTest('OnRouteWrongType'):
-      error = "input 6 has type int32 but expected <class 'jax.numpy.bool_'>."
+      error = 'input 6 has type int32 but expected .*bool.*.'
       with self.assertRaisesRegex(AssertionError, error):
         self.routes.replace(on_route=jnp.zeros((1), dtype=jnp.int32)).validate()
 

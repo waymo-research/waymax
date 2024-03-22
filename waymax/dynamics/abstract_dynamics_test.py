@@ -281,6 +281,66 @@ class AbstractDynamicsTest(tf.test.TestCase, parameterized.TestCase):
         updated_sim_traj.valid[:, sim_state.timestep + 1], expected_valid
     )
 
+  @parameterized.named_parameters(
+      ('UseFallback', True),
+      ('DontUseFallback', False),
+  )
+  def test_apply_trajectory_update_with_fallback(self, use_fallback):
+    data_config = _config.DatasetConfig(path=TEST_DATA_PATH, max_num_objects=5)
+    sim_state = test_utils.make_zeros_state(data_config)
+    sim_state = datatypes.update_state_by_log(sim_state, num_steps=10)
+
+    current_valids = jnp.array([True, False, True, True, False])
+    next_valids = jnp.array([True, True, False, False, False])
+    is_controlled = jnp.array([True, True, True, False, True])
+    action_valid = jnp.array([True, False, True, False, False])
+
+    sim_current_valids = sim_state.sim_trajectory.valid.at[
+        ..., sim_state.timestep
+    ].set(current_valids)
+    log_next_valids = sim_state.log_trajectory.valid.at[
+        ..., sim_state.timestep + 1
+    ].set(next_valids)
+    sim_state = sim_state.replace(
+        sim_trajectory=sim_state.sim_trajectory.replace(
+            valid=sim_current_valids
+        ),
+        log_trajectory=sim_state.log_trajectory.replace(valid=log_next_valids),
+    )
+    current_traj = sim_state.current_sim_trajectory
+
+    trajectory_update = datatypes.TrajectoryUpdate(
+        x=jnp.ones_like(current_traj.x),
+        y=jnp.ones_like(current_traj.y),
+        vel_x=jnp.ones_like(current_traj.vel_x),
+        vel_y=jnp.ones_like(current_traj.vel_y),
+        yaw=jnp.ones_like(current_traj.yaw),
+        valid=action_valid[..., jnp.newaxis],
+    )
+    updated_sim_traj = abstract_dynamics.apply_trajectory_update_to_state(
+        trajectory_update,
+        sim_state.sim_trajectory,
+        sim_state.log_trajectory,
+        is_controlled=is_controlled,
+        timestep=int(sim_state.timestep),
+        use_fallback=use_fallback,
+        allow_object_injection=False,
+    )
+
+    base_valid = (is_controlled & current_valids) | (
+        ~is_controlled & next_valids
+    )
+    if use_fallback:
+      # With fallback, agents are not invalidated when an action is invalid.
+      expected_valid = base_valid
+    else:
+      # Without fallback, agents are invalidated when the action is invalid.
+      expected_valid = base_valid & action_valid
+
+    self.assertAllEqual(
+        updated_sim_traj.valid[:, sim_state.timestep + 1], expected_valid
+    )
+
 
 if __name__ == '__main__':
   tf.test.main()

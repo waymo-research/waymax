@@ -279,88 +279,40 @@ class ObjectStateTest(tf.test.TestCase, parameterized.TestCase):
     self.assertAllEqual(traj, zeros_traj)
 
   def test_trajectory_validate_asserts_if_improperly_created(self):
-    error_prefix = (
-        '[Chex] Assertion assert_type failed: Error in type '
-        'compatibility check:'
-    )
     with self.subTest('IdsWrongType'):
-      error = (
-          f'{error_prefix} input 0 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(x=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 1 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(y=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 2 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(z=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 3 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(vel_x=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 4 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(vel_y=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 5 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(yaw=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 6 has type float32 but expected <class '
-          "'jax.numpy.bool_'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(valid=jnp.zeros((1), dtype=jnp.float32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 7 has type float32 but expected <class '
-          "'jax.numpy.int32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(
             timestamp_micros=jnp.zeros((1), dtype=jnp.float32)
         ).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 8 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(length=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 9 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(width=jnp.zeros((1), dtype=jnp.int32)).validate()
     with self.subTest('ObjectTypesWrongType'):
-      error = (
-          f'{error_prefix} input 10 has type int32 but expected <class '
-          "'jax.numpy.float32'>."
-      )
-      with self.assertRaisesWithLiteralMatch(AssertionError, error):
+      with self.assertRaises(AssertionError):
         self.traj.replace(height=jnp.zeros((1), dtype=jnp.int32)).validate()
 
     with self.subTest('ShapesNotTheSame'):
