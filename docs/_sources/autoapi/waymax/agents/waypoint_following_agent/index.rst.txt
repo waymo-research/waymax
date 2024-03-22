@@ -81,7 +81,7 @@ Attributes
 
    
 
-.. py:class:: WaypointFollowingPolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None)
+.. py:class:: WaypointFollowingPolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None, invalidate_on_end: bool = False)
 
 
    Bases: :py:obj:`waymax.agents.sim_agent.SimAgentActor`
@@ -132,7 +132,7 @@ Attributes
 
 
 
-.. py:class:: IDMRoutePolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None, desired_vel: float = 30.0, min_spacing: float = 2.0, safe_time_headway: float = 2.0, max_accel: float = 2.0, max_deccel: float = 4.0, delta: float = 4.0, max_lookahead: int = 10, additional_lookahead_points: int = 10, additional_lookahead_distance: float = 10.0)
+.. py:class:: IDMRoutePolicy(is_controlled_func: Optional[Callable[[waymax.datatypes.SimulatorState], jax.Array]] = None, desired_vel: float = 30.0, min_spacing: float = 2.0, safe_time_headway: float = 2.0, max_accel: float = 2.0, max_decel: float = 4.0, delta: float = 4.0, max_lookahead: int = 10, lookahead_from_current_position: bool = True, additional_lookahead_points: int = 10, additional_lookahead_distance: float = 10.0, invalidate_on_end: bool = False)
 
 
    Bases: :py:obj:`WaypointFollowingPolicy`

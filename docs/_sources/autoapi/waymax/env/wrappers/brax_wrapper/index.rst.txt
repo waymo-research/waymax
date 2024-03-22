@@ -110,14 +110,10 @@ Classes
 
 
 
-.. py:class:: BraxWrapper(wrapped_env: waymax.env.base_environment.BaseEnvironment)
+.. py:class:: BraxWrapper(wrapped_env: waymax.env.abstract_environment.AbstractEnvironment, dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig)
 
 
    Brax-like interface wrapper for the Waymax environment.
-
-   .. py:property:: dynamics
-      :type: waymax.dynamics.DynamicsModel
-
 
    .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
 

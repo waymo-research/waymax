@@ -40,6 +40,7 @@ Attributes
 
    waymax.agents.actor_core.ActorState
    waymax.agents.actor_core.Params
+   waymax.agents.actor_core.Action
    waymax.agents.actor_core._ActorCore
 
 
@@ -48,6 +49,10 @@ Attributes
    
 
 .. py:data:: Params
+
+   
+
+.. py:data:: Action
 
    
 
@@ -78,7 +83,7 @@ Attributes
       
 
    .. py:attribute:: action
-      :type: waymax.datatypes.Action
+      :type: Action
 
       
 

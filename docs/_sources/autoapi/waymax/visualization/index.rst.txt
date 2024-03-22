@@ -103,7 +103,7 @@ Functions
    :param verbose: print traffic lights count if set to True.
 
 
-.. py:function:: plot_trajectory(ax: matplotlib.axes.Axes, traj: waymax.datatypes.Trajectory, is_controlled: numpy.ndarray, time_idx: Optional[int] = None, indices: Optional[numpy.ndarray] = None) -> None
+.. py:function:: plot_trajectory(ax: matplotlib.axes.Axes, traj: waymax.datatypes.Trajectory, is_controlled: numpy.ndarray, time_idx: Optional[int] = None, indices: Optional[numpy.ndarray] = None, add_label: bool = False) -> None
 
    Plots a Trajectory with different color for controlled and context.
 
@@ -119,5 +119,8 @@ Functions
    :param time_idx: step index to highlight bbox, -1 for last step. Default(None) for
                     not showing bbox.
    :param indices: ids to show for each agents if not None, shape (A,).
+   :param add_label: a boolean that indicates whether or not to plot labels that
+                     indicates different agent types, including 'controlled', 'overlap',
+                     'history', 'context'.
 
 

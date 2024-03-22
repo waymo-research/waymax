@@ -29,7 +29,7 @@ Classes
 
    A stateless environment interface for Waymax.
 
-   .. py:method:: reset(scenario: waymax.env.typedefs.GenericScenario) -> waymax.env.typedefs.GenericState
+   .. py:method:: reset(scenario: waymax.env.typedefs.GenericScenario, rng: jax.Array | None = None) -> waymax.env.typedefs.GenericState
       :abstractmethod:
 
       Initializes a simulation state.
@@ -39,11 +39,12 @@ Classes
       no-op.
 
       :param scenario: Scenario used to generate the initial state.
+      :param rng: Optional random number generator for stochastic environments.
 
       :returns: The initialized simulation state.
 
 
-   .. py:method:: step(state: waymax.env.typedefs.GenericState, actions: waymax.env.typedefs.GenericAction) -> waymax.env.typedefs.GenericState
+   .. py:method:: step(state: waymax.env.typedefs.GenericState, actions: waymax.env.typedefs.GenericAction, rng: jax.Array | None = None) -> waymax.env.typedefs.GenericState
       :abstractmethod:
 
       Advances the simulation by one timestep.
@@ -51,6 +52,7 @@ Classes
       :param state: The current state of the simulator.
       :param actions: Action to apply to the state to produce the updated simulator
                       state.
+      :param rng: Optional random number generator for stochastic environments.
 
       :returns: The next simulation state after taking an action.
 

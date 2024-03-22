@@ -329,6 +329,12 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#waymax.metrics.get_metric_names" title="waymax.metrics.get_metric_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_metric_names</span></code></a>(→ collections.abc.Iterable[str])</p></td>
+<td><p>Returns the names of all registered metrics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#waymax.metrics.register_metric" title="waymax.metrics.register_metric"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_metric</span></code></a>(metric_name, metric)</p></td>
+<td><p>Register a metric.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#waymax.metrics.run_metrics" title="waymax.metrics.run_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_metrics</span></code></a>(→ dict[str, ...)</p></td>
 <td><p>Runs all metrics with config flags set to True.</p></td>
 </tr>
@@ -430,9 +436,32 @@ shape (…, num_objects, num_timesteps, 2).</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="waymax.metrics.get_metric_names">
+<span class="sig-prename descclassname"><span class="pre">waymax.metrics.</span></span><span class="sig-name descname"><span class="pre">get_metric_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">collections.abc.Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#waymax.metrics.get_metric_names" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the names of all registered metrics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="waymax.metrics.register_metric">
+<span class="sig-prename descclassname"><span class="pre">waymax.metrics.</span></span><span class="sig-name descname"><span class="pre">register_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="abstract_metric/index.html#waymax.metrics.abstract_metric.AbstractMetric" title="waymax.metrics.abstract_metric.AbstractMetric"><span class="pre">waymax.metrics.abstract_metric.AbstractMetric</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#waymax.metrics.register_metric" title="Permalink to this definition">#</a></dt>
+<dd><p>Register a metric.</p>
+<p>This function registers a metric so that it can be included in a MetricsConfig
+and computed by <cite>run_metrics</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metric_name</strong> – String name to register the metric with.</p></li>
+<li><p><strong>metric</strong> – The metric to register.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="waymax.metrics.run_metrics">
 <span class="sig-prename descclassname"><span class="pre">waymax.metrics.</span></span><span class="sig-name descname"><span class="pre">run_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simulator_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../datatypes/index.html#waymax.datatypes.SimulatorState" title="waymax.datatypes.SimulatorState"><span class="pre">waymax.datatypes.SimulatorState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../config/index.html#waymax.config.MetricsConfig" title="waymax.config.MetricsConfig"><span class="pre">waymax.config.MetricsConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="abstract_metric/index.html#waymax.metrics.abstract_metric.MetricResult" title="waymax.metrics.abstract_metric.MetricResult"><span class="pre">waymax.metrics.abstract_metric.MetricResult</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#waymax.metrics.run_metrics" title="Permalink to this definition">#</a></dt>
 <dd><p>Runs all metrics with config flags set to True.</p>
+<p>User-defined metrics must be registered using the <cite>register_metric</cite> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -703,6 +732,8 @@ returns zero.</p>
 <li><a class="reference internal" href="#waymax.metrics.LogDivergenceMetric.compute_log_divergence"><code class="docutils literal notranslate"><span class="pre">LogDivergenceMetric.compute_log_divergence()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#waymax.metrics.get_metric_names"><code class="docutils literal notranslate"><span class="pre">get_metric_names()</span></code></a></li>
+<li><a class="reference internal" href="#waymax.metrics.register_metric"><code class="docutils literal notranslate"><span class="pre">register_metric()</span></code></a></li>
 <li><a class="reference internal" href="#waymax.metrics.run_metrics"><code class="docutils literal notranslate"><span class="pre">run_metrics()</span></code></a></li>
 <li><a class="reference internal" href="#waymax.metrics.OverlapMetric"><code class="docutils literal notranslate"><span class="pre">OverlapMetric</span></code></a><ul>
 <li><a class="reference internal" href="#waymax.metrics.OverlapMetric.compute"><code class="docutils literal notranslate"><span class="pre">OverlapMetric.compute()</span></code></a></li>

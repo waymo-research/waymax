@@ -120,7 +120,7 @@ Functions
    Gets n different colors.
 
 
-.. py:function:: plot_numpy_bounding_boxes(ax: matplotlib.axes.Axes, bboxes: numpy.ndarray, color: numpy.ndarray, alpha: Optional[float] = 1.0, as_center_pts: bool = False) -> None
+.. py:function:: plot_numpy_bounding_boxes(ax: matplotlib.axes.Axes, bboxes: numpy.ndarray, color: numpy.ndarray, alpha: Optional[float] = 1.0, as_center_pts: bool = False, label: Optional[str] = None) -> None
 
    Plots multiple bounding boxes.
 
@@ -131,5 +131,6 @@ Functions
    :param alpha: Alpha value for drawing, i.e. 0 means fully transparent.
    :param as_center_pts: If set to True, bboxes will be drawn as center points,
                          instead of full bboxes.
+   :param label: String, represents the meaning of the color for different boxes.
 
 

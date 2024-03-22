@@ -3,11 +3,6 @@
 
 .. py:module:: waymax
 
-.. autoapi-nested-parse::
-
-   Waymax root directory.
-
-
 
 Subpackages
 -----------

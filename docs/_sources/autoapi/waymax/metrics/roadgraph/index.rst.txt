@@ -94,9 +94,9 @@ Functions
    trajectory is onroad else offroad.
 
    :param trajectory: Agent trajectories to test to see if they are on or off road of
-                      shape (..., num_objects). The bounding boxes derived from center and shape
-                      of the trajectory will be used to determine if any point in the box is
-                      offroad.
+                      shape (..., num_objects, num_timesteps). The bounding boxes derived from
+                      center and shape of the trajectory will be used to determine if any point
+                      in the box is offroad. The num_timesteps dimension size should be 1.
    :param roadgraph_points: All of the roadgraph points in the run segment of shape
                             (..., num_points). Roadgraph points of type `ROAD_EDGE_BOUNDARY` and
                             `ROAD_EDGE_MEDIAN` are used to do the check.
@@ -111,7 +111,7 @@ Functions
    Computes the signed distance from a set of queries to roadgraph points.
 
    :param query_points: A set of query points for the metric of shape
-                        (num_query_points, 3).
+                        (..., num_query_points, 3).
    :param roadgraph_points: A set of roadgraph points of shape (num_points).
    :param z_stretch: Tolerance in the z dimension which determines how close to
                      associate points in the roadgraph. This is used to fix problems with

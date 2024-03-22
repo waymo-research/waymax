@@ -48,6 +48,8 @@ Functions
 
 .. autoapisummary::
 
+   waymax.metrics.get_metric_names
+   waymax.metrics.register_metric
    waymax.metrics.run_metrics
 
 
@@ -128,9 +130,27 @@ Functions
 
 
 
+.. py:function:: get_metric_names() -> collections.abc.Iterable[str]
+
+   Returns the names of all registered metrics.
+
+
+.. py:function:: register_metric(metric_name: str, metric: waymax.metrics.abstract_metric.AbstractMetric)
+
+   Register a metric.
+
+   This function registers a metric so that it can be included in a MetricsConfig
+   and computed by `run_metrics`.
+
+   :param metric_name: String name to register the metric with.
+   :param metric: The metric to register.
+
+
 .. py:function:: run_metrics(simulator_state: waymax.datatypes.SimulatorState, metrics_config: waymax.config.MetricsConfig) -> dict[str, waymax.metrics.abstract_metric.MetricResult]
 
    Runs all metrics with config flags set to True.
+
+   User-defined metrics must be registered using the `register_metric` function.
 
    :param simulator_state: The current simulator state of shape (...).
    :param metrics_config: Waymax metrics config.

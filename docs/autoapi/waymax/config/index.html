@@ -644,90 +644,17 @@ observation.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">waymax.config.</span></span><span class="sig-name descname"><span class="pre">MetricsConfig</span></span><a class="headerlink" href="#waymax.config.MetricsConfig" title="Permalink to this definition">#</a></dt>
 <dd><p>Config for the built-in Waymax Metrics functions.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_log_divergence">
-<span class="sig-name descname"><span class="pre">run_log_divergence</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_log_divergence" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether log_divergence metric will be computed in the
-<cite>step</cite> function.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_overlap">
-<span class="sig-name descname"><span class="pre">run_overlap</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_overlap" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether overlap metric will be computed in the <cite>step</cite> function.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_offroad">
-<span class="sig-name descname"><span class="pre">run_offroad</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_offroad" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether offroad metric will be computed in the <cite>step</cite> function.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_sdc_wrongway">
-<span class="sig-name descname"><span class="pre">run_sdc_wrongway</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_sdc_wrongway" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether wrong-way metric will be computed for SDC in the
-<cite>step</cite> function. Note this is only for single-agent env currently since
-there is no route for sim-agents in data.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_sdc_progression">
-<span class="sig-name descname"><span class="pre">run_sdc_progression</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_sdc_progression" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether progression metric will be computed for SDC in
-the <cite>step</cite> function. Note this is only for single-agent env currently
-since there is no route for sim-agents in data.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_sdc_off_route">
-<span class="sig-name descname"><span class="pre">run_sdc_off_route</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_sdc_off_route" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether the off-route metric will be computed for SDC in
-the <cite>step</cite> function. Note this is only for single-agent env currently
-since there is no route for sim-agents in data.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="waymax.config.MetricsConfig.run_sdc_kinematic_infeasibility">
-<span class="sig-name descname"><span class="pre">run_sdc_kinematic_infeasibility</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.run_sdc_kinematic_infeasibility" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether the kinematics infeasibility metric
-will be computed for SDC in the <cite>step</cite> function. Note this is only for
-single-agent env currently since other agents may have different dynamics
-and cannot be evaluated using the current kinematics infeasibility metrics</p>
+<dt class="sig sig-object py" id="waymax.config.MetricsConfig.metrics_to_run">
+<span class="sig-name descname"><span class="pre">metrics_to_run</span></span><a class="headerlink" href="#waymax.config.MetricsConfig.metrics_to_run" title="Permalink to this definition">#</a></dt>
+<dd><p>A list of metric names to run. Available metrics are:
+log_divergence, overlap, offroad, sdc_wrongway, sdc_off_route,
+sdc_progression, kinematic_infeasibility. Additional custom metrics can be
+registered with <cite>metric_factory.register_metric</cite>.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id21">
-<span class="sig-name descname"><span class="pre">run_log_divergence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id21" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">run_overlap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id22" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">run_offroad</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id23" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id24">
-<span class="sig-name descname"><span class="pre">run_sdc_wrongway</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#id24" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id25">
-<span class="sig-name descname"><span class="pre">run_sdc_progression</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#id25" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id26">
-<span class="sig-name descname"><span class="pre">run_sdc_off_route</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#id26" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id27">
-<span class="sig-name descname"><span class="pre">run_sdc_kinematic_infeasibility</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#id27" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">metrics_to_run</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Ellipsis</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('log_divergence',</span> <span class="pre">'overlap',</span> <span class="pre">'offroad')</span></em><a class="headerlink" href="#id21" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -740,16 +667,12 @@ and cannot be evaluated using the current kinematics infeasibility metrics</p>
 <dt class="sig sig-object py" id="waymax.config.LinearCombinationRewardConfig.rewards">
 <span class="sig-name descname"><span class="pre">rewards</span></span><a class="headerlink" href="#waymax.config.LinearCombinationRewardConfig.rewards" title="Permalink to this definition">#</a></dt>
 <dd><p>Dictionary of metric names to floats indicating the weight of each
-metric to create a reward of a linear combination. Valid metric names are
-taken from the MetricConfig and removing ‘<a href="#id42"><span class="problematic" id="id43">run_</span></a>’. For example, to create a
-reward using the progression metric, the name would have to be
-‘sdc_progression’, since ‘run_sdc_progression’ is used in the config
-above.</p>
+metric to create a reward of a linear combination.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id28">
-<span class="sig-name descname"><span class="pre">rewards</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id28" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">rewards</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id22" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -810,13 +733,13 @@ above.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id29">
-<span class="sig-name descname"><span class="pre">agent_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.SimAgentType" title="waymax.config.SimAgentType"><span class="pre">SimAgentType</span></a></em><a class="headerlink" href="#id29" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">agent_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.SimAgentType" title="waymax.config.SimAgentType"><span class="pre">SimAgentType</span></a></em><a class="headerlink" href="#id23" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id30">
-<span class="sig-name descname"><span class="pre">controlled_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.ObjectType" title="waymax.config.ObjectType"><span class="pre">ObjectType</span></a></em><a class="headerlink" href="#id30" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">controlled_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.ObjectType" title="waymax.config.ObjectType"><span class="pre">ObjectType</span></a></em><a class="headerlink" href="#id24" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -898,48 +821,48 @@ last sim agent will be applied for that object).</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">max_num_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#id25" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">init_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#id26" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">controlled_object</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.ObjectType" title="waymax.config.ObjectType"><span class="pre">ObjectType</span></a></em><a class="headerlink" href="#id27" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">compute_reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id28" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">allow_new_objects_after_warmup</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id29" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.ObservationConfig" title="waymax.config.ObservationConfig"><span class="pre">ObservationConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id30" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="id31">
-<span class="sig-name descname"><span class="pre">max_num_objects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#id31" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.MetricsConfig" title="waymax.config.MetricsConfig"><span class="pre">MetricsConfig</span></a></em><a class="headerlink" href="#id31" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id32">
-<span class="sig-name descname"><span class="pre">init_steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#id32" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rewards</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.LinearCombinationRewardConfig" title="waymax.config.LinearCombinationRewardConfig"><span class="pre">LinearCombinationRewardConfig</span></a></em><a class="headerlink" href="#id32" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id33">
-<span class="sig-name descname"><span class="pre">controlled_object</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.ObjectType" title="waymax.config.ObjectType"><span class="pre">ObjectType</span></a></em><a class="headerlink" href="#id33" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id34">
-<span class="sig-name descname"><span class="pre">compute_reward</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id34" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id35">
-<span class="sig-name descname"><span class="pre">allow_new_objects_after_warmup</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#id35" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id36">
-<span class="sig-name descname"><span class="pre">observation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.ObservationConfig" title="waymax.config.ObservationConfig"><span class="pre">ObservationConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id36" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id37">
-<span class="sig-name descname"><span class="pre">metrics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.MetricsConfig" title="waymax.config.MetricsConfig"><span class="pre">MetricsConfig</span></a></em><a class="headerlink" href="#id37" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id38">
-<span class="sig-name descname"><span class="pre">rewards</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.LinearCombinationRewardConfig" title="waymax.config.LinearCombinationRewardConfig"><span class="pre">LinearCombinationRewardConfig</span></a></em><a class="headerlink" href="#id38" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id39">
-<span class="sig-name descname"><span class="pre">sim_agents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#waymax.config.SimAgentConfig" title="waymax.config.SimAgentConfig"><span class="pre">SimAgentConfig</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id39" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">sim_agents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#waymax.config.SimAgentConfig" title="waymax.config.SimAgentConfig"><span class="pre">SimAgentConfig</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id33" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -968,13 +891,13 @@ metrics.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id40">
-<span class="sig-name descname"><span class="pre">data_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.DatasetConfig" title="waymax.config.DatasetConfig"><span class="pre">DatasetConfig</span></a></em><a class="headerlink" href="#id40" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">data_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.DatasetConfig" title="waymax.config.DatasetConfig"><span class="pre">DatasetConfig</span></a></em><a class="headerlink" href="#id34" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id41">
-<span class="sig-name descname"><span class="pre">env_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.EnvironmentConfig" title="waymax.config.EnvironmentConfig"><span class="pre">EnvironmentConfig</span></a></em><a class="headerlink" href="#id41" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">env_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#waymax.config.EnvironmentConfig" title="waymax.config.EnvironmentConfig"><span class="pre">EnvironmentConfig</span></a></em><a class="headerlink" href="#id35" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1123,25 +1046,13 @@ metrics.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#waymax.config.MetricsConfig"><code class="docutils literal notranslate"><span class="pre">MetricsConfig</span></code></a><ul>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_log_divergence"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_log_divergence</span></code></a></li>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_overlap"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_overlap</span></code></a></li>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_offroad"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_offroad</span></code></a></li>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_sdc_wrongway"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_wrongway</span></code></a></li>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_sdc_progression"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_progression</span></code></a></li>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_sdc_off_route"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_off_route</span></code></a></li>
-<li><a class="reference internal" href="#waymax.config.MetricsConfig.run_sdc_kinematic_infeasibility"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_kinematic_infeasibility</span></code></a></li>
-<li><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_log_divergence</span></code></a></li>
-<li><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_overlap</span></code></a></li>
-<li><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_offroad</span></code></a></li>
-<li><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_wrongway</span></code></a></li>
-<li><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_progression</span></code></a></li>
-<li><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_off_route</span></code></a></li>
-<li><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.run_sdc_kinematic_infeasibility</span></code></a></li>
+<li><a class="reference internal" href="#waymax.config.MetricsConfig.metrics_to_run"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.metrics_to_run</span></code></a></li>
+<li><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">MetricsConfig.metrics_to_run</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#waymax.config.LinearCombinationRewardConfig"><code class="docutils literal notranslate"><span class="pre">LinearCombinationRewardConfig</span></code></a><ul>
 <li><a class="reference internal" href="#waymax.config.LinearCombinationRewardConfig.rewards"><code class="docutils literal notranslate"><span class="pre">LinearCombinationRewardConfig.rewards</span></code></a></li>
-<li><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">LinearCombinationRewardConfig.rewards</span></code></a></li>
+<li><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">LinearCombinationRewardConfig.rewards</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#waymax.config.ObjectType"><code class="docutils literal notranslate"><span class="pre">ObjectType</span></code></a><ul>
@@ -1158,8 +1069,8 @@ metrics.</p>
 <li><a class="reference internal" href="#waymax.config.SimAgentConfig"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig</span></code></a><ul>
 <li><a class="reference internal" href="#waymax.config.SimAgentConfig.agent_type"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig.agent_type</span></code></a></li>
 <li><a class="reference internal" href="#waymax.config.SimAgentConfig.controlled_objects"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig.controlled_objects</span></code></a></li>
-<li><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig.agent_type</span></code></a></li>
-<li><a class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig.controlled_objects</span></code></a></li>
+<li><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig.agent_type</span></code></a></li>
+<li><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">SimAgentConfig.controlled_objects</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#waymax.config.EnvironmentConfig"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig</span></code></a><ul>
@@ -1172,23 +1083,23 @@ metrics.</p>
 <li><a class="reference internal" href="#waymax.config.EnvironmentConfig.metrics"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.metrics</span></code></a></li>
 <li><a class="reference internal" href="#waymax.config.EnvironmentConfig.rewards"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.rewards</span></code></a></li>
 <li><a class="reference internal" href="#waymax.config.EnvironmentConfig.sim_agents"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.sim_agents</span></code></a></li>
-<li><a class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.max_num_objects</span></code></a></li>
-<li><a class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.init_steps</span></code></a></li>
-<li><a class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.controlled_object</span></code></a></li>
-<li><a class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.compute_reward</span></code></a></li>
-<li><a class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.allow_new_objects_after_warmup</span></code></a></li>
-<li><a class="reference internal" href="#id36"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.observation</span></code></a></li>
-<li><a class="reference internal" href="#id37"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.metrics</span></code></a></li>
-<li><a class="reference internal" href="#id38"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.rewards</span></code></a></li>
-<li><a class="reference internal" href="#id39"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.sim_agents</span></code></a></li>
+<li><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.max_num_objects</span></code></a></li>
+<li><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.init_steps</span></code></a></li>
+<li><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.controlled_object</span></code></a></li>
+<li><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.compute_reward</span></code></a></li>
+<li><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.allow_new_objects_after_warmup</span></code></a></li>
+<li><a class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.observation</span></code></a></li>
+<li><a class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.metrics</span></code></a></li>
+<li><a class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.rewards</span></code></a></li>
+<li><a class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.sim_agents</span></code></a></li>
 <li><a class="reference internal" href="#waymax.config.EnvironmentConfig.__post_init__"><code class="docutils literal notranslate"><span class="pre">EnvironmentConfig.__post_init__()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#waymax.config.WaymaxConfig"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig</span></code></a><ul>
 <li><a class="reference internal" href="#waymax.config.WaymaxConfig.data_config"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.data_config</span></code></a></li>
 <li><a class="reference internal" href="#waymax.config.WaymaxConfig.env_config"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.env_config</span></code></a></li>
-<li><a class="reference internal" href="#id40"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.data_config</span></code></a></li>
-<li><a class="reference internal" href="#id41"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.env_config</span></code></a></li>
+<li><a class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.data_config</span></code></a></li>
+<li><a class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.env_config</span></code></a></li>
 <li><a class="reference internal" href="#waymax.config.WaymaxConfig.__post_init__"><code class="docutils literal notranslate"><span class="pre">WaymaxConfig.__post_init__()</span></code></a></li>
 </ul>
 </li>

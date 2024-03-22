@@ -318,83 +318,16 @@ Attributes
 
    Config for the built-in Waymax Metrics functions.
 
-   .. attribute:: run_log_divergence
+   .. attribute:: metrics_to_run
 
-      Whether log_divergence metric will be computed in the
-      `step` function.
+      A list of metric names to run. Available metrics are:
+      log_divergence, overlap, offroad, sdc_wrongway, sdc_off_route,
+      sdc_progression, kinematic_infeasibility. Additional custom metrics can be
+      registered with `metric_factory.register_metric`.
 
-   .. attribute:: run_overlap
-
-      Whether overlap metric will be computed in the `step` function.
-
-   .. attribute:: run_offroad
-
-      Whether offroad metric will be computed in the `step` function.
-
-   .. attribute:: run_sdc_wrongway
-
-      Whether wrong-way metric will be computed for SDC in the
-      `step` function. Note this is only for single-agent env currently since
-      there is no route for sim-agents in data.
-
-   .. attribute:: run_sdc_progression
-
-      Whether progression metric will be computed for SDC in
-      the `step` function. Note this is only for single-agent env currently
-      since there is no route for sim-agents in data.
-
-   .. attribute:: run_sdc_off_route
-
-      Whether the off-route metric will be computed for SDC in
-      the `step` function. Note this is only for single-agent env currently
-      since there is no route for sim-agents in data.
-
-   .. attribute:: run_sdc_kinematic_infeasibility
-
-      Whether the kinematics infeasibility metric
-      will be computed for SDC in the `step` function. Note this is only for
-      single-agent env currently since other agents may have different dynamics
-      and cannot be evaluated using the current kinematics infeasibility metrics
-
-   .. py:attribute:: run_log_divergence
-      :type: bool
-      :value: True
-
-      
-
-   .. py:attribute:: run_overlap
-      :type: bool
-      :value: True
-
-      
-
-   .. py:attribute:: run_offroad
-      :type: bool
-      :value: True
-
-      
-
-   .. py:attribute:: run_sdc_wrongway
-      :type: bool
-      :value: False
-
-      
-
-   .. py:attribute:: run_sdc_progression
-      :type: bool
-      :value: False
-
-      
-
-   .. py:attribute:: run_sdc_off_route
-      :type: bool
-      :value: False
-
-      
-
-   .. py:attribute:: run_sdc_kinematic_infeasibility
-      :type: bool
-      :value: False
+   .. py:attribute:: metrics_to_run
+      :type: tuple[str, Ellipsis]
+      :value: ('log_divergence', 'overlap', 'offroad')
 
       
 
@@ -407,11 +340,7 @@ Attributes
    .. attribute:: rewards
 
       Dictionary of metric names to floats indicating the weight of each
-      metric to create a reward of a linear combination. Valid metric names are
-      taken from the MetricConfig and removing 'run_'. For example, to create a
-      reward using the progression metric, the name would have to be
-      'sdc_progression', since 'run_sdc_progression' is used in the config
-      above.
+      metric to create a reward of a linear combination.
 
    .. py:attribute:: rewards
       :type: dict[str, float]

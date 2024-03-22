@@ -18,6 +18,7 @@ Classes
 .. autoapisummary::
 
    waymax.env.planning_agent_environment.PlanningAgentDynamics
+   waymax.env.planning_agent_environment.PlanningAgentSimulatorState
    waymax.env.planning_agent_environment.PlanningAgentEnvironment
 
 
@@ -100,10 +101,31 @@ Functions
 
 
 
-.. py:class:: PlanningAgentEnvironment(dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig, sim_agent_actors: Sequence[waymax.agents.actor_core.WaymaxActorCore] = ())
+.. py:class:: PlanningAgentSimulatorState
 
 
-   Bases: :py:obj:`waymax.env.base_environment.BaseEnvironment`
+   Bases: :py:obj:`waymax.datatypes.SimulatorState`
+
+   Simulator state for the planning agent environment.
+
+   .. attribute:: sim_agent_actor_states
+
+      State of the sim agents that are being run inside of
+      the environment `step` function. If sim agents state is provided, this
+      will be updated. The list of sim agent states should be as long as and in
+      the same order as the number of sim agents run in the environment.
+
+   .. py:attribute:: sim_agent_actor_states
+      :type: Sequence[waymax.agents.actor_core.ActorState]
+      :value: ()
+
+      
+
+
+.. py:class:: PlanningAgentEnvironment(dynamics_model: waymax.dynamics.DynamicsModel, config: waymax.config.EnvironmentConfig, sim_agent_actors: Sequence[waymax.agents.actor_core.WaymaxActorCore] = (), sim_agent_params: Sequence[waymax.agents.actor_core.Params] = ())
+
+
+   Bases: :py:obj:`waymax.env.abstract_environment.AbstractEnvironment`
 
    An environment wrapper allowing for controlling a single agent.
 
@@ -115,7 +137,41 @@ Functions
    expected for a single agent env, the observation retains the obj dimension
    set to 1 to conform with the observation datastructure.
 
-   .. py:method:: metrics(state: waymax.datatypes.SimulatorState) -> waymax.env.typedefs.Metrics
+   .. py:property:: dynamics
+      :type: waymax.dynamics.DynamicsModel
+
+
+   .. py:method:: reset(state: waymax.datatypes.SimulatorState, rng: jax.Array | None = None) -> PlanningAgentSimulatorState
+
+      Initializes the simulation state.
+
+      This initializer sets the initial timestep and fills the initial simulation
+      trajectory with invalid values.
+
+      :param state: An uninitialized state of shape (...).
+      :param rng: Optional random number generator for stochastic environments.
+
+      :returns: The initialized simulation state of shape (...).
+
+
+   .. py:method:: observe(state: PlanningAgentSimulatorState) -> waymax.env.typedefs.Observation
+
+      Computes the observation for the given simulation state.
+
+      Here we assume that the default observation is just the simulator state. We
+      leave this for the user to override in order to provide a user-specific
+      observation function. A user can use this to move some of their model
+      specific post-processing into the environment rollout in the actor nodes. If
+      they want this post-processing on the accelerator, they can keep this the
+      same and implement it on the learner side. We provide some helper functions
+      at datatypes.observation.py to help write your own observation functions.
+
+      :param state: Current state of the simulator of shape (...).
+
+      :returns: Simulator state as an observation without modifications of shape (...).
+
+
+   .. py:method:: metrics(state: PlanningAgentSimulatorState) -> waymax.env.typedefs.Metrics
 
       Computes the metrics for the single agent wrapper.
 
@@ -134,7 +190,7 @@ Functions
                   (..., num_objects=1) unless specified in the metrics implementation.
 
 
-   .. py:method:: reward(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> jax.Array
+   .. py:method:: reward(state: PlanningAgentSimulatorState, action: waymax.datatypes.Action) -> jax.Array
 
       Computes the reward for a transition.
 
@@ -156,7 +212,7 @@ Functions
                   are instances of specs.Array.
 
 
-   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> waymax.datatypes.SimulatorState
+   .. py:method:: step(state: PlanningAgentSimulatorState, action: waymax.datatypes.Action, rng: jax.Array | None = None) -> PlanningAgentSimulatorState
 
       Advances simulation by one timestep using the dynamics model.
 
@@ -165,6 +221,7 @@ Functions
                      actions.valid field is used to denote which objects are being controlled
                      - objects whose valid is False will fallback to default behavior
                      specified by self.dynamics.
+      :param rng: Optional random number generator for stochastic environments.
 
       :returns: The next simulation state after taking an action of shape (...).
 
@@ -172,6 +229,22 @@ Functions
    .. py:method:: reward_spec() -> dm_env.specs.Array
 
       Specify the reward spec as just for one object.
+
+
+   .. py:method:: discount_spec() -> dm_env.specs.BoundedArray
+
+      Returns the discount specs of the environment without batch dimension.
+
+
+   .. py:method:: observation_spec() -> waymax.env.typedefs.Observation
+      :abstractmethod:
+
+      Returns the observation specs of the environment without batch dimension.
+
+      :returns:
+
+                The observation specs represented as a PyTree where the
+                  leaves are instances of specs.Array.
 
 
 

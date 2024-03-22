@@ -58,7 +58,7 @@ Attributes
       Computes metrics (lower is better) from state.
 
 
-   .. py:method:: reset(state: waymax.datatypes.SimulatorState) -> waymax.datatypes.SimulatorState
+   .. py:method:: reset(state: waymax.datatypes.SimulatorState, rng: jax.Array | None = None) -> waymax.datatypes.SimulatorState
 
       Initializes the simulation state.
 
@@ -66,6 +66,7 @@ Attributes
       trajectory with invalid values.
 
       :param state: An uninitialized state of shape (...).
+      :param rng: Optional random number generator for stochastic environments.
 
       :returns: The initialized simulation state of shape (...).
 
@@ -87,7 +88,7 @@ Attributes
       :returns: Simulator state as an observation without modifications of shape (...).
 
 
-   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action) -> waymax.datatypes.SimulatorState
+   .. py:method:: step(state: waymax.datatypes.SimulatorState, action: waymax.datatypes.Action, rng: jax.Array | None = None) -> waymax.datatypes.SimulatorState
 
       Advances simulation by one timestep using the dynamics model.
 
@@ -96,6 +97,7 @@ Attributes
                      actions.valid field is used to denote which objects are being controlled
                      - objects whose valid is False will fallback to default behavior
                      specified by self.dynamics.
+      :param rng: Optional random number generator for stochastic environments.
 
       :returns: The next simulation state after taking an action of shape (...).
 

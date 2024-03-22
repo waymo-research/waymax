@@ -295,14 +295,17 @@
 <p>A stateless environment interface for Waymax.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="waymax.env.abstract_environment.AbstractEnvironment.reset">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericScenario</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericState</span></span></span><a class="headerlink" href="#waymax.env.abstract_environment.AbstractEnvironment.reset" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericScenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericState</span></span></span><a class="headerlink" href="#waymax.env.abstract_environment.AbstractEnvironment.reset" title="Permalink to this definition">#</a></dt>
 <dd><p>Initializes a simulation state.</p>
 <p>This method allows the environment to perform optional postprocessing
 on the state before the episode begins. By default this method is a
 no-op.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scenario</strong> – Scenario used to generate the initial state.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> – Scenario used to generate the initial state.</p></li>
+<li><p><strong>rng</strong> – Optional random number generator for stochastic environments.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The initialized simulation state.</p>
@@ -312,7 +315,7 @@ no-op.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="waymax.env.abstract_environment.AbstractEnvironment.step">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericState</span></span></span><a class="headerlink" href="#waymax.env.abstract_environment.AbstractEnvironment.step" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">waymax.env.typedefs.GenericAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">jax.Array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">waymax.env.typedefs.GenericState</span></span></span><a class="headerlink" href="#waymax.env.abstract_environment.AbstractEnvironment.step" title="Permalink to this definition">#</a></dt>
 <dd><p>Advances the simulation by one timestep.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -320,6 +323,7 @@ no-op.</p>
 <li><p><strong>state</strong> – The current state of the simulator.</p></li>
 <li><p><strong>actions</strong> – Action to apply to the state to produce the updated simulator
 state.</p></li>
+<li><p><strong>rng</strong> – Optional random number generator for stochastic environments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
