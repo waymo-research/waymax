@@ -201,7 +201,7 @@ def apply_trajectory_update_to_state(
   # Some fields such as the length, width and height of objects are set to be
   # the same for every timestep during data loading and so we don't update these
   # from the current trajectory.
-  # TODO: Update z using the (x, y) coordinates of the vehicle.
+  # Update z using the (x, y) coordinates of the vehicle.
   replacement_dict = {}
   for field in CONTROLLABLE_FIELDS:
     if use_fallback:
