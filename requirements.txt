@@ -1,0 +1,10 @@
+tensorflow
+tensorflow-addons
+tensorflow-datasets
+tensorflow-graphics
+tensorflow-io
+jax
+jaxlib
+numpy
+google-auth
+google-cloud-storage

@@ -1,0 +1,19 @@
+{
+    "name": "Waymax Development",
+    "build": {
+      "dockerfile": "Dockerfile",
+      "context": ".."
+    },
+    "settings": {
+      "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+      "ms-python.python",  // Python extension for VS Code
+      "ms-toolsai.jupyter" // Jupyter extension for interactive notebooks
+    ],
+    "runArgs": [
+      "--gpus",
+      "all"
+    ],
+    "postCreateCommand": "pip install -r requirements.txt"
+  }  
