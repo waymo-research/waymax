@@ -121,7 +121,7 @@ class ObjectMetadata:
             jnp.bool_,
         ],
     )
-    # TODO runtime checks only one sdc exist for self.is_sdc
+    # TODO(b/246965197) runtime checks only one sdc exist for self.is_sdc
 
 
 @chex.dataclass

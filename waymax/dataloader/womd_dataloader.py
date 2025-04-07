@@ -70,7 +70,7 @@ def preprocess_womd_example(
     processed = example
 
   if max_num_objects is not None:
-    # TODO check sdc included if it is needed.
+    # TODO(b/246965197) check sdc included if it is needed.
     return {
         k: v[:max_num_objects] if k.startswith('state/') else v
         for k, v in processed.items()

@@ -153,7 +153,7 @@ def update_by_slice_in_dim(
     A PyTree with same structure as inputs.
   """
 
-  # TODO add proper boundary runtime check, `dynamic_slice_in_dim`
+  # TODO(b/246965197) add proper boundary runtime check, `dynamic_slice_in_dim`
   # does not do a boundary check.
 
   if updates_start_idx is None:

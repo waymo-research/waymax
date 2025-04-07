@@ -38,7 +38,7 @@ from waymax.dynamics import abstract_dynamics
 from waymax.utils import geometry
 
 DynamicsModel = abstract_dynamics.DynamicsModel
-# TODO Determine whether 0.6 is appropriate speed limit.
+# TODO(b/256862507) Determine whether 0.6 is appropriate speed limit.
 # This speed limit helps to filter out false positive very large steering value.
 _SPEED_LIMIT = 0.6  # Units: m/s
 

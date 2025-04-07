@@ -24,7 +24,7 @@ from waymax.metrics import imitation
 from waymax.utils import test_utils
 
 
-# TODO: test that the metric result validity mask is correct.
+# TODO(b/267827375): test that the metric result validity mask is correct.
 class LogDivergenceMetricTest(tf.test.TestCase, parameterized.TestCase):
 
   def test_metric_runs_from_real_data(self):

@@ -147,11 +147,12 @@ def get_features_description(
   Args:
     max_num_objects: Max number of objects.
     max_num_rg_points: Max number of sampled roadgraph points.
-    include_sdc_paths: Whether to include roadgraph traversal paths for the SDC.
-    num_paths: Optional number of SDC paths. Must be defined if
-      `include_sdc_paths` is True.
-    num_points_per_path: Optional number of points per SDC path. Must be defined
-      if `include_sdc_paths` is True.
+    include_sdc_paths: [Waymo-internal only] Whether to include roadgraph
+      traversal paths for the SDC.
+    num_paths: [Waymo-internal only] Optional number of SDC paths. Must be
+      defined if `include_sdc_paths` is True.
+    num_points_per_path: [Waymo-internal only] Optional number of points per SDC
+      path. Must be defined if `include_sdc_paths` is True.
     num_tls: Maximum number of traffic lights.
 
   Returns:

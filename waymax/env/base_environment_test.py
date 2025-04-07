@@ -36,7 +36,7 @@ class BaseEnvironmentTest(tf.test.TestCase, parameterized.TestCase):
 
   def setUp(self):
     super().setUp()
-    # TODO Update environment tests to test different inputs args
+    # TODO(b/251258357) Update environment tests to test different inputs args
     # including dynamics and controlled objects.
     self.env_config = _config.EnvironmentConfig(init_steps=10)
     self.env = _env.MultiAgentEnvironment(
@@ -95,7 +95,7 @@ class BaseEnvironmentTest(tf.test.TestCase, parameterized.TestCase):
         timestamp_micros=jnp.ones_like(traj_value).astype(jnp.int32),
         valid=jnp.ones_like(traj_value).astype(jnp.bool_),
     )
-    log_traj = jax.tree_map(
+    log_traj = jax.tree.map(
         lambda x: jnp.zeros_like(x).astype(x.dtype), sim_traj
     )
     roadgraph_points = datatypes.RoadgraphPoints(

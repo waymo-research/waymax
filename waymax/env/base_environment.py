@@ -56,7 +56,7 @@ class BaseEnvironment(abstract_environment.AbstractEnvironment):
   @jax.named_scope('BaseEnvironment.metrics')
   def metrics(self, state: datatypes.SimulatorState) -> types.Metrics:
     """Computes metrics (lower is better) from state."""
-    # TODO Make metric_dict a dataclasses.
+    # TODO(b/254483042) Make metric_dict a dataclasses.
     return metrics.run_metrics(
         simulator_state=state, metrics_config=self.config.metrics
     )

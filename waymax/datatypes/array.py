@@ -51,7 +51,7 @@ class MaskedArray:
     chex.assert_equal_shape_prefix([self.value, self.valid], self.valid.ndim)
     chex.assert_type(self.valid, jnp.bool_)
 
-  # TODO: replace type annotation with typing.Self when Python 3.11
+  # TODO(b/268101054): replace type annotation with typing.Self when Python 3.11
   # is available.
   @classmethod
   def create_and_validate(

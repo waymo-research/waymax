@@ -145,10 +145,10 @@ def simulator_state_from_womd_dict(
       (https://waymo.com/open/data/motion/tfexample). The data, however, can be
       augmented with different time keys. We do this in our data loader, by
       aggregating all timesteps into an `all` key prefix.
-    include_sdc_paths: Whether to include sdc based route paths when
-      constructing the simulator state. This is useful for representing the
-      route of the agent. A similar parameter must be used in the data loader to
-      get consistent behavior.
+    include_sdc_paths: [Waymo-internal only] Whether to include sdc based route
+      paths when constructing the simulator state. This is useful for
+      representing the route of the agent. A similar parameter must be used in
+      the data loader to get consistent behavior.
     time_key: Time step information to gather from `example` (`past`, `current`,
       `future`, `all`).
 

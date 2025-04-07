@@ -171,7 +171,7 @@ class PlanningAgentEnvironment(abstract_environment.AbstractEnvironment):
   set to 1 to conform with the observation datastructure.
   """
 
-  # TODO: Move to the new sim agent interface when available.
+  # TODO(b/260631051): Move to the new sim agent interface when available.
   def __init__(
       self,
       dynamics_model: _dynamics.DynamicsModel,

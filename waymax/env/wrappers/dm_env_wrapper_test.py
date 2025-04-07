@@ -38,7 +38,7 @@ class WaymaxDMEnvTest(parameterized.TestCase):
     )
     dataset_iter = dataloader.simulator_state_generator(self.dataset_config)
 
-    # TODO Update environment tests to use other dynamics.
+    # TODO(b/251258357) Update environment tests to use other dynamics.
     # Uses large init step (in this case only 2 steps left) to reduce test time.
     self.env_config = _config.EnvironmentConfig(init_steps=88)
     self.multi_stateless_env = base_environment.MultiAgentEnvironment(

@@ -16,9 +16,8 @@ import functools
 import math
 import jax
 import jax.numpy as jnp
+import numpy as np
 import tensorflow as tf
-
-from absl.testing import parameterized
 from waymax import config as _config
 from waymax.dataloader import womd_dataloader
 from waymax.dataloader import womd_factories
@@ -27,6 +26,7 @@ from waymax.datatypes import operations
 from waymax.datatypes import roadgraph
 from waymax.datatypes import simulator_state
 from waymax.utils import test_utils
+from absl.testing import parameterized
 
 
 class ObservationTest(tf.test.TestCase, parameterized.TestCase):
@@ -247,15 +247,20 @@ class ObservationTest(tf.test.TestCase, parameterized.TestCase):
         exp_tls = observation.transform_traffic_lights(global_tls, pose)
 
       # pylint: disable=cell-var-from-loop
-      self.assertEqual(
-          jax.tree_util.tree_map(lambda x: x[i], obs.trajectory), exp_traj
+      jax.tree.map(
+          np.testing.assert_allclose,
+          jax.tree.map(lambda x: x[i], obs.trajectory),
+          exp_traj,
       )
-      self.assertEqual(
-          jax.tree_util.tree_map(lambda x: x[i], obs.roadgraph_static_points),
+      jax.tree.map(
+          np.testing.assert_allclose,
+          jax.tree.map(lambda x: x[i], obs.roadgraph_static_points),
           exp_rg,
       )
-      self.assertEqual(
-          jax.tree_util.tree_map(lambda x: x[i], obs.traffic_lights), exp_tls
+      jax.tree.map(
+          np.testing.assert_allclose,
+          jax.tree.map(lambda x: x[i], obs.traffic_lights),
+          exp_tls,
       )
 
   @parameterized.parameters(

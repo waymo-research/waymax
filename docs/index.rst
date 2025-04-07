@@ -58,5 +58,5 @@ For additional installation options, see the `Install Guide`_ in the project REA
    genindex
    modindex
 
-.. _JAX: https://github.com/google/jax
+.. _JAX: https://github.com/jax-ml/jax
 .. _Install Guide: https://github.com/waymo-research/waymax#installation

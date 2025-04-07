@@ -62,7 +62,7 @@ class SimulatorState:
   """
 
   sim_trajectory: object_state.Trajectory
-  # TODO Support testset, i.e. no log_trajectory for all steps.
+  # TODO(b/247841891) Support testset, i.e. no log_trajectory for all steps.
   log_trajectory: object_state.Trajectory
   log_traffic_light: traffic_lights.TrafficLights
   object_metadata: object_state.ObjectMetadata
@@ -133,7 +133,7 @@ def update_state_by_log(
     state: SimulatorState, num_steps: int
 ) -> SimulatorState:
   """Advances SimulatorState by num_steps using logged data."""
-  # TODO jax runtime check num_steps > state.remaining_timesteps
+  # TODO(b/246965197) jax runtime check num_steps > state.remaining_timesteps
   return state.replace(
       timestep=state.timestep + num_steps,
       sim_trajectory=operations.update_by_slice_in_dim(

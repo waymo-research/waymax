@@ -98,7 +98,7 @@ class RolloutOutput:
     return self.state.shape
 
 
-# TODO: Update tests for rollout function.
+# TODO(b/251256348): Update tests for rollout function.
 @jax.named_scope('rollout')
 def rollout(
     scenario: types.GenericScenario,
@@ -128,7 +128,7 @@ def rollout(
       prepend the initial timetep to the `timestep` field and append an invalid
       action into the `action` field.
   """
-  # TODO Runtime check that rollout_num_steps is not greater than
+  # TODO(b/246965197) Runtime check that rollout_num_steps is not greater than
   # reset_state.remaining_timesteps
   reset_state = env.reset(scenario)
   init_rng, rng = jax.random.split(rng, 2)

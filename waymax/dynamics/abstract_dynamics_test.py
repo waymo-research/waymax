@@ -71,7 +71,7 @@ class AbstractDynamicsTest(tf.test.TestCase, parameterized.TestCase):
         width=jnp.zeros((batch_size, objects, timesteps)),
         height=jnp.zeros((batch_size, objects, timesteps)),
     )
-    sim_traj = jax.tree_map(jnp.ones_like, log_traj)
+    sim_traj = jax.tree.map(jnp.ones_like, log_traj)
     is_controlled = jnp.array([[True, False, False, False, False]])
     update = datatypes.TrajectoryUpdate(
         x=1 * jnp.ones((batch_size, objects, 1)),

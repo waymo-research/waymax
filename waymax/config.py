@@ -51,8 +51,9 @@ class DatasetConfig:
     num_shards: Number of shards for parallel loading, no effect on data
       returned.
     deterministic: Whether to use deterministic parallel processing.
-    include_sdc_paths: Whether to include all valid future paths for SDC
-      according to roadgraph connectivity from its starting position.
+    include_sdc_paths: [Waymo-internal only] Whether to include all valid future
+      paths for SDC according to roadgraph connectivity from its starting
+      position.
     aggregate_timesteps: Whether to aggregate keys from tf examples, need to set
       to True for parsing SimulatorState afterwards.
     max_num_rg_points: Max number of roadgraph points in data.
@@ -249,31 +250,31 @@ class WaymaxConfig:
       )
 
 WOD_1_0_0_TRAINING = DatasetConfig(
-    path='gs://waymo_open_dataset_motion_v_1_0_0/uncompressed/tf_example/training/training_tfexample.tfrecord@1000',
+    path='gs:///waymo_open_dataset_motion_v_1_0_0/uncompressed/tf_example/training/training_tfexample.tfrecord@1000',
     max_num_rg_points=20000,
     data_format=DataFormat.TFRECORD,
 )
 
 WOD_1_0_0_VALIDATION = DatasetConfig(
-    path='gs://waymo_open_dataset_motion_v_1_0_0/uncompressed/tf_example/validation/validation_tfexample.tfrecord@150',
+    path='gs:///waymo_open_dataset_motion_v_1_0_0/uncompressed/tf_example/validation/validation_tfexample.tfrecord@150',
     max_num_rg_points=20000,
     data_format=DataFormat.TFRECORD,
 )
 
 WOD_1_1_0_TRAINING = DatasetConfig(
-    path='gs://waymo_open_dataset_motion_v_1_1_0/uncompressed/tf_example/training/training_tfexample.tfrecord@1000',
+    path='gs:///waymo_open_dataset_motion_v_1_1_0/uncompressed/tf_example/training/training_tfexample.tfrecord@1000',
     max_num_rg_points=20000,
     data_format=DataFormat.TFRECORD,
 )
 
 WOD_1_1_0_VALIDATION = DatasetConfig(
-    path='gs://waymo_open_dataset_motion_v_1_1_0/uncompressed/tf_example/validation/validation_tfexample.tfrecord@150',
+    path='gs:///waymo_open_dataset_motion_v_1_1_0/uncompressed/tf_example/validation/validation_tfexample.tfrecord@150',
     max_num_rg_points=20000,
     data_format=DataFormat.TFRECORD,
 )
 
 WOD_1_2_0_TEST = DatasetConfig(
-    path='gs://waymo_open_dataset_motion_v_1_2_0/uncompressed/tf_example/testing/testing_tfexample.tfrecord@150',
+    path='gs:///waymo_open_dataset_motion_v_1_2_0/uncompressed/tf_example/testing/testing_tfexample.tfrecord@150',
     max_num_rg_points=30000,
     data_format=DataFormat.TFRECORD,
 )

@@ -71,7 +71,7 @@ class BraxWrapperTest(parameterized.TestCase, tf.test.TestCase):
   def test_step_advances_timestep(self, multi=False):
     env = self.multi_env if multi else self.single_env
     reset_ts = env.reset(self.state_0)
-    action = jax.tree_map(
+    action = jax.tree.map(
         lambda x: jnp.zeros(x.shape, dtype=x.dtype), env.action_spec()
     )
     next_ts = env.step(reset_ts, action)
@@ -86,14 +86,14 @@ class BraxWrapperTest(parameterized.TestCase, tf.test.TestCase):
         data_format=_config.DataFormat.TFRECORD,
     )
     dataset_iter = dataloader.simulator_state_generator(config)
-    action = jax.tree_map(
+    action = jax.tree.map(
         lambda x: jnp.zeros(x.shape, dtype=x.dtype),
         self.multi_env.action_spec(),
     )
     # Adding batch dimensions if needed.
     for ndims in reversed(batch_dims):
       # pylint: disable=cell-var-from-loop
-      action = jax.tree_map(
+      action = jax.tree.map(
           lambda x: jnp.repeat(x[jnp.newaxis], ndims, axis=0), action
       )
     new_state = self.multi_env.reset(next(dataset_iter))

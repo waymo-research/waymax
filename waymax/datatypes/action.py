@@ -22,7 +22,7 @@ import jax.numpy as jnp
 from waymax.datatypes import operations
 
 
-# TODO: make Actions inherit from datatypes.MaskedArray.
+# TODO(b/268097580): make Actions inherit from datatypes.MaskedArray.
 @chex.dataclass
 class Action:
   """Raw actions tensor and validity mask.

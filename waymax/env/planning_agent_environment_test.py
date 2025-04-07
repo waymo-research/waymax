@@ -40,7 +40,7 @@ class PlanningAgentEnvironmentTest(parameterized.TestCase, tf.test.TestCase):
     super().setUp()
 
     self.env_config = _config.EnvironmentConfig(init_steps=10)
-    # TODO Update environment tests to use other dynamics.
+    # TODO(b/251258357) Update environment tests to use other dynamics.
     self.env = planning_agent_environment.PlanningAgentEnvironment(
         dynamics_model=dynamics.DeltaGlobal(), config=self.env_config
     )

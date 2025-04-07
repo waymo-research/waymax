@@ -404,7 +404,7 @@ def transform_observation(
     Transformed observation in local coordinates per-observation defined by the
     pose.
   """
-  # TODO Potentially removes pose2d and lets user handle it.
+  # TODO(b/251216922) Potentially removes pose2d and lets user handle it.
   chex.assert_equal_shape([observation, pose2d])
 
   # Chain two rigid transformation using pose information.

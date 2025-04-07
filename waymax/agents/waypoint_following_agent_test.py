@@ -60,14 +60,14 @@ class WaypointFollowingAgentTest(tf.test.TestCase):
         width=jnp.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
         height=jnp.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
     )
-    self.test_traj = jax.tree_map(lambda x: x[jnp.newaxis], test_traj)
+    self.test_traj = jax.tree.map(lambda x: x[jnp.newaxis], test_traj)
     test_traj_with_invalid = test_traj.replace(
         x=jnp.array([0.0, 1.0, -1.0, -1.0, 4.0, 5.0]),
         y=jnp.array([-1.0, 0.0, -1.0, -1.0, 1.0, 2.0]),
         z=jnp.array([0.0, 0.0, -1.0, -1.0, 0.0, 0.0]),
         valid=jnp.array([1.0, 1.0, 0.0, 0.0, 1.0, 1.0], dtype=bool),
     )
-    self.test_traj_with_invalid = jax.tree_map(
+    self.test_traj_with_invalid = jax.tree.map(
         lambda x: x[jnp.newaxis], test_traj_with_invalid
     )
     self.config = _config.DatasetConfig(
@@ -220,7 +220,7 @@ class IDMRoutePolicyTest(tf.test.TestCase, parameterized.TestCase):
         width=jnp.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
         height=jnp.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
     )
-    self.test_traj = jax.tree_map(lambda x: x[jnp.newaxis], test_traj)
+    self.test_traj = jax.tree.map(lambda x: x[jnp.newaxis], test_traj)
 
     self.config = _config.DatasetConfig(
         path=TEST_DATA_PATH,
@@ -362,7 +362,7 @@ class UtilFunctionsTest(tf.test.TestCase, parameterized.TestCase):
         width=jnp.array([1, 1, 1], dtype=jnp.float32),
         height=jnp.array([1, 1, 1], dtype=jnp.float32),
     )
-    traj = jax.tree_map(lambda x: x[jnp.newaxis], traj)
+    traj = jax.tree.map(lambda x: x[jnp.newaxis], traj)
 
     new_traj = waypoint_following_agent._add_headway_waypoints(
         traj, distance=2.0, num_points=2
@@ -380,7 +380,7 @@ class UtilFunctionsTest(tf.test.TestCase, parameterized.TestCase):
         width=jnp.array([1, 1, 1, 1, 1]),
         height=jnp.array([1, 1, 1, 1, 1]),
     )
-    expected_traj = jax.tree_map(lambda x: x[jnp.newaxis], expected_traj)
+    expected_traj = jax.tree.map(lambda x: x[jnp.newaxis], expected_traj)
 
     traj_7dof = new_traj.stack_fields(
         ['x', 'y', 'vel_x', 'vel_y', 'length', 'width', 'yaw']

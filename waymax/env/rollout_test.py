@@ -96,7 +96,7 @@ class UtilsTest(tf.test.TestCase, parameterized.TestCase):
       logged_next_traj = datatypes.dynamic_slice(
           state.log_trajectory, state.timestep + 1, 1, axis=-1
       )
-      combined_traj = jax.tree_map(
+      combined_traj = jax.tree.map(
           lambda x, y: jnp.concatenate([x, y], axis=-1),
           prev_sim_traj,
           logged_next_traj,

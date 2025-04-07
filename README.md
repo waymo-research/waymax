@@ -31,7 +31,7 @@ pip install --upgrade pip
 pip install git+https://github.com/waymo-research/waymax.git@main#egg=waymo-waymax
 ```
 
-Please refer to [JAX](https://github.com/google/jax#installation) for specific
+Please refer to [JAX](https://github.com/jax-ml/jax#installation) for specific
 instructions on how to setup JAX with GPU/CUDA support if needed.
 
 ### Configure access to Waymo Open Motion Dataset
