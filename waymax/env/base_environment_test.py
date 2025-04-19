@@ -95,7 +95,7 @@ class BaseEnvironmentTest(tf.test.TestCase, parameterized.TestCase):
         timestamp_micros=jnp.ones_like(traj_value).astype(jnp.int32),
         valid=jnp.ones_like(traj_value).astype(jnp.bool_),
     )
-    log_traj = jax.tree_map(
+    log_traj = jax.tree_util.tree_map(
         lambda x: jnp.zeros_like(x).astype(x.dtype), sim_traj
     )
     roadgraph_points = datatypes.RoadgraphPoints(

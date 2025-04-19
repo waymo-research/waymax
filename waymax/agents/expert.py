@@ -50,7 +50,7 @@ def infer_expert_action(
   next_logged_traj = datatypes.dynamic_slice(  # pytype: disable=wrong-arg-types  # jax-ndarray
       simulator_state.log_trajectory, simulator_state.timestep + 1, 1, axis=-1
   )
-  combined_traj = jax.tree_map(
+  combined_traj = jax.tree_util.tree_map(
       lambda x, y: jnp.concatenate([x, y], axis=-1),
       prev_sim_traj,
       next_logged_traj,
