@@ -634,7 +634,7 @@ def _add_headway_waypoints(
     new_item = jnp.tile(item[..., -1:], tile_shape)
     return jnp.concatenate([item, new_item], axis=-1)
 
-  new_traj = jax.tree_map(_repeat_last, traj)
+  new_traj = jax.tree_util.tree_map(_repeat_last, traj)
   new_traj = new_traj.replace(
       x=new_xy_points[..., 0],
       y=new_xy_points[..., 1],

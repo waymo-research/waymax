@@ -46,7 +46,7 @@ class StateDynamicsTest(parameterized.TestCase, tf.test.TestCase):
         height=jnp.zeros((batch_size, objects, timesteps)),
     )
     # Initialize the simulated trajectory to all one-valued attributes.
-    sim_traj = jax.tree_map(jnp.ones_like, log_traj)
+    sim_traj = jax.tree_util.tree_map(jnp.ones_like, log_traj)
     # Set the 2nd object (index 1) to be controlled.
     is_controlled = jnp.array([[False, True, False, False, False]])
     # Create a test action with value (1, 2, 3, 4, 5)
@@ -69,7 +69,7 @@ class StateDynamicsTest(parameterized.TestCase, tf.test.TestCase):
         next_traj, timestep + 1, 1, axis=-1
     )
     # Shape: (batch_size=1, timesteps=1)
-    controlled_traj = jax.tree_map(lambda x: x[is_controlled], traj_at_timestep)
+    controlled_traj = jax.tree_util.tree_map(lambda x: x[is_controlled], traj_at_timestep)
 
     with self.subTest('ControlledTrajIsCorrect'):
       self.assertAllClose(
