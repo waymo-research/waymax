@@ -21,7 +21,6 @@ deployed on hardware accelerators, such as GPUs and
 [TPUs](https://cloud.google.com/tpu). Waymax is provided free of charge under
 the terms of the [Waymax License Agreement for Non-Commercial Use](https://github.com/waymo-research/waymax/blob/main/LICENSE).
 
-
 ## Installation
 
 Waymax can be installed via pip using the following command:
@@ -86,20 +85,20 @@ The `waymax.metrics` module defines commonly used metrics for evaluating agents.
 These metrics can be used to evaluate simulated rollouts, or open-loop
 predictions from behavior models. Supported metrics include:
 
--   [Overlap](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/overlap.py)
--   [Offroad](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/roadgraph.py)
--   [Wrong-way](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/roadgraph.py)
--   [Route-following](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/route.py)
--   [Kinematic infeasibility](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/comfort.py)
--   [Log divergence (MSE)](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/imitation.py)
+- [Overlap](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/overlap.py)
+- [Offroad](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/roadgraph.py)
+- [Wrong-way](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/roadgraph.py)
+- [Route-following](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/route.py)
+- [Kinematic infeasibility](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/comfort.py)
+- [Log divergence (MSE)](https://github.com/waymo-research/waymax/tree/main/waymax/metrics/imitation.py)
 
 ### Agents
 
 The `waymax.agents` module defines intelligent simulated agents for realistic
 simulation. Waymax currently supports:
 
--   Log-playback
--   [IDM](https://github.com/waymo-research/waymax/tree/main/waymax/agents/waypoint_following_agent.py)
+- Log-playback
+- [IDM](https://github.com/waymo-research/waymax/tree/main/waymax/agents/waypoint_following_agent.py)
 
 ### Environments and dynamics
 
@@ -135,13 +134,13 @@ We provide a few
 [colab tutorials](https://github.com/waymo-research/waymax/blob/main/docs/notebooks) for
 getting started:
 
--   [data_demo.ipynb](https://github.com/waymo-research/waymax/blob/main/docs/notebooks/data_demo.ipynb)
-    shows how to load the data and use the top-down view visualization.
--   [multi_actors_demo.ipynb](https://github.com/waymo-research/waymax/blob/main/docs/notebooks/multi_actors_demo.ipynb)
-    shows how to instantiate multiple agents and run a simple closed-loop
-    simulation.
--   [wosac_submission_via_waymax.ipynb](https://github.com/waymo-research/waymax/blob/main/docs/notebooks/wosac_submission_via_waymax.ipynb)
-    shows how to create a Waymo Open Sim Agents Challenge submission file.
+- [data_demo.ipynb](https://github.com/waymo-research/waymax/blob/main/docs/notebooks/data_demo.ipynb)
+  shows how to load the data and use the top-down view visualization.
+- [multi_actors_demo.ipynb](https://github.com/waymo-research/waymax/blob/main/docs/notebooks/multi_actors_demo.ipynb)
+  shows how to instantiate multiple agents and run a simple closed-loop
+  simulation.
+- [wosac_submission_via_waymax.ipynb](https://github.com/waymo-research/waymax/blob/main/docs/notebooks/wosac_submission_via_waymax.ipynb)
+  shows how to create a Waymo Open Sim Agents Challenge submission file.
 
 ## Citing Waymax
 
@@ -160,7 +159,3 @@ Brandyn White and Aleksandra Faust, and Rowan McAllister and Dragomir Anguelov a
 booktitle={Proceedings of the Neural Information Processing Systems Track on Datasets and
 Benchmarks},year={2023}}
 ```
-
-## Contact
-
-Please email any questions to [waymax@google.com](mailto:waymax@google.com), or raise an issue on Github.
