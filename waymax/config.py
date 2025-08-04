@@ -278,3 +278,20 @@ WOD_1_2_0_TEST = DatasetConfig(
     max_num_rg_points=30000,
     data_format=DataFormat.TFRECORD,
 )
+
+WOD_1_3_0_TRAINING = DatasetConfig(
+    path="gs://waymo_open_dataset_motion_v_1_3_0/uncompressed/tf_example/training/training_tfexample.tfrecord@1000",
+    max_num_rg_points=10000,
+    data_format=DataFormat.TFRECORD,
+)
+
+
+WOD_1_3_0_TEST = DatasetConfig(
+    path="gs://waymo_open_dataset_motion_v_1_3_0/uncompressed/tf_example/testing/testing_tfexample.tfrecord@150",
+    data_format=DataFormat.TFRECORD,
+)
+
+WOD_1_3_0_VALIDATION = DatasetConfig(
+    path="gs://waymo_open_dataset_motion_v_1_3_0/uncompressed/tf_example/validation/validation_tfexample.tfrecord@150",
+    data_format=DataFormat.TFRECORD,
+)
