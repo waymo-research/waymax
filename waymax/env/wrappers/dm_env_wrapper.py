@@ -191,6 +191,7 @@ def make_sdc_dm_environment(
     dynamics_model: dynamics.DynamicsModel,
     data_config: _config.DatasetConfig,
     env_config: _config.EnvironmentConfig,
+    sim_agent_params: tuple[datatypes.PyTree | None, ...] | None = None,
 ) -> DMEnvWrapper:
   """Makes a DM environment for controlling SDC only.
 
@@ -198,6 +199,9 @@ def make_sdc_dm_environment(
     dynamics_model: A dynamics model used to transit state of the environment.
     data_config: Config for dataset, see details in config.DatasetConfig
     env_config: Config for environment, see details in config.EnvironmentConfig.
+    sim_agent_params: Optional parameters for each sim agent. If None, defaults
+      to (None,) for each sim agent actor. Must match the number of sim agents
+      if provided.
 
   Returns:
     The single agent (SDC) Waymax DM environment that has not been reset.
@@ -213,10 +217,15 @@ def make_sdc_dm_environment(
     ]
   else:
     sim_agent_actors = []
+
+  if sim_agent_params is None:
+    sim_agent_params = (None,) * len(sim_agent_actors)
+  
   dataset_iterator = dataloader.simulator_state_generator(config=data_config)
   single_env = planning_agent_environment.PlanningAgentEnvironment(
       dynamics_model=dynamics_model,
       config=env_config,
       sim_agent_actors=sim_agent_actors,
+      sim_agent_params=sim_agent_params
   )
   return DMEnvWrapper(dataset_iterator, single_env)

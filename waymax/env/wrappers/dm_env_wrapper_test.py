@@ -56,6 +56,18 @@ class WaymaxDMEnvTest(parameterized.TestCase):
         dataset_iter, self.single_stateless_env
     )
 
+  def _env_config_with_one_sim_agent(self):
+    return _config.EnvironmentConfig(
+      controlled_object=_config.ObjectType.SDC,
+      sim_agents=(
+        _config.SimAgentConfig(
+          agent_type=_config.SimAgentType.IDM,
+          controlled_objects=_config.ObjectType.NON_SDC
+        ),
+      ),
+      max_num_objects=32
+    )
+
   @parameterized.parameters(True, False)
   def test_observation_matches_spec(self, multiagent: bool):
     env = self.multi_env if multiagent else self.single_env
@@ -218,6 +230,45 @@ class WaymaxDMEnvTest(parameterized.TestCase):
     obs_spec = env.observation_spec()
     observation = env.reset().observation
     self.assertEqual(batch_dims + obs_spec.shape, observation.shape)
+
+  def test_make_sdc_dm_env_defaults_sim_agent_params(self):
+    batch_dims = (1,)
+    dynamics_model = dynamics.DeltaGlobal()
+    max_num_objects = 32
+    env_config = self._env_config_with_one_sim_agent()
+    dataset_config = _config.DatasetConfig(
+        path=_TEST_DATA_PATH,
+        data_format=_config.DataFormat.TFRECORD,
+        max_num_objects=max_num_objects,
+        batch_dims=batch_dims,
+    )
+    env = dm_env_wrapper.make_sdc_dm_environment(
+      dynamics_model=dynamics_model,
+      data_config=dataset_config,
+      env_config=env_config,
+      sim_agent_params=None
+    )
+
+    _ = env.reset()
+
+  def test_make_sdc_dm_environment_raises_on_mismatched_sim_agent_params(self):
+    max_num_objects = 32
+    dataset_config = _config.DatasetConfig(
+        path=_TEST_DATA_PATH,
+        data_format=_config.DataFormat.TFRECORD,
+        max_num_objects=max_num_objects,
+        batch_dims=(1,),
+    )
+    env_config = self._env_config_with_one_sim_agent()
+
+    with self.assertRaises(ValueError):
+      _ = dm_env_wrapper.make_sdc_dm_environment(
+          dynamics_model=dynamics.DeltaGlobal(),
+          data_config=dataset_config,
+          env_config=env_config,
+          sim_agent_params=(),
+      )
+  
 
 
 if __name__ == '__main__':
