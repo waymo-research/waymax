@@ -23,6 +23,7 @@ from waymax.datatypes import roadgraph
 from waymax.datatypes import route
 from waymax.datatypes import simulator_state
 from waymax.datatypes import traffic_lights
+from waymax.dataloader import traffic_light_alignment
 
 
 def object_metadata_from_womd_dict(
@@ -176,6 +177,14 @@ def simulator_state_from_womd_dict(
   object_metadata = object_metadata_from_womd_dict(example)
 
   log_trajectory = trajectory_from_womd_dict(example, time_key=time_key)
+  if time_key == 'all':
+    traffic_light = traffic_light_alignment.align_to_trajectory(
+        traffic_light,
+        log_trajectory,
+        example,
+        time_key=time_key,
+        is_sdc=object_metadata.is_sdc,
+    )
   # Init with zeros and false.
   sim_trajectory = jax.tree_util.tree_map(
       lambda x: jnp.zeros(x.shape, x.dtype), log_trajectory
