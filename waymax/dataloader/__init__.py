@@ -14,6 +14,7 @@
 
 """Libraries for loading data in Waymax."""
 from waymax.dataloader.dataloader_utils import get_data_generator
+from waymax.dataloader.traffic_light_alignment import align_to_trajectory
 from waymax.dataloader.dataloader_utils import tf_examples_dataset
 from waymax.dataloader.womd_dataloader import preprocess_serialized_womd_data
 from waymax.dataloader.womd_dataloader import preprocess_womd_example
