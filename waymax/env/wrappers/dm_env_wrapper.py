@@ -218,5 +218,6 @@ def make_sdc_dm_environment(
       dynamics_model=dynamics_model,
       config=env_config,
       sim_agent_actors=sim_agent_actors,
+      sim_agent_params=[None] * len(sim_agent_actors),
   )
   return DMEnvWrapper(dataset_iterator, single_env)
