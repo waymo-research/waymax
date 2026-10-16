@@ -24,6 +24,7 @@ from waymax import dataloader
 from waymax import datatypes
 from waymax import dynamics
 from waymax import env as _env
+from waymax.agents import actor_core
 from waymax.agents import expert
 from waymax.utils import test_utils
 
@@ -208,6 +209,80 @@ class UtilsTest(tf.test.TestCase, parameterized.TestCase):
         result.observation.shape,
         tuple([3]),
     )
+
+  def test_rollout_supports_observation_based_actor(self):
+    """Regression test for issue #73.
+
+    An observation-based actor consumes the environment observation
+    (``env.observe(state)``) inside ``select_action`` rather than reading the
+    raw simulator state. This exercises that such an actor:
+      * runs inside ``rollout`` (which drives the actor via ``jax.lax.scan``),
+      * is ``jax.jit`` compatible,
+      * produces results identical to the equivalent state-based expert actor
+        (i.e. it receives the correct observation), and
+      * that the ``RolloutOutput.observation`` stream stays aligned with the
+        per-step state (the behavior the issue asked about).
+    """
+    env = _env.BaseEnvironment(
+        dynamics_model=dynamics.DeltaGlobal(),
+        config=_config.EnvironmentConfig(
+            init_steps=2,
+            max_num_objects=self.dataset_config.max_num_objects,
+        ),
+    )
+    observe_fn = env.observe  # Default observation function (identity).
+
+    def observation_based_select_action(params, state, actor_state, rng):
+      del params, rng  # Unused.
+      # Observation-based policy: act on the environment observation, which is a
+      # pure function of the state, rather than reading the raw state fields.
+      observation = observe_fn(state)
+      action = expert.infer_expert_action(observation, env.dynamics)
+      return actor_core.WaymaxActorOutput(
+          actor_state=actor_state,
+          action=action,
+          is_controlled=observation.object_metadata.is_sdc,
+      )
+
+    observation_actor = actor_core.actor_core_factory(
+        init=lambda rng, state: None,
+        select_action=observation_based_select_action,
+        name='observation_based_expert',
+    )
+
+    def run(scenario, rng):
+      return _env.rollout(
+          scenario, observation_actor, env, rng=rng, rollout_num_steps=3
+      )
+
+    result = run(self.state_t0, jax.random.PRNGKey(0))
+    # Equivalent state-based expert actor used as ground truth.
+    expert_result = _env.rollout(
+        self.state_t0,
+        expert.create_expert_actor(env.dynamics),
+        env,
+        rng=jax.random.PRNGKey(0),
+        rollout_num_steps=3,
+    )
+
+    with self.subTest('observation_based_actor_matches_state_based_expert'):
+      self.assertAllClose(result.action, expert_result.action)
+      self.assertAllClose(result.reward, expert_result.reward)
+      jax.tree_util.tree_map(
+          self.assertAllClose, result.state, expert_result.state
+      )
+
+    with self.subTest('carried_observation_is_aligned_with_state'):
+      # observe() defaults to the identity, so the recorded observation stream
+      # must equal the state stream element-wise.
+      jax.tree_util.tree_map(
+          self.assertAllClose, result.observation, result.state
+      )
+
+    with self.subTest('rollout_is_jittable_with_observation_based_actor'):
+      jit_result = jax.jit(run)(self.state_t0, jax.random.PRNGKey(0))
+      self.assertAllClose(jit_result.action, result.action)
+      self.assertAllClose(jit_result.reward, result.reward)
 
 
 if __name__ == '__main__':
