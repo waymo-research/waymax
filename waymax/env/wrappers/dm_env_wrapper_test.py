@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import dm_env
+import jax
 import jax.numpy as jnp
 import tensorflow as tf
 
@@ -20,6 +21,7 @@ from absl.testing import parameterized
 from waymax import config as _config
 from waymax import dataloader
 from waymax import dynamics
+from waymax.agents import waypoint_following_agent
 from waymax.env import base_environment
 from waymax.env import errors
 from waymax.env import planning_agent_environment
@@ -218,6 +220,103 @@ class WaymaxDMEnvTest(parameterized.TestCase):
     obs_spec = env.observation_spec()
     observation = env.reset().observation
     self.assertEqual(batch_dims + obs_spec.shape, observation.shape)
+
+
+class MakeSDCDMEnvironmentTest(parameterized.TestCase, tf.test.TestCase):
+
+  @parameterized.named_parameters(
+      ('default_no_agents', None, ()),
+      ('empty_agents', 0, ()),
+      ('one_agent', 1, ()),
+      ('multiple_agents', 2, ()),
+      ('batched_one_agent', 1, (2, 1)),
+      ('batched_multiple_agents', 2, (2, 1)),
+  )
+  def test_configured_sim_agents_reset_and_step(self, num_agents, batch_dims):
+    max_num_objects = 32
+    dataset_config = _config.DatasetConfig(
+        path=_TEST_DATA_PATH,
+        data_format=_config.DataFormat.TFRECORD,
+        max_num_objects=max_num_objects,
+        batch_dims=batch_dims,
+    )
+    sim_agent_config = _config.SimAgentConfig(
+        agent_type=_config.SimAgentType.IDM,
+        controlled_objects=_config.ObjectType.NON_SDC,
+    )
+    env_config = _config.EnvironmentConfig(
+        max_num_objects=max_num_objects,
+        init_steps=88,
+        sim_agents=(
+            None if num_agents is None else [sim_agent_config] * num_agents
+        ),
+    )
+    env = dm_env_wrapper.make_sdc_dm_environment(
+        dynamics_model=dynamics.DeltaGlobal(),
+        data_config=dataset_config,
+        env_config=env_config,
+    )
+    timestep = env.reset()
+    self.assertEqual(timestep.step_type, dm_env.StepType.FIRST)
+    self.assertEqual(env.simulation_state.timestep, env_config.init_steps - 1)
+    self.assertLen(env.simulation_state.sim_agent_actor_states, num_agents or 0)
+    initial_state = env.simulation_state
+    action = jnp.zeros(batch_dims + env.action_spec().shape, dtype=jnp.float32)
+    timestep = env.step(action)
+    self.assertEqual(timestep.step_type, dm_env.StepType.MID)
+    self.assertEqual(env.simulation_state.timestep, env_config.init_steps)
+    self.assertLen(env.simulation_state.sim_agent_actor_states, num_agents or 0)
+    self.assertEqual(timestep.observation.shape, batch_dims)
+    self.assertEqual(timestep.reward.shape, batch_dims)
+    if num_agents:
+      # Compare non-SDC updates with the real policy, independently of the
+      # factory's actor/parameter wiring and the environment's dispatch loop.
+      policy = waypoint_following_agent.IDMRoutePolicy()
+      expected = jax.jit(policy.update_trajectory)(initial_state)
+      controlled = (
+          ~initial_state.object_metadata.is_sdc
+          & ~planning_agent_environment._initialized_overlap(
+              initial_state.log_trajectory
+          )
+      )
+      self.assertTrue(jnp.any(controlled & expected.valid[..., 0]))
+      actual = env.simulation_state.current_sim_trajectory
+      self.assertAllClose(actual.x[controlled], expected.x[controlled])
+      self.assertAllClose(actual.y[controlled], expected.y[controlled])
+      self.assertAllEqual(actual.valid[controlled], expected.valid[controlled])
+
+  @parameterized.parameters(
+      _config.ObjectType.MODELED,
+      _config.ObjectType.VALID,
+      _config.ObjectType.NON_SDC,
+  )
+  def test_rejects_non_sdc_environment(self, controlled_object):
+    with self.assertRaisesRegex(ValueError, 'controlled_object should be SDC'):
+      dm_env_wrapper.make_sdc_dm_environment(
+          dynamics_model=dynamics.DeltaGlobal(),
+          data_config=_config.DatasetConfig(path=_TEST_DATA_PATH),
+          env_config=_config.EnvironmentConfig(
+              controlled_object=controlled_object
+          ),
+      )
+
+  @parameterized.parameters(_config.ObjectType.MODELED, _config.ObjectType.VALID)
+  def test_rejects_unsupported_sim_agent_control(self, controlled_objects):
+    with self.assertRaisesRegex(
+        NotImplementedError, 'not a supported controlled objects for sim agent'
+    ):
+      dm_env_wrapper.make_sdc_dm_environment(
+          dynamics_model=dynamics.DeltaGlobal(),
+          data_config=_config.DatasetConfig(path=_TEST_DATA_PATH),
+          env_config=_config.EnvironmentConfig(
+              sim_agents=[
+                  _config.SimAgentConfig(
+                      agent_type=_config.SimAgentType.IDM,
+                      controlled_objects=controlled_objects,
+                  )
+              ]
+          ),
+      )
 
 
 if __name__ == '__main__':
