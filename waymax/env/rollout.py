@@ -32,9 +32,14 @@ class RolloutCarry:
 
   Attributes:
     state: Current state of the simulator after `state.timestep` steps.
-    observation: Observation of the simulator state from the environment which
-      is called by a given observation function meant to be the input of the
-      actor's model.
+    observation: Observation of the carried ``state`` produced by the
+      environment observation function, i.e. ``env.observe(state)``. This field
+      is recorded so the rollout can return the observation stream; it is not
+      passed to the actor. The actor receives the full simulator ``state``
+      through ``WaymaxActorCore.select_action``. Because ``observe`` is a pure
+      function of the state (and defaults to the identity), an observation-based
+      policy reproduces this exact value by applying its observation function to
+      ``state`` inside ``select_action``.
     rng: Random key which represents the key for randomizing actions and
       initializing parameters for a Waymax actor.
     actor_state: Internal state for whatever the agent needs to keep as its

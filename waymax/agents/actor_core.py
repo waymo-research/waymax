@@ -83,9 +83,18 @@ class WaymaxActorCore(abc.ABC):
   ) -> WaymaxActorOutput:
     """Selects an action given the current simulator state.
 
+    The actor is given the full simulator ``state``. The default environment
+    observation (``env.observe``) is the identity, so ``state`` already is the
+    default observation. An observation-based policy obtains its observation by
+    applying its observation function to ``state`` -- the same value the rollout
+    records in ``RolloutCarry.observation`` -- since any observation is a pure
+    function of the state. Passing the full state therefore keeps the interface
+    maximally general rather than committing to a single observation format.
+
     Args:
       params: Actor parameters, e.g. neural network weights.
-      state: The current simulator state.
+      state: The current simulator state. This is also the input that an
+        observation-based policy transforms via its observation function.
       actor_state: The actor state, e.g. recurrent state or batch normalization.
       rng: A random key.
 
