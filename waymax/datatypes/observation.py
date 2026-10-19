@@ -564,11 +564,11 @@ def observation_from_state(
 
   global_obs = global_observation_from_state(state, obs_num_steps, num_obj)
   # Adds is_ego flags as one-hot vector, in this case it is computing
-  # observation for all objects, thus it's a diagnal matrix with shape:
+  # observation for all objects, thus it's an identity matrix with shape:
   # state.shape + (num_obj, num_obj)
   target_shape = state.shape + (num_obj, num_obj)
   is_ego = jax.lax.broadcast_in_dim(
-      jnp.diag(jnp.arange(num_obj)) == 1,
+      jnp.eye(num_obj, dtype=jnp.bool_),
       shape=target_shape,
       broadcast_dimensions=(len(target_shape) - 2, len(target_shape) - 1),
   )

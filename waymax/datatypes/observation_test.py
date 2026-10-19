@@ -268,6 +268,18 @@ class ObservationTest(tf.test.TestCase, parameterized.TestCase):
       _config.CoordinateFrame.OBJECT,
       _config.CoordinateFrame.GLOBAL,
   )
+  def test_obs_from_state_is_ego_marks_each_observer(self, coordinate_frame):
+    obs = observation.observation_from_state(
+        self.state_t10, roadgraph_top_k=3, coordinate_frame=coordinate_frame
+    )
+    num_obj = self.config.max_num_objects
+    self.assertAllEqual(obs.is_ego, jnp.eye(num_obj, dtype=jnp.bool_))
+
+  @parameterized.parameters(
+      _config.CoordinateFrame.SDC,
+      _config.CoordinateFrame.OBJECT,
+      _config.CoordinateFrame.GLOBAL,
+  )
   def test_sdc_obs_from_state_for_different_coordinate_system(
       self, coordinate_frame
   ):
