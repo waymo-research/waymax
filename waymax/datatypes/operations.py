@@ -278,9 +278,9 @@ def masked_mean(
   Returns:
     Array representing the mean of the array of all valid values.
   """
-  num_valid = jnp.sum(valid.astype(jnp.float32), axis=axis)
-  masked_sum = jnp.sum(x, where=valid, axis=axis)
+  num_valid = jnp.sum(valid.astype(jnp.float32), axis=axis, keepdims=True)
+  masked_sum = jnp.sum(x, where=valid, axis=axis, keepdims=True)
   mean = masked_sum / num_valid
   mean = jnp.where(num_valid == 0, invalid_value, mean)
   # Broadcast back to the original shape.
-  return jnp.broadcast_to(mean[..., None], x.shape)
+  return jnp.broadcast_to(mean, x.shape)

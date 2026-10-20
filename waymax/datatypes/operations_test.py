@@ -154,5 +154,26 @@ class DataOperationsTest(tf.test.TestCase, parameterized.TestCase):
     )
 
 
+  def test_masked_mean_works_properly_along_first_axis(self):
+    values = jnp.array([
+        [1.0, 2.0, -1.0],
+        [3.0, -1.0, -1.0],
+        [5.0, 4.0, -1.0],
+        [7.0, -1.0, -1.0],
+    ])
+    expected_values = jnp.array([[4.0, 3.0, -1.0]] * 4)
+    self.assertAllClose(
+        operations.masked_mean(values, values != -1.0, axis=0), expected_values
+    )
+
+  def test_masked_mean_default_axis_on_square_input(self):
+    values = jnp.array([[1.0, 2.0], [3.0, 10.0]])
+    expected_values = jnp.array([[2.0, 6.0], [2.0, 6.0]])
+    self.assertAllClose(
+        operations.masked_mean(values, jnp.ones_like(values, dtype=bool)),
+        expected_values,
+    )
+
+
 if __name__ == '__main__':
   tf.test.main()
